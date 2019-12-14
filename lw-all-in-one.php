@@ -29,7 +29,12 @@ if (!defined('WPINC')) {
  * Currently plugin version.
  */
 define('LW_ALL_IN_ONE_VERSION', '1.0.0');
-define('LW_ALL_IN_ONE_DB_TABLE', 'lw_aio_a_events');
+
+/**
+ * Define plugin custom table names.
+ */
+define('LW_ALL_IN_ONE_A_EVENTS_TABLE', 'lw_aio_a_events');
+define('LW_ALL_IN_ONE_CF7_TABLE', 'lw_aio_cf7');
 
 /**
  * The code that runs during plugin activation.

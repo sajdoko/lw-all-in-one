@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 }
 
 global $wpdb;
-$table_name = $wpdb->prefix . LW_ALL_IN_ONE_DB_TABLE;
+$table_name = $wpdb->prefix . LW_ALL_IN_ONE_A_EVENTS_TABLE;
 $lw_all_in_one_pagination_html = "";
 $lw_all_in_one_items_per_page = 10;
 $lw_all_in_one_query = "SELECT * FROM $table_name";
@@ -25,7 +25,7 @@ $lw_all_in_one_total_query = "SELECT COUNT(1) FROM (${lw_all_in_one_query}) AS c
 $lw_all_in_one_total = $wpdb->get_var($lw_all_in_one_total_query);
 $lw_all_in_one_page = isset($_GET['lw_aio_page']) ? abs((int) $_GET['lw_aio_page']) : 1;
 $lw_all_in_one_offset = ($lw_all_in_one_page * $lw_all_in_one_items_per_page) - $lw_all_in_one_items_per_page;
-$ga_event_results = $wpdb->get_results($lw_all_in_one_query . " ORDER BY id DESC LIMIT ${lw_all_in_one_offset}, ${lw_all_in_one_items_per_page}");
+$ga_event_results = $wpdb->get_results($lw_all_in_one_query . " ORDER BY time DESC LIMIT ${lw_all_in_one_offset}, ${lw_all_in_one_items_per_page}");
 $lw_all_in_one_total_page = ceil($lw_all_in_one_total / $lw_all_in_one_items_per_page);
 
 if ($lw_all_in_one_total_page > 1) {

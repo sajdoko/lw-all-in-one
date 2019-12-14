@@ -100,7 +100,7 @@ class Lw_All_In_One_Public {
             $event_label = sanitize_text_field($_POST['event_label']);
 
             global $wpdb;
-            $table = $wpdb->prefix.LW_ALL_IN_ONE_DB_TABLE;
+            $table = $wpdb->prefix.LW_ALL_IN_ONE_A_EVENTS_TABLE;
             $data = array('time' => current_time('mysql', 1), 'ga_category' => $event_category, 'ga_action' => $event_action, 'ga_label' => $event_label);
             $format = array('%s','%s','%s','%s');
             if ($wpdb->insert($table,$data,$format)) {
