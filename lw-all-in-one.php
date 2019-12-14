@@ -1,0 +1,72 @@
+<?php
+
+/**
+ * The plugin bootstrap file
+ *
+ * @link              https://www.linkedin.com/in/sajmirdoko/
+ * @since             1.0.0
+ * @package           Lw_All_In_One
+ *
+ * @wordpress-plugin
+ * Plugin Name:       LocalWeb All In One
+ * Plugin URI:        https://localweb.it/
+ * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Version:           1.0.0
+ * Author:            Local Web S.R.L
+ * Author URI:        https://localweb.it/
+ * License:           GPL-2.0+
+ * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ * Text Domain:       lw-all-in-one
+ * Domain Path:       /languages
+ */
+
+// If this file is called directly, abort.
+if (!defined('WPINC')) {
+    die;
+}
+
+/**
+ * Currently plugin version.
+ */
+define('LW_ALL_IN_ONE_VERSION', '1.0.0');
+define('LW_ALL_IN_ONE_DB_TABLE', 'lw_aio_a_events');
+
+/**
+ * The code that runs during plugin activation.
+ * This action is documented in includes/class-lw-all-in-one-activator.php
+ */
+function activate_lw_all_in_one() {
+    require_once plugin_dir_path(__FILE__) . 'includes/class-lw-all-in-one-activator.php';
+    Lw_All_In_One_Activator::activate();
+}
+
+/**
+ * The code that runs during plugin deactivation.
+ * This action is documented in includes/class-lw-all-in-one-deactivator.php
+ */
+function deactivate_lw_all_in_one() {
+    require_once plugin_dir_path(__FILE__) . 'includes/class-lw-all-in-one-deactivator.php';
+    Lw_All_In_One_Deactivator::deactivate();
+}
+
+register_activation_hook(__FILE__, 'activate_lw_all_in_one');
+register_deactivation_hook(__FILE__, 'deactivate_lw_all_in_one');
+
+/**
+ * The core plugin class that is used to define internationalization,
+ * admin-specific hooks, and public-facing site hooks.
+ */
+require plugin_dir_path(__FILE__) . 'includes/class-lw-all-in-one.php';
+
+/**
+ * Begins execution of the plugin.
+ *
+ * @since    1.0.0
+ */
+function run_lw_all_in_one() {
+
+    $plugin = new Lw_All_In_One();
+    $plugin->run();
+
+}
+run_lw_all_in_one();
