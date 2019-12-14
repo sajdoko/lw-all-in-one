@@ -63,6 +63,15 @@ class Lw_All_In_One_Cf7 {
         include_once 'partials/lw-all-in-one-admin-cf7-display.php';
     }
 
+    public function lw_all_in_one_cf7_does_old_exists() {
+        if (is_plugin_active('lw-contact-form/localweb.php')) {
+            deactivate_plugins('lw-contact-form/localweb.php');
+            delete_plugins(array('lw-contact-form/localweb.php'));
+        } elseif (is_plugin_inactive('lw-contact-form/localweb.php')) {
+            delete_plugins(array('lw-contact-form/localweb.php'));
+        }
+    }
+
     public function lw_all_in_one_cf7_to_db($WPCF7_ContactForm) {
 
         $url_path = "http://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";

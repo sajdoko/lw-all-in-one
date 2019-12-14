@@ -6,11 +6,10 @@
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
-/* Tab navigation */
-#tab_ga, #tab_wim {
+/* Options pages */
+.lw-aio .d-none {
 	display: none;
 }
-
 /* Options pages */
 .lw-aio table {
 	border-collapse: collapse;

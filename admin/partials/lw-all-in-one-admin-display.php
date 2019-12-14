@@ -21,7 +21,7 @@
 
   <h2><?php echo esc_html(get_admin_page_title()); ?></h2>
   <hr>
-  <?php //settings_errors();?>
+  <?php settings_errors();?>
   <form method="post" name="<?php echo $this->plugin_name; ?>_options" id="<?php echo $this->plugin_name; ?>_options" action="options.php">
 
     <?php
@@ -37,6 +37,8 @@
 
       settings_fields($this->plugin_name);
       do_settings_sections($this->plugin_name);
+
+      $active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'tab_ga_events';
     ?>
 
     <div id="poststuff" class="lw-aio">
@@ -91,11 +93,11 @@
         </div>
         <div id="post-body-content">
           <div class="inside">
-            <h1 class="nav-tab-wrapper">
-              <a href="#tab_ga" id="<?php echo $this->plugin_name; ?>_tab_ga" class="nav-tab"><?php esc_attr_e('Google Analytics', $this->plugin_name);?></a>
-              <a href="#tab_wim" id="<?php echo $this->plugin_name; ?>_tab_wim" class="nav-tab"><?php esc_attr_e('Web Instant Messenger', $this->plugin_name);?></a>
-            </h1>
-            <div id="tab_ga" class="tab-content">
+            <h2 class="nav-tab-wrapper">
+              <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_ga_events" class="nav-tab <?php echo $active_tab == 'tab_ga_events' ? 'nav-tab-active' : ''; ?>"><?php esc_attr_e('Google Analytics', $this->plugin_name);?></a>
+              <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_wim" class="nav-tab <?php echo $active_tab == 'tab_wim' ? 'nav-tab-active' : ''; ?>"><?php esc_attr_e('Web Instant Messenger', $this->plugin_name);?></a>
+            </h2>
+            <div id="tab_ga_events" class="tab-content<?php echo $active_tab != 'tab_ga_events' ? ' d-none' : ''; ?>">
               <table class="lw-aio-settings-options">
                 <tbody>
                   <tr>
@@ -106,13 +108,13 @@
                       <label for="ga_tracking_id">Tracking ID: </label>
                     </td>
                     <td>
-                      <input type="text" id="ga_tracking_id" name="<?php echo $this->plugin_name; ?>[ga_fields][tracking_id]" <?php echo ($ga_fields_tracking_id !== '') ? 'value="'.$ga_fields_tracking_id.'"' : '';?> placeholder="UA-XXXXX-XX" size="25" <?php echo ($ga_activate !== 'on') ? 'readonly' : '';?>>
+                      <input type="text" id="ga_tracking_id" name="<?php echo $this->plugin_name; ?>[ga_fields][tracking_id]" <?php echo ($ga_fields_tracking_id !== '') ? 'value="'.$ga_fields_tracking_id.'"' : '';?> placeholder="UA-XXXXX-XX" size="25">
                     </td>
                   </tr>
                   <tr>
                     <td colspan="2" class="lw-aio-settings-title">
                       <div class="button-secondary lw-aio-settings-switchoo">
-                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][monitor_email_link]" class="lw-aio-settings-switchoo-checkbox" id="monitor_email_link" <?php echo ($ga_fields_monitor_email_link === 'on') ? 'checked="checked"' : '';?> <?php echo ($ga_activate !== 'on') ? 'readonly' : '';?>>
+                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][monitor_email_link]" class="lw-aio-settings-switchoo-checkbox" id="monitor_email_link" <?php echo ($ga_fields_monitor_email_link === 'on') ? 'checked="checked"' : '';?>>
                         <label class="lw-aio-settings-switchoo-label" for="monitor_email_link">
                           <div class="lw-aio-settings-switchoo-inner"></div>
                           <div class="lw-aio-settings-switchoo-switch"></div>
@@ -124,7 +126,7 @@
                   <tr>
                     <td colspan="2" class="lw-aio-settings-title">
                       <div class="button-secondary lw-aio-settings-switchoo">
-                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][monitor_tel_link]" class="lw-aio-settings-switchoo-checkbox" id="monitor_tel_link" <?php echo ($ga_fields_monitor_tel_link === 'on') ? 'checked="checked"' : '';?> <?php echo ($ga_activate !== 'on') ? 'readonly' : '';?>>
+                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][monitor_tel_link]" class="lw-aio-settings-switchoo-checkbox" id="monitor_tel_link" <?php echo ($ga_fields_monitor_tel_link === 'on') ? 'checked="checked"' : '';?>>
                         <label class="lw-aio-settings-switchoo-label" for="monitor_tel_link">
                           <div class="lw-aio-settings-switchoo-inner"></div>
                           <div class="lw-aio-settings-switchoo-switch"></div>
@@ -136,7 +138,7 @@
                   <tr>
                     <td colspan="2" class="lw-aio-settings-title">
                       <div class="button-secondary lw-aio-settings-switchoo">
-                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][monitor_form_submit]" class="lw-aio-settings-switchoo-checkbox" id="monitor_form_submit" <?php echo ($ga_fields_monitor_form_submit === 'on') ? 'checked="checked"' : '';?> <?php echo ($ga_activate !== 'on') ? 'readonly' : '';?>>
+                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][monitor_form_submit]" class="lw-aio-settings-switchoo-checkbox" id="monitor_form_submit" <?php echo ($ga_fields_monitor_form_submit === 'on') ? 'checked="checked"' : '';?>>
                         <label class="lw-aio-settings-switchoo-label" for="monitor_form_submit">
                           <div class="lw-aio-settings-switchoo-inner"></div>
                           <div class="lw-aio-settings-switchoo-switch"></div>
@@ -148,7 +150,7 @@
                 </tbody>
               </table>
             </div>
-            <div id="tab_wim" class="tab-content">
+            <div id="tab_wim" class="tab-content<?php echo $active_tab != 'tab_wim' ? ' d-none' : ''; ?>">
               
             </div>
           </div>

@@ -28,30 +28,30 @@
 	 * Although scripts in the WordPress core, Plugins and Themes may be
 	 * practising this, we should strive to set a better example in our own work.
 	 */
-	$( window ).load(function() {
-			$(".tab-content").each(function (key, value) {
-				if (key === 0) {
-					$(this).show();
-				} else {
-					$(this).hide();
-				}
-			});
-			$(".nav-tab-wrapper a").each(function (key, value) {
-				if (key === 0) {
-					$(this).addClass("nav-tab-active");
-				}
-			});
-	});
-	$(document).on('click', '.nav-tab', function () {
-		if (window.location.href.indexOf("page=lw_all_in_one") != -1) {
-			$(".nav-tab-wrapper a").each(function () {
-				$(this).removeClass("nav-tab-active");
-			});
-			$(this).addClass("nav-tab-active");
-			$(".tab-content").each(function () {
-				$(this).hide();
-			});
-			$($(this).attr('href')).show();
-		}
-	});
+	// $( window ).load(function() {
+	// 		$(".tab-content").each(function (key, value) {
+	// 			if (key === 0) {
+	// 				$(this).show();
+	// 			} else {
+	// 				$(this).hide();
+	// 			}
+	// 		});
+	// 		$(".nav-tab-wrapper a").each(function (key, value) {
+	// 			if (key === 0) {
+	// 				$(this).addClass("nav-tab-active");
+	// 			}
+	// 		});
+	// });
+	// $(document).on('click', '.nav-tab', function () {
+	// 	if (window.location.href.indexOf("page=lw_all_in_one") != -1) {
+	// 		$(".nav-tab-wrapper a").each(function () {
+	// 			$(this).removeClass("nav-tab-active");
+	// 		});
+	// 		$(this).addClass("nav-tab-active");
+	// 		$(".tab-content").each(function () {
+	// 			$(this).hide();
+	// 		});
+	// 		$($(this).attr('href')).show();
+	// 	}
+	// });
 })(jQuery);

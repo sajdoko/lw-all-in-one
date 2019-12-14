@@ -85,7 +85,6 @@ class Lw_All_In_One_Admin {
          */
         add_menu_page(__('LocalWeb All In One Options', $this->plugin_name), __('LW AIO Options', $this->plugin_name), 'manage_options', $this->plugin_name, array($this, 'display_plugin_setup_page'), plugin_dir_url(__FILE__) . '/img/icon.png', 81
         );
-        add_submenu_page($this->plugin_name,  __('Saved Google Analytics Events', $this->plugin_name), __('Saved GA Events', $this->plugin_name), 'manage_options', $this->plugin_name . '_ga_events', array($this, 'lw_all_in_one_ga_events_display_page') );
     }
 
     /**
@@ -96,10 +95,6 @@ class Lw_All_In_One_Admin {
 
     public function display_plugin_setup_page() {
         include_once 'partials/lw-all-in-one-admin-display.php';
-    }
-
-    public function lw_all_in_one_ga_events_display_page() {
-        include_once 'partials/lw-all-in-one-admin-ga-events-display.php';
     }
 
 
@@ -117,18 +112,6 @@ class Lw_All_In_One_Admin {
     }
 
     /**
-     * Regular Expression snippet to validate Google Analytics tracking code
-     * see http://code.google.com/apis/analytics/docs/concepts/gaConceptsAccounts.html#webProperty
-     *
-     * @param   $str     string to be validated
-     * @return  Boolean
-     * @since    1.0.0
-     */
-    public function lw_all_in_one_validate_tracking_id($str) {
-        return preg_match('/^ua-\d{4,9}-\d{1,4}$/i', strval($str)) ? true : false;
-    }
-
-    /**
      * Sanitize plugin input options.
      *
      * @since    1.0.0
@@ -138,17 +121,21 @@ class Lw_All_In_One_Admin {
         $valid['ga_activate'] = (isset($input['ga_activate']) && $input['ga_activate'] === 'on') ? 'on' : '';
         $valid['ga_fields']['tracking_id'] = (isset($input['ga_fields']['tracking_id'])) ? $input['ga_fields']['tracking_id'] : '';
         if ($valid['ga_fields']['tracking_id'] !== '' && !$this->lw_all_in_one_validate_tracking_id($valid['ga_fields']['tracking_id'])) {
+            $valid['ga_fields']['tracking_id'] = $this->get_plugin_options('ga_fields', 'tracking_id');
+            $valid['ga_fields']['monitor_email_link'] = $this->get_plugin_options('ga_fields', 'monitor_email_link');
+            $valid['ga_fields']['monitor_tel_link'] = $this->get_plugin_options('ga_fields', 'monitor_tel_link');
+            $valid['ga_fields']['monitor_form_submit'] = $this->get_plugin_options('ga_fields', 'monitor_form_submit');
             add_settings_error(
                 $this->plugin_name,
                 $this->plugin_name . '_ga_fields_tracking_id_gabim',
                 __('Tracking ID is NOT valid!', $this->plugin_name),
                 'error'
             );
-            $valid['ga_fields']['tracking_id'] = '';
+        } else {
+            $valid['ga_fields']['monitor_email_link'] = (isset($input['ga_fields']['monitor_email_link']) && $input['ga_fields']['monitor_email_link'] === 'on') ? 'on' : '';
+            $valid['ga_fields']['monitor_tel_link'] = (isset($input['ga_fields']['monitor_tel_link']) && $input['ga_fields']['monitor_tel_link'] === 'on') ? 'on' : '';
+            $valid['ga_fields']['monitor_form_submit'] = (isset($input['ga_fields']['monitor_form_submit']) && $input['ga_fields']['monitor_form_submit'] === 'on') ? 'on' : '';
         }
-        $valid['ga_fields']['monitor_email_link'] = (isset($input['ga_fields']['monitor_email_link']) && $input['ga_fields']['monitor_email_link'] === 'on') ? 'on' : '';
-        $valid['ga_fields']['monitor_tel_link'] = (isset($input['ga_fields']['monitor_tel_link']) && $input['ga_fields']['monitor_tel_link'] === 'on') ? 'on' : '';
-        $valid['ga_fields']['monitor_form_submit'] = (isset($input['ga_fields']['monitor_form_submit']) && $input['ga_fields']['monitor_form_submit'] === 'on') ? 'on' : '';
         $valid['wim_activate'] = (isset($input['wim_activate']) && $input['wim_activate'] === 'on') ? 'on' : '';
         $valid['lw_cf7'] = (isset($input['lw_cf7']) && $input['lw_cf7'] === 'on') ? 'on' : '';
 
@@ -164,52 +151,38 @@ class Lw_All_In_One_Admin {
         register_setting($this->plugin_name, $this->plugin_name, array($this, 'validate_lw_all_in_one_settings'));
     }
 
-    public function lw_all_in_one_header_scripts() {
-        //Plugin options
+    /**
+     * Check if plugin option exists and returns it's vale, else return empty.
+     *
+     * @since     1.0.0
+     */
+    public function get_plugin_options($parent_key = false, $key) {
         $options = get_option($this->plugin_name);
-        $ga_activate = (isset($options['ga_activate'])) ? $options['ga_activate'] : '';
-        $ga_fields_tracking_id = (isset($options['ga_fields']['tracking_id'])) ? $options['ga_fields']['tracking_id'] : '';
-        $ga_fields_monitor_email_link = (isset($options['ga_fields']['monitor_email_link'])) ? $options['ga_fields']['monitor_email_link'] : '';
-        $ga_fields_monitor_tel_link = (isset($options['ga_fields']['monitor_tel_link'])) ? $options['ga_fields']['monitor_tel_link'] : '';
-        $ga_fields_monitor_form_submit = (isset($options['ga_fields']['monitor_form_submit'])) ? $options['ga_fields']['monitor_form_submit'] : '';
-
-        if ($ga_activate === 'on' && $ga_fields_tracking_id !== '') {
-            echo '<script async src="https://www.googletagmanager.com/gtag/js?id='.$ga_fields_tracking_id.'"></script>
-                    <script>
-                    window.dataLayer = window.dataLayer || [];
-                    function gtag(){dataLayer.push(arguments);}
-                    gtag(\'js\', new Date());
-                    gtag(\'config\', \''.$ga_fields_tracking_id.'\');';
-            echo 'const lwAioGaActivate = true;';
-            if ($ga_fields_monitor_email_link === 'on') {
-                echo 'const lwAioMonitorEmailLink = true;';
+        if ($parent_key !== false) {
+            if (isset($options[$parent_key][$key])) {
+                return $options[$parent_key][$key];
             } else {
-                echo 'const lwAioMonitorEmailLink = false;';
+                return '';
             }
-            if ($ga_fields_monitor_tel_link === 'on') {
-                echo 'const lwAioMonitorTelLink = true;';
+        } else {
+            if (isset($options[$key])) {
+                return $options[$key];
             } else {
-                echo 'const lwAioMonitorTelLink = false;';
+                return '';
             }
-            if ($ga_fields_monitor_form_submit === 'on') {
-                echo 'const lwAioMonitorFormSubmit = true;';
-            } else {
-                echo 'const lwAioMonitorFormSubmit = false;';
-            }
-            echo '</script>';
         }
     }
 
     /**
-     * WooCommerce Google Analytics Integration fallback notice.
+     * Regular Expression snippet to validate Google Analytics tracking code
+     * see http://code.google.com/apis/analytics/docs/concepts/gaConceptsAccounts.html#webProperty
      *
-     * @return string
+     * @param   $str     string to be validated
+     * @return  Boolean
+     * @since    1.0.0
      */
-    public function woocommerce_google_analytics_missing_notice() {
-        // Checks if WooCommerce is installed.
-        if (is_plugin_active('woocommerce/woocommerce.php') && !is_plugin_active('woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php')) {
-            echo '<div class="error"><p><img src="'.plugin_dir_url(__FILE__) . '/img/icon.png'.'"/> ' . sprintf( __( 'You have Woocommerce active. Install %s to better track your store events!', $this->plugin_name ), '<a href="https://wordpress.org/plugins/woocommerce-google-analytics-integration/" target="_blank">' . __( 'WooCommerce Google Analytics Integration', $this->plugin_name ) . '</a>' ) . '</p></div>';
-        }
+    public function lw_all_in_one_validate_tracking_id($str) {
+        return preg_match('/^ua-\d{4,9}-\d{1,4}$/i', strval($str)) ? true : false;
     }
 
 }

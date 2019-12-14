@@ -31,6 +31,11 @@ if (!defined('WPINC')) {
 define('LW_ALL_IN_ONE_VERSION', '1.0.0');
 
 /**
+ * Plugin name.
+ */
+define('LW_ALL_IN_ONE_PLUGIN_NAME', 'lw_all_in_one');
+
+/**
  * Define plugin custom table names.
  */
 define('LW_ALL_IN_ONE_A_EVENTS_TABLE', 'lw_aio_a_events');

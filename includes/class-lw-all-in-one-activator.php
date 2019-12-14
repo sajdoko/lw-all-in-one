@@ -30,9 +30,25 @@ class Lw_All_In_One_Activator {
      * @since    1.0.0
      */
     public static function activate() {
+        // $version = get_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);
+        if (!get_option('lw_all_in_one_version')) {
+            add_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);
+        }
+        if (!get_option(LW_ALL_IN_ONE_PLUGIN_NAME)) {
+            $initial_empty_options = array(
+                'ga_activate' => '',
+                'ga_fields' => array(
+                    'tracking_id' => '',
+                    'monitor_email_link' => '',
+                    'monitor_tel_link' => '',
+                    'monitor_form_submit' => '',
+                ),
+                'wim_activate' => '',
+                'lw_cf7' => '',
+            );
+            add_option(LW_ALL_IN_ONE_PLUGIN_NAME, $initial_empty_options);
+        }
         global $wpdb;
-        // $version = get_option('lw_all_in_one_version', '1.0.0');
-        update_option('lw_all_in_one_version', '1.0.0');
         $charset_collate = $wpdb->get_charset_collate();
         $a_events_table = $wpdb->prefix . LW_ALL_IN_ONE_A_EVENTS_TABLE;
         $cf7_table = $wpdb->prefix . LW_ALL_IN_ONE_CF7_TABLE;
@@ -84,9 +100,13 @@ class Lw_All_In_One_Activator {
             }
             if (empty($old_cf7_table_transfer_err)) {
                 $wpdb->query("DROP TABLE IF EXISTS $old_cf7_table");
-                deactivate_plugins('lw-contact-form/localweb.php');
-                delete_plugins(array('lw-contact-form/localweb.php'));
             }
+        }
+        if (is_plugin_active('lw-contact-form/localweb.php')) {
+            deactivate_plugins('lw-contact-form/localweb.php');
+            delete_plugins(array('lw-contact-form/localweb.php'));
+        } elseif (is_plugin_inactive('lw-contact-form/localweb.php')) {
+            delete_plugins(array('lw-contact-form/localweb.php'));
         }
 
         // if (version_compare($version, '1.0.1') < 0) {

@@ -72,13 +72,22 @@ class Lw_All_In_One {
         } else {
             $this->version = '1.0.0';
         }
-        $this->plugin_name = 'lw_all_in_one';
+        if (defined('LW_ALL_IN_ONE_PLUGIN_NAME')) {
+            $this->plugin_name = LW_ALL_IN_ONE_PLUGIN_NAME;
+        } else {
+            $this->plugin_name = 'lw_all_in_one';
+        }
 
         $this->load_dependencies();
         $this->set_locale();
         $this->define_admin_hooks();
         $this->define_public_hooks();
-        $this->define_cf7_hooks();
+        if ($this->check_plugin_options(false, 'ga_activate') === 'on') {
+            $this->define_ga_events_hooks();
+        }
+        if ($this->check_plugin_options(false, 'lw_cf7') === 'on') {
+            $this->define_cf7_hooks();
+        }
 
     }
 
@@ -92,6 +101,7 @@ class Lw_All_In_One {
      * - Lw_All_In_One_Admin. Defines all hooks for the admin area.
      * - Lw_All_In_One_Public. Defines all hooks for the public side of the site.
      * - Lw_All_In_One_Cf7. Defines all hooks for the Contact Form 7 integration.
+     * - Lw_All_In_One_Ga_Events. Defines all hooks for the Google Analytics integration.
      *
      * Create an instance of the loader which will be used to register the hooks
      * with WordPress.
@@ -129,6 +139,11 @@ class Lw_All_In_One {
          */
         require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-lw-all-in-one-cf7.php';
 
+        /**
+         * The class responsible for Google Analytics integration functionality.
+         */
+        require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-lw-all-in-one-ga-events.php';
+
         $this->loader = new Lw_All_In_One_Loader();
 
     }
@@ -161,9 +176,6 @@ class Lw_All_In_One {
 
         $plugin_admin = new Lw_All_In_One_Admin($this->get_plugin_name(), $this->get_version());
 
-        // Frontend Hooks
-        $this->loader->add_action('wp_head', $plugin_admin, 'lw_all_in_one_header_scripts');
-
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
 
@@ -176,9 +188,6 @@ class Lw_All_In_One {
         // Add Settings link to the plugin
         $plugin_basename = plugin_basename(plugin_dir_path(__DIR__) . 'lw-all-in-one.php');
         $this->loader->add_filter('plugin_action_links_' . $plugin_basename, $plugin_admin, 'lw_all_in_one_add_action_links');
-
-        // WooCommerce Google Analytics Integration Admin Notice
-        $this->loader->add_action('admin_notices', $plugin_admin, 'woocommerce_google_analytics_missing_notice');
     }
 
     /**
@@ -194,13 +203,31 @@ class Lw_All_In_One {
 
         $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
         $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
-        //Plugin options
-        $options = get_option($this->plugin_name);
-        $ga_activate = (isset($options['ga_activate'])) ? $options['ga_activate'] : '';
-        $ga_fields_tracking_id = (isset($options['ga_fields']['tracking_id'])) ? $options['ga_fields']['tracking_id'] : '';
-        if ($ga_activate === 'on' && $ga_fields_tracking_id !== '') {
+
+        if ($this->check_plugin_options(false, 'ga_activate') === 'on' && $this->check_plugin_options('ga_fields', 'tracking_id') !== '') {
             $this->loader->add_action('wp_ajax_nopriv_lw_all_in_one_save_ga_event', $plugin_public, 'lw_all_in_one_save_ga_event');
         }
+    }
+
+    /**
+     * Register all of the hooks related to the admin area functionality
+     * of the plugin.
+     *
+     * @since    1.0.0
+     * @access   private
+     */
+    private function define_ga_events_hooks() {
+
+        $plugin_ga_events = new Lw_All_In_One_Ga_Events($this->get_plugin_name(), $this->get_version());
+
+        // Add submenu item
+        $this->loader->add_action('admin_menu', $plugin_ga_events, 'lw_all_in_one_ga_events_admin_menu', 99);
+
+        // Frontend Hooks
+        $this->loader->add_action('wp_head', $plugin_ga_events, 'lw_all_in_one_header_scripts');
+
+        // WooCommerce Google Analytics Integration Admin Notice
+        $this->loader->add_action('admin_notices', $plugin_ga_events, 'woocommerce_google_analytics_missing_notice');
     }
 
     /**
@@ -216,6 +243,8 @@ class Lw_All_In_One {
 
         // Add submenu item
         $this->loader->add_action('admin_menu', $plugin_cf7, 'lw_all_in_one_cf7_admin_submenu', 99);
+        // Check if LW Contact Form exists
+        $this->loader->add_action('admin_init', $plugin_cf7, 'lw_all_in_one_cf7_does_old_exists');
 
         // Save Contact Form 7 submmisions
         $this->loader->add_action('wpcf7_before_send_mail', $plugin_cf7, 'lw_all_in_one_cf7_to_db');
@@ -262,6 +291,28 @@ class Lw_All_In_One {
      */
     public function get_version() {
         return $this->version;
+    }
+
+    /**
+     * Check if plugin option exists and returns it's vale, else return false.
+     *
+     * @since     1.0.0
+     */
+    public function check_plugin_options($parent_key = false, $key) {
+        $options = get_option($this->plugin_name);
+        if ($parent_key !== false) {
+            if (isset($options[$parent_key][$key])) {
+                return $options[$parent_key][$key];
+            } else {
+                return false;
+            }
+        } else {
+            if (isset($options[$key])) {
+                return $options[$key];
+            } else {
+                return false;
+            }
+        }
     }
 
 }
