@@ -86,7 +86,6 @@ class Lw_All_In_One_Admin {
         add_menu_page(__('LocalWeb All In One Options', $this->plugin_name), __('LW AIO Options', $this->plugin_name), 'manage_options', $this->plugin_name, array($this, 'display_plugin_setup_page'), plugin_dir_url(__FILE__) . '/img/icon.png', 81
         );
         add_submenu_page($this->plugin_name,  __('Saved Google Analytics Events', $this->plugin_name), __('Saved GA Events', $this->plugin_name), 'manage_options', $this->plugin_name . '_ga_events', array($this, 'lw_all_in_one_ga_events_display_page') );
-        add_submenu_page($this->plugin_name,  __('Saved Contact Form Submissions', $this->plugin_name), __('Saved CF7', $this->plugin_name), 'manage_options', $this->plugin_name . '_cf7', array($this, 'lw_all_in_one_cf7_display_page') );
     }
 
     /**
@@ -103,9 +102,6 @@ class Lw_All_In_One_Admin {
         include_once 'partials/lw-all-in-one-admin-ga-events-display.php';
     }
 
-    public function lw_all_in_one_cf7_display_page() {
-        include_once 'partials/lw-all-in-one-admin-cf7-display.php';
-    }
 
     /**
      * Add's action links to the plugins page.

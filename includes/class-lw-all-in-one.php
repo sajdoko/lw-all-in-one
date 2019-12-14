@@ -78,6 +78,7 @@ class Lw_All_In_One {
         $this->set_locale();
         $this->define_admin_hooks();
         $this->define_public_hooks();
+        $this->define_cf7_hooks();
 
     }
 
@@ -90,6 +91,7 @@ class Lw_All_In_One {
      * - Lw_All_In_One_i18n. Defines internationalization functionality.
      * - Lw_All_In_One_Admin. Defines all hooks for the admin area.
      * - Lw_All_In_One_Public. Defines all hooks for the public side of the site.
+     * - Lw_All_In_One_Cf7. Defines all hooks for the Contact Form 7 integration.
      *
      * Create an instance of the loader which will be used to register the hooks
      * with WordPress.
@@ -121,6 +123,11 @@ class Lw_All_In_One {
          * side of the site.
          */
         require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-lw-all-in-one-public.php';
+
+        /**
+         * The class responsible for Contact Form 7 integration functionality.
+         */
+        require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-lw-all-in-one-cf7.php';
 
         $this->loader = new Lw_All_In_One_Loader();
 
@@ -154,8 +161,8 @@ class Lw_All_In_One {
 
         $plugin_admin = new Lw_All_In_One_Admin($this->get_plugin_name(), $this->get_version());
 
-		// Frontend Hooks
-        $this->loader->add_action( 'wp_head', $plugin_admin, 'lw_all_in_one_header_scripts');
+        // Frontend Hooks
+        $this->loader->add_action('wp_head', $plugin_admin, 'lw_all_in_one_header_scripts');
 
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
@@ -171,7 +178,7 @@ class Lw_All_In_One {
         $this->loader->add_filter('plugin_action_links_' . $plugin_basename, $plugin_admin, 'lw_all_in_one_add_action_links');
 
         // WooCommerce Google Analytics Integration Admin Notice
-        $this->loader->add_action( 'admin_notices', $plugin_admin, 'woocommerce_google_analytics_missing_notice');
+        $this->loader->add_action('admin_notices', $plugin_admin, 'woocommerce_google_analytics_missing_notice');
     }
 
     /**
@@ -192,8 +199,29 @@ class Lw_All_In_One {
         $ga_activate = (isset($options['ga_activate'])) ? $options['ga_activate'] : '';
         $ga_fields_tracking_id = (isset($options['ga_fields']['tracking_id'])) ? $options['ga_fields']['tracking_id'] : '';
         if ($ga_activate === 'on' && $ga_fields_tracking_id !== '') {
-            $this->loader->add_action( 'wp_ajax_nopriv_lw_all_in_one_save_ga_event', $plugin_public, 'lw_all_in_one_save_ga_event' );
+            $this->loader->add_action('wp_ajax_nopriv_lw_all_in_one_save_ga_event', $plugin_public, 'lw_all_in_one_save_ga_event');
         }
+    }
+
+    /**
+     * Register all of the hooks related to the admin area functionality
+     * of the plugin.
+     *
+     * @since    1.0.0
+     * @access   private
+     */
+    private function define_cf7_hooks() {
+
+        $plugin_cf7 = new Lw_All_In_One_Cf7($this->get_plugin_name(), $this->get_version());
+
+        // Add submenu item
+        $this->loader->add_action('admin_menu', $plugin_cf7, 'lw_all_in_one_cf7_admin_submenu', 99);
+
+        // Save Contact Form 7 submmisions
+        $this->loader->add_action('wpcf7_before_send_mail', $plugin_cf7, 'lw_all_in_one_cf7_to_db');
+        $this->loader->add_filter('cron_schedules', $plugin_cf7, 'lw_all_in_one_cf7_add_every_five_minutes');
+        $this->loader->add_action('lw_all_in_one_cf7_check_sent_data', $plugin_cf7, 'lw_all_in_one_cf7_every_5_minutes');
+
     }
 
     /**
