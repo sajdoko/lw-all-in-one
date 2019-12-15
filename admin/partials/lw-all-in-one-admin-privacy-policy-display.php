@@ -57,7 +57,7 @@ $italy_cookie_choices_missing = false;
                       <div class="button-secondary lw-aio-settings-custom-switch">
                         <input type="checkbox" name="<?php echo $this->plugin_name; ?>-cookie-page" class="lw-aio-settings-custom-switch-checkbox" id="<?php echo $this->plugin_name; ?>_cookie_page">
                         <label class="lw-aio-settings-custom-switch-label" for="<?php echo $this->plugin_name; ?>_cookie_page">
-                          <div class="lw-aio-settings-custom-switch-inner"></div>
+                          <div class="lw-aio-settings-custom-switch-inner privacy-page"></div>
                           <div class="lw-aio-settings-custom-switch-switch"></div>
                         </label>
                       </div>
@@ -69,7 +69,7 @@ $italy_cookie_choices_missing = false;
                       <div class="button-secondary lw-aio-settings-custom-switch">
                         <input type="checkbox" name="<?php echo $this->plugin_name; ?>-privacy-page" class="lw-aio-settings-custom-switch-checkbox" id="<?php echo $this->plugin_name; ?>_privacy_page">
                         <label class="lw-aio-settings-custom-switch-label" for="<?php echo $this->plugin_name; ?>_privacy_page">
-                          <div class="lw-aio-settings-custom-switch-inner"></div>
+                          <div class="lw-aio-settings-custom-switch-inner privacy-page"></div>
                           <div class="lw-aio-settings-custom-switch-switch"></div>
                         </label>
                       </div>
@@ -81,7 +81,7 @@ $italy_cookie_choices_missing = false;
                       <div class="button-secondary lw-aio-settings-custom-switch">
                         <input type="checkbox" name="<?php echo $this->plugin_name; ?>-trattamento-dati-page" class="lw-aio-settings-custom-switch-checkbox" id="<?php echo $this->plugin_name; ?>_trattamento_dati_page">
                         <label class="lw-aio-settings-custom-switch-label" for="<?php echo $this->plugin_name; ?>_trattamento_dati_page">
-                          <div class="lw-aio-settings-custom-switch-inner"></div>
+                          <div class="lw-aio-settings-custom-switch-inner privacy-page"></div>
                           <div class="lw-aio-settings-custom-switch-switch"></div>
                         </label>
                       </div>
