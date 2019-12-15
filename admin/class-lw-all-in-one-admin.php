@@ -60,7 +60,7 @@ class Lw_All_In_One_Admin {
    * @since    1.0.0
    */
   public function enqueue_styles($hook) {
-    if ($hook == 'toplevel_page_lw_all_in_one' || $hook == 'lw-aio-options_page_lw_all_in_one_ga_events' || $hook == 'lw-aio-options_page_lw_all_in_one_cf7') {
+    if (preg_match('/page_lw_all_in_one/', $hook)) {
       wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/lw-all-in-one-admin.css', array(), $this->version, 'all');
     }
   }
@@ -73,7 +73,7 @@ class Lw_All_In_One_Admin {
   public function enqueue_scripts($hook) {
     // echo $hook;
     // die();
-    if ($hook == 'toplevel_page_lw_all_in_one' || $hook == 'lw-aio-options_page_lw_all_in_one_ga_events' || $hook == 'lw-aio-options_page_lw_all_in_one_cf7') {
+    if (preg_match('/page_lw_all_in_one/', $hook)) {
       wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/lw-all-in-one-admin.js', array('jquery'), $this->version, false);
     }
   }

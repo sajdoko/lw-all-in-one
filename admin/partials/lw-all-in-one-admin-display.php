@@ -151,7 +151,13 @@
               </table>
             </div>
             <div id="tab_wim" class="tab-content<?php echo $active_tab != 'tab_wim' ? ' d-none' : ''; ?>">
-              
+              <table class="lw-aio-settings-options">
+                <tbody>
+                  <tr>
+                    <td colspan="2"><h2><?php esc_attr_e('Web Instant Messenger Options', $this->plugin_name);?></h2></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

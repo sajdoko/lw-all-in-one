@@ -88,6 +88,7 @@ class Lw_All_In_One {
     if ($this->check_plugin_options(false, 'lw_cf7') === 'on') {
       $this->define_cf7_hooks();
     }
+    $this->define_privacy_policy_hooks();
 
   }
 
@@ -102,6 +103,7 @@ class Lw_All_In_One {
    * - Lw_All_In_One_Public. Defines all hooks for the public side of the site.
    * - Lw_All_In_One_Cf7. Defines all hooks for the Contact Form 7 integration.
    * - Lw_All_In_One_Ga_Events. Defines all hooks for the Google Analytics integration.
+   * - Lw_All_In_One_Privacy_Policy_Pages. Defines all hooks for the LocalWeb Privacy&Policy pages.
    *
    * Create an instance of the loader which will be used to register the hooks
    * with WordPress.
@@ -143,6 +145,11 @@ class Lw_All_In_One {
      * The class responsible for Google Analytics integration functionality.
      */
     require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-lw-all-in-one-ga-events.php';
+
+    /**
+     * The class responsible for LocalWeb Privacy&Policy pages functionality.
+     */
+    require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-lw-all-in-one-privacy-policy-pages.php';
 
     $this->loader = new Lw_All_In_One_Loader();
 
@@ -228,6 +235,9 @@ class Lw_All_In_One {
 
     // WooCommerce Google Analytics Integration Admin Notice
     $this->loader->add_action('admin_notices', $plugin_ga_events, 'woocommerce_google_analytics_missing_notice');
+
+    // Check if Google Analytics Dashboard for WP (GADWP) plugin is active
+    $this->loader->add_action('admin_init', $plugin_ga_events, 'lw_all_in_one_gadwp_is_active_deactivate');
   }
 
   /**
@@ -250,6 +260,24 @@ class Lw_All_In_One {
     $this->loader->add_action('wpcf7_before_send_mail', $plugin_cf7, 'lw_all_in_one_cf7_to_db');
     $this->loader->add_filter('cron_schedules', $plugin_cf7, 'lw_all_in_one_cf7_add_every_five_minutes');
     $this->loader->add_action('lw_all_in_one_cf7_check_sent_data', $plugin_cf7, 'lw_all_in_one_cf7_every_5_minutes');
+
+  }
+
+  /**
+   * Register all of the hooks related to the admin area functionality
+   * of the plugin.
+   *
+   * @since    1.0.0
+   * @access   private
+   */
+  private function define_privacy_policy_hooks() {
+
+    $plugin_privacy_policy = new Lw_All_In_One_Privacy_Policy_Pages($this->get_plugin_name(), $this->get_version());
+    $this->loader->add_action('admin_enqueue_scripts', $plugin_privacy_policy, 'localize_script');
+    $this->loader->add_action('wp_ajax_lw_all_in_one_create_privacy_pages', $plugin_privacy_policy, 'lw_all_in_one_create_privacy_pages');
+
+    // Add submenu item
+    $this->loader->add_action('admin_menu', $plugin_privacy_policy, 'lw_all_in_one_privacy_policy_admin_menu', 99);
 
   }
 

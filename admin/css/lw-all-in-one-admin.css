@@ -17,6 +17,9 @@
 .lw-aio .lw-aio-pagi-span {
 	margin-right: 15px;
 }
+.lw-aio #post-body-content, .lw-aio .postbox {
+	margin-bottom: 5px;
+}
 table.lw-aio-settings-options {
 	padding-left: 10px;
 	width: 100%;
@@ -212,4 +215,17 @@ input.lw-aio-settings-custom-switch-checkbox {
 }
 .lw-aio-pagination .lw-aio-pagi-span-tot {
 	float: right;
+}
+.warning p {
+	color: orange;
+	font-size: 18px;
+	line-height: 18px;
+}
+.warning h3 {
+	font-size: 25px;
+	color: orange;
+}
+.warning .danger {
+	font-size: 25px;
+	color: red;
 }

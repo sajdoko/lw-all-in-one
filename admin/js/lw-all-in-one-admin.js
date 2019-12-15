@@ -54,4 +54,28 @@
 	// 		$($(this).attr('href')).show();
 	// 	}
 	// });
+	$(document).ready(function () {
+    $("#lw_all_in_one_privacy_policy_pages").submit(function (event) {
+        event.preventDefault();
+				var form_data = new FormData(this);
+				form_data.append('action', 'lw_all_in_one_create_privacy_pages');
+				form_data.append('security', lw_all_in_one_create_privacy_pages_object.security);
+        $.ajax({
+                url: ajaxurl,
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                cache: false,
+                processData: false
+            })
+            .done(function (response) { //
+                // response = JSON.parse(response)
+                if (response.status == 'success') {
+									alert(response.data);
+                } else {
+									alert(response.data);
+                }
+            });
+    });
+	});
 })(jQuery);
