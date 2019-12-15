@@ -3,7 +3,7 @@
 /**
  * The plugin bootstrap file
  *
- * @link              https://www.linkedin.com/in/sajmirdoko/
+ * @link              https://localweb.it/
  * @since             1.0.0
  * @package           Lw_All_In_One
  *
@@ -22,7 +22,7 @@
 
 // If this file is called directly, abort.
 if (!defined('WPINC')) {
-    die;
+  die;
 }
 
 /**
@@ -46,8 +46,8 @@ define('LW_ALL_IN_ONE_CF7_TABLE', 'lw_aio_cf7');
  * This action is documented in includes/class-lw-all-in-one-activator.php
  */
 function activate_lw_all_in_one() {
-    require_once plugin_dir_path(__FILE__) . 'includes/class-lw-all-in-one-activator.php';
-    Lw_All_In_One_Activator::activate();
+  require_once plugin_dir_path(__FILE__) . 'includes/class-lw-all-in-one-activator.php';
+  Lw_All_In_One_Activator::activate();
 }
 
 /**
@@ -55,8 +55,8 @@ function activate_lw_all_in_one() {
  * This action is documented in includes/class-lw-all-in-one-deactivator.php
  */
 function deactivate_lw_all_in_one() {
-    require_once plugin_dir_path(__FILE__) . 'includes/class-lw-all-in-one-deactivator.php';
-    Lw_All_In_One_Deactivator::deactivate();
+  require_once plugin_dir_path(__FILE__) . 'includes/class-lw-all-in-one-deactivator.php';
+  Lw_All_In_One_Deactivator::deactivate();
 }
 
 register_activation_hook(__FILE__, 'activate_lw_all_in_one');
@@ -75,8 +75,8 @@ require plugin_dir_path(__FILE__) . 'includes/class-lw-all-in-one.php';
  */
 function run_lw_all_in_one() {
 
-    $plugin = new Lw_All_In_One();
-    $plugin->run();
+  $plugin = new Lw_All_In_One();
+  $plugin->run();
 
 }
 run_lw_all_in_one();

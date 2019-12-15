@@ -3,7 +3,7 @@
 /**
  * The Google Analytics integration functionality of the plugin.
  *
- * @link       https://www.linkedin.com/in/sajmirdoko/
+ * @link       https://localweb.it/
  * @since      1.0.0
  *
  * @package    Lw_All_In_One
@@ -22,95 +22,92 @@
  */
 class Lw_All_In_One_Ga_Events {
 
-    /**
-     * The ID of this plugin.
-     *
-     * @since    1.0.0
-     * @access   private
-     * @var      string    $plugin_name    The ID of this plugin.
-     */
-    private $plugin_name;
+  /**
+   * The ID of this plugin.
+   *
+   * @since    1.0.0
+   * @access   private
+   * @var      string    $plugin_name    The ID of this plugin.
+   */
+  private $plugin_name;
 
-    /**
-     * The version of this plugin.
-     *
-     * @since    1.0.0
-     * @access   private
-     * @var      string    $version    The current version of this plugin.
-     */
-    private $version;
+  /**
+   * The version of this plugin.
+   *
+   * @since    1.0.0
+   * @access   private
+   * @var      string    $version    The current version of this plugin.
+   */
+  private $version;
 
-    /**
-     * Initialize the class and set its properties.
-     *
-     * @since    1.0.0
-     * @param      string    $plugin_name       The name of this plugin.
-     * @param      string    $version    The version of this plugin.
-     */
-    public function __construct($plugin_name, $version) {
+  /**
+   * Initialize the class and set its properties.
+   *
+   * @since    1.0.0
+   * @param      string    $plugin_name       The name of this plugin.
+   * @param      string    $version    The version of this plugin.
+   */
+  public function __construct($plugin_name, $version) {
 
-        $this->plugin_name = $plugin_name;
-        $this->version = $version;
+    $this->plugin_name = $plugin_name;
+    $this->version = $version;
 
-    }
+  }
 
+  public function lw_all_in_one_ga_events_admin_menu() {
+    add_submenu_page($this->plugin_name, __('Saved Google Analytics Events', $this->plugin_name), __('Saved GA Events', $this->plugin_name), 'manage_options', $this->plugin_name . '_ga_events', array($this, 'lw_all_in_one_ga_events_display_page'));
+  }
 
-    public function lw_all_in_one_ga_events_admin_menu() {
-        add_submenu_page($this->plugin_name,  __('Saved Google Analytics Events', $this->plugin_name), __('Saved GA Events', $this->plugin_name), 'manage_options', $this->plugin_name . '_ga_events', array($this, 'lw_all_in_one_ga_events_display_page') );
-    }
+  public function lw_all_in_one_ga_events_display_page() {
+    include_once 'partials/lw-all-in-one-admin-ga-events-display.php';
+  }
 
+  public function lw_all_in_one_header_scripts() {
+    //Plugin options
+    $options = get_option($this->plugin_name);
+    $ga_activate = (isset($options['ga_activate'])) ? $options['ga_activate'] : '';
+    $ga_fields_tracking_id = (isset($options['ga_fields']['tracking_id'])) ? $options['ga_fields']['tracking_id'] : '';
+    $ga_fields_monitor_email_link = (isset($options['ga_fields']['monitor_email_link'])) ? $options['ga_fields']['monitor_email_link'] : '';
+    $ga_fields_monitor_tel_link = (isset($options['ga_fields']['monitor_tel_link'])) ? $options['ga_fields']['monitor_tel_link'] : '';
+    $ga_fields_monitor_form_submit = (isset($options['ga_fields']['monitor_form_submit'])) ? $options['ga_fields']['monitor_form_submit'] : '';
 
-    public function lw_all_in_one_ga_events_display_page() {
-        include_once 'partials/lw-all-in-one-admin-ga-events-display.php';
-    }
-
-
-    public function lw_all_in_one_header_scripts() {
-        //Plugin options
-        $options = get_option($this->plugin_name);
-        $ga_activate = (isset($options['ga_activate'])) ? $options['ga_activate'] : '';
-        $ga_fields_tracking_id = (isset($options['ga_fields']['tracking_id'])) ? $options['ga_fields']['tracking_id'] : '';
-        $ga_fields_monitor_email_link = (isset($options['ga_fields']['monitor_email_link'])) ? $options['ga_fields']['monitor_email_link'] : '';
-        $ga_fields_monitor_tel_link = (isset($options['ga_fields']['monitor_tel_link'])) ? $options['ga_fields']['monitor_tel_link'] : '';
-        $ga_fields_monitor_form_submit = (isset($options['ga_fields']['monitor_form_submit'])) ? $options['ga_fields']['monitor_form_submit'] : '';
-
-        if ($ga_activate === 'on' && $ga_fields_tracking_id !== '') {
-            echo '<script async src="https://www.googletagmanager.com/gtag/js?id='.$ga_fields_tracking_id.'"></script>
+    if ($ga_activate === 'on' && $ga_fields_tracking_id !== '') {
+      echo '<script async src="https://www.googletagmanager.com/gtag/js?id=' . $ga_fields_tracking_id . '"></script>
                     <script>
                     window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}
                     gtag(\'js\', new Date());
-                    gtag(\'config\', \''.$ga_fields_tracking_id.'\');';
-            echo 'const lwAioGaActivate = true;';
-            if ($ga_fields_monitor_email_link === 'on') {
-                echo 'const lwAioMonitorEmailLink = true;';
-            } else {
-                echo 'const lwAioMonitorEmailLink = false;';
-            }
-            if ($ga_fields_monitor_tel_link === 'on') {
-                echo 'const lwAioMonitorTelLink = true;';
-            } else {
-                echo 'const lwAioMonitorTelLink = false;';
-            }
-            if ($ga_fields_monitor_form_submit === 'on') {
-                echo 'const lwAioMonitorFormSubmit = true;';
-            } else {
-                echo 'const lwAioMonitorFormSubmit = false;';
-            }
-            echo '</script>';
-        }
+                    gtag(\'config\', \'' . $ga_fields_tracking_id . '\');';
+      echo 'const lwAioGaActivate = true;';
+      if ($ga_fields_monitor_email_link === 'on') {
+        echo 'const lwAioMonitorEmailLink = true;';
+      } else {
+        echo 'const lwAioMonitorEmailLink = false;';
+      }
+      if ($ga_fields_monitor_tel_link === 'on') {
+        echo 'const lwAioMonitorTelLink = true;';
+      } else {
+        echo 'const lwAioMonitorTelLink = false;';
+      }
+      if ($ga_fields_monitor_form_submit === 'on') {
+        echo 'const lwAioMonitorFormSubmit = true;';
+      } else {
+        echo 'const lwAioMonitorFormSubmit = false;';
+      }
+      echo '</script>';
     }
+  }
 
-    /**
-     * WooCommerce Google Analytics Integration fallback notice.
-     *
-     * @return string
-     */
-    public function woocommerce_google_analytics_missing_notice() {
-        // Checks if WooCommerce is installed.
-        if (is_plugin_active('woocommerce/woocommerce.php') && !is_plugin_active('woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php')) {
-            echo '<div class="error"><p><img src="'.plugin_dir_url(__FILE__) . '/img/icon.png'.'"/> ' . sprintf( __( 'You have Woocommerce active. Install %s to better track your store events!', $this->plugin_name ), '<a href="https://wordpress.org/plugins/woocommerce-google-analytics-integration/" target="_blank">' . __( 'WooCommerce Google Analytics Integration', $this->plugin_name ) . '</a>' ) . '</p></div>';
-        }
+  /**
+   * WooCommerce Google Analytics Integration fallback notice.
+   *
+   * @return string
+   */
+  public function woocommerce_google_analytics_missing_notice() {
+    // Checks if WooCommerce is installed.
+    if (is_plugin_active('woocommerce/woocommerce.php') && !is_plugin_active('woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php')) {
+      echo '<div class="error"><p><img src="' . plugin_dir_url(__FILE__) . '/img/icon.png' . '"/> ' . sprintf(__('You have Woocommerce active. Install %s to better track your store events!', $this->plugin_name), '<a href="https://wordpress.org/plugins/woocommerce-google-analytics-integration/" target="_blank">' . __('WooCommerce Google Analytics Integration', $this->plugin_name) . '</a>') . '</p></div>';
     }
+  }
 
 }

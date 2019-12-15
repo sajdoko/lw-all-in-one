@@ -3,7 +3,7 @@
 /**
  * Fired during plugin deactivation
  *
- * @link       https://www.linkedin.com/in/sajmirdoko/
+ * @link       https://localweb.it/
  * @since      1.0.0
  *
  * @package    Lw_All_In_One
@@ -22,15 +22,15 @@
  */
 class Lw_All_In_One_Deactivator {
 
-    /**
-     * Short Description. (use period)
-     *
-     * Long Description.
-     *
-     * @since    1.0.0
-     */
-    public static function deactivate() {
+  /**
+   * Short Description. (use period)
+   *
+   * Long Description.
+   *
+   * @since    1.0.0
+   */
+  public static function deactivate() {
 
-    }
+  }
 
 }

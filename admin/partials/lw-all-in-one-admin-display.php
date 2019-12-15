@@ -5,7 +5,7 @@
  *
  * This file is used to markup the admin-facing aspects of the plugin.
  *
- * @link       https://www.linkedin.com/in/sajmirdoko/
+ * @link       https://localweb.it/
  * @since      1.0.0
  *
  * @package    Lw_All_In_One
@@ -52,11 +52,11 @@
                 <tbody>
                   <tr>
                     <td colspan="2" class="lw-aio-settings-title">
-                      <div class="button-secondary lw-aio-settings-switchoo">
-                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_activate]" class="lw-aio-settings-switchoo-checkbox" id="<?php echo $this->plugin_name; ?>_ga_activate" <?php echo ($ga_activate === 'on') ? 'checked="checked"' : '';?>>
-                        <label class="lw-aio-settings-switchoo-label" for="<?php echo $this->plugin_name; ?>_ga_activate">
-                          <div class="lw-aio-settings-switchoo-inner"></div>
-                          <div class="lw-aio-settings-switchoo-switch"></div>
+                      <div class="button-secondary lw-aio-settings-custom-switch">
+                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_activate]" class="lw-aio-settings-custom-switch-checkbox" id="<?php echo $this->plugin_name; ?>_ga_activate" <?php echo ($ga_activate === 'on') ? 'checked="checked"' : '';?>>
+                        <label class="lw-aio-settings-custom-switch-label" for="<?php echo $this->plugin_name; ?>_ga_activate">
+                          <div class="lw-aio-settings-custom-switch-inner"></div>
+                          <div class="lw-aio-settings-custom-switch-switch"></div>
                         </label>
                       </div>
                       <div class="switch-desc"> <?php esc_attr_e('Activate Google Analytics?', $this->plugin_name);?></div>
@@ -64,11 +64,11 @@
                   </tr>
                   <tr>
                     <td colspan="2" class="lw-aio-settings-title">
-                      <div class="button-secondary lw-aio-settings-switchoo">
-                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[wim_activate]" class="lw-aio-settings-switchoo-checkbox" id="<?php echo $this->plugin_name; ?>_wim_activate" <?php echo ($wim_activate === 'on') ? 'checked="checked"' : '';?>>
-                        <label class="lw-aio-settings-switchoo-label" for="<?php echo $this->plugin_name; ?>_wim_activate">
-                          <div class="lw-aio-settings-switchoo-inner"></div>
-                          <div class="lw-aio-settings-switchoo-switch"></div>
+                      <div class="button-secondary lw-aio-settings-custom-switch">
+                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[wim_activate]" class="lw-aio-settings-custom-switch-checkbox" id="<?php echo $this->plugin_name; ?>_wim_activate" <?php echo ($wim_activate === 'on') ? 'checked="checked"' : '';?>>
+                        <label class="lw-aio-settings-custom-switch-label" for="<?php echo $this->plugin_name; ?>_wim_activate">
+                          <div class="lw-aio-settings-custom-switch-inner"></div>
+                          <div class="lw-aio-settings-custom-switch-switch"></div>
                         </label>
                       </div>
                       <div class="switch-desc"> <?php esc_attr_e('Activate Web Instant Messenger?', $this->plugin_name);?></div>
@@ -76,11 +76,11 @@
                   </tr>
                   <tr>
                     <td colspan="2" class="lw-aio-settings-title">
-                      <div class="button-secondary lw-aio-settings-switchoo">
-                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[lw_cf7]" class="lw-aio-settings-switchoo-checkbox" id="<?php echo $this->plugin_name; ?>_lw_cf7" <?php echo ($lw_cf7 === 'on') ? 'checked="checked"' : '';?>>
-                        <label class="lw-aio-settings-switchoo-label" for="<?php echo $this->plugin_name; ?>_lw_cf7">
-                          <div class="lw-aio-settings-switchoo-inner"></div>
-                          <div class="lw-aio-settings-switchoo-switch"></div>
+                      <div class="button-secondary lw-aio-settings-custom-switch">
+                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[lw_cf7]" class="lw-aio-settings-custom-switch-checkbox" id="<?php echo $this->plugin_name; ?>_lw_cf7" <?php echo ($lw_cf7 === 'on') ? 'checked="checked"' : '';?>>
+                        <label class="lw-aio-settings-custom-switch-label" for="<?php echo $this->plugin_name; ?>_lw_cf7">
+                          <div class="lw-aio-settings-custom-switch-inner"></div>
+                          <div class="lw-aio-settings-custom-switch-switch"></div>
                         </label>
                       </div>
                       <div class="switch-desc"> <?php esc_attr_e('Activate LocalWeb Contact Form 7?', $this->plugin_name);?></div>
@@ -113,11 +113,11 @@
                   </tr>
                   <tr>
                     <td colspan="2" class="lw-aio-settings-title">
-                      <div class="button-secondary lw-aio-settings-switchoo">
-                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][monitor_email_link]" class="lw-aio-settings-switchoo-checkbox" id="monitor_email_link" <?php echo ($ga_fields_monitor_email_link === 'on') ? 'checked="checked"' : '';?>>
-                        <label class="lw-aio-settings-switchoo-label" for="monitor_email_link">
-                          <div class="lw-aio-settings-switchoo-inner"></div>
-                          <div class="lw-aio-settings-switchoo-switch"></div>
+                      <div class="button-secondary lw-aio-settings-custom-switch">
+                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][monitor_email_link]" class="lw-aio-settings-custom-switch-checkbox" id="monitor_email_link" <?php echo ($ga_fields_monitor_email_link === 'on') ? 'checked="checked"' : '';?>>
+                        <label class="lw-aio-settings-custom-switch-label" for="monitor_email_link">
+                          <div class="lw-aio-settings-custom-switch-inner"></div>
+                          <div class="lw-aio-settings-custom-switch-switch"></div>
                         </label>
                       </div>
                       <div class="switch-desc"> <?php esc_attr_e('Track Email link clicks', $this->plugin_name);?></div>
@@ -125,11 +125,11 @@
                   </tr>
                   <tr>
                     <td colspan="2" class="lw-aio-settings-title">
-                      <div class="button-secondary lw-aio-settings-switchoo">
-                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][monitor_tel_link]" class="lw-aio-settings-switchoo-checkbox" id="monitor_tel_link" <?php echo ($ga_fields_monitor_tel_link === 'on') ? 'checked="checked"' : '';?>>
-                        <label class="lw-aio-settings-switchoo-label" for="monitor_tel_link">
-                          <div class="lw-aio-settings-switchoo-inner"></div>
-                          <div class="lw-aio-settings-switchoo-switch"></div>
+                      <div class="button-secondary lw-aio-settings-custom-switch">
+                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][monitor_tel_link]" class="lw-aio-settings-custom-switch-checkbox" id="monitor_tel_link" <?php echo ($ga_fields_monitor_tel_link === 'on') ? 'checked="checked"' : '';?>>
+                        <label class="lw-aio-settings-custom-switch-label" for="monitor_tel_link">
+                          <div class="lw-aio-settings-custom-switch-inner"></div>
+                          <div class="lw-aio-settings-custom-switch-switch"></div>
                         </label>
                       </div>
                       <div class="switch-desc"> <?php esc_attr_e('Track Telephone link clicks', $this->plugin_name);?></div>
@@ -137,11 +137,11 @@
                   </tr>
                   <tr>
                     <td colspan="2" class="lw-aio-settings-title">
-                      <div class="button-secondary lw-aio-settings-switchoo">
-                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][monitor_form_submit]" class="lw-aio-settings-switchoo-checkbox" id="monitor_form_submit" <?php echo ($ga_fields_monitor_form_submit === 'on') ? 'checked="checked"' : '';?>>
-                        <label class="lw-aio-settings-switchoo-label" for="monitor_form_submit">
-                          <div class="lw-aio-settings-switchoo-inner"></div>
-                          <div class="lw-aio-settings-switchoo-switch"></div>
+                      <div class="button-secondary lw-aio-settings-custom-switch">
+                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][monitor_form_submit]" class="lw-aio-settings-custom-switch-checkbox" id="monitor_form_submit" <?php echo ($ga_fields_monitor_form_submit === 'on') ? 'checked="checked"' : '';?>>
+                        <label class="lw-aio-settings-custom-switch-label" for="monitor_form_submit">
+                          <div class="lw-aio-settings-custom-switch-inner"></div>
+                          <div class="lw-aio-settings-custom-switch-switch"></div>
                         </label>
                       </div>
                       <div class="switch-desc"> <?php esc_attr_e('Track Contact Form submission', $this->plugin_name);?></div>

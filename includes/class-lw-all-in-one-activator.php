@@ -3,7 +3,7 @@
 /**
  * Fired during plugin activation
  *
- * @link       https://www.linkedin.com/in/sajmirdoko/
+ * @link       https://localweb.it/
  * @since      1.0.0
  *
  * @package    Lw_All_In_One
@@ -22,40 +22,40 @@
  */
 class Lw_All_In_One_Activator {
 
-    /**
-     * Short Description. (use period)
-     *
-     * Long Description.
-     *
-     * @since    1.0.0
-     */
-    public static function activate() {
-        // $version = get_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);
-        if (!get_option('lw_all_in_one_version')) {
-            add_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);
-        }
-        if (!get_option(LW_ALL_IN_ONE_PLUGIN_NAME)) {
-            $initial_empty_options = array(
-                'ga_activate' => '',
-                'ga_fields' => array(
-                    'tracking_id' => '',
-                    'monitor_email_link' => '',
-                    'monitor_tel_link' => '',
-                    'monitor_form_submit' => '',
-                ),
-                'wim_activate' => '',
-                'lw_cf7' => '',
-            );
-            add_option(LW_ALL_IN_ONE_PLUGIN_NAME, $initial_empty_options);
-        }
-        global $wpdb;
-        $charset_collate = $wpdb->get_charset_collate();
-        $a_events_table = $wpdb->prefix . LW_ALL_IN_ONE_A_EVENTS_TABLE;
-        $cf7_table = $wpdb->prefix . LW_ALL_IN_ONE_CF7_TABLE;
+  /**
+   * Short Description. (use period)
+   *
+   * Long Description.
+   *
+   * @since    1.0.0
+   */
+  public static function activate() {
+    // $version = get_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);
+    if (!get_option('lw_all_in_one_version')) {
+      add_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);
+    }
+    if (!get_option(LW_ALL_IN_ONE_PLUGIN_NAME)) {
+      $initial_empty_options = array(
+        'ga_activate' => '',
+        'ga_fields' => array(
+          'tracking_id' => '',
+          'monitor_email_link' => '',
+          'monitor_tel_link' => '',
+          'monitor_form_submit' => '',
+        ),
+        'wim_activate' => '',
+        'lw_cf7' => '',
+      );
+      add_option(LW_ALL_IN_ONE_PLUGIN_NAME, $initial_empty_options);
+    }
+    global $wpdb;
+    $charset_collate = $wpdb->get_charset_collate();
+    $a_events_table = $wpdb->prefix . LW_ALL_IN_ONE_A_EVENTS_TABLE;
+    $cf7_table = $wpdb->prefix . LW_ALL_IN_ONE_CF7_TABLE;
 
-        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-        if ($wpdb->get_var("show tables like '$a_events_table'") != $a_events_table) {
-            $sql1 = "CREATE TABLE $a_events_table (
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+    if ($wpdb->get_var("show tables like '$a_events_table'") != $a_events_table) {
+      $sql1 = "CREATE TABLE $a_events_table (
             id mediumint(9) NOT NULL AUTO_INCREMENT,
             time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
             ga_category varchar(250) DEFAULT '' NULL,
@@ -63,11 +63,11 @@ class Lw_All_In_One_Activator {
             ga_label varchar(250) DEFAULT '' NULL,
             PRIMARY KEY (id)
           ) $charset_collate;";
-            dbDelta($sql1);
-        }
+      dbDelta($sql1);
+    }
 
-        if ($wpdb->get_var("show tables like '$cf7_table'") != $cf7_table) {
-            $sql2 = "CREATE TABLE $cf7_table (
+    if ($wpdb->get_var("show tables like '$cf7_table'") != $cf7_table) {
+      $sql2 = "CREATE TABLE $cf7_table (
             id mediumint(9) NOT NULL AUTO_INCREMENT,
             subject text DEFAULT '' NULL,
             message text DEFAULT '' NULL,
@@ -82,46 +82,46 @@ class Lw_All_In_One_Activator {
             sent varchar(2) DEFAULT '' NULL,
             PRIMARY KEY (id)
           ) $charset_collate;";
-            dbDelta($sql2);
-        }
-
-        $old_cf7_table = $wpdb->prefix . 'inserimenti_cf';
-        $old_cf7_table_transfer_err = array();
-        if ($wpdb->get_var("show tables like '$old_cf7_table'") == $old_cf7_table) {
-            $inserimenti_cf_results = $wpdb->get_results("SELECT * FROM $old_cf7_table");
-            if ($wpdb->num_rows > 0) {
-                foreach ($inserimenti_cf_results as $cf) {
-                    $old_data = array('subject' => $cf->soggetto, 'message' => $cf->messaggio, 'name' => $cf->nome, 'surname' => $cf->cognome, 'time' => $cf->time, 'email' => $cf->email, 'phone' => $cf->telefono, 'tipo_Contratto' => $cf->tipo_Contratto, 'id_Contratto' => $cf->id_Contratto, 'submited_page' => $cf->submited_page, 'sent' => $cf->inviato);
-                    $format = array('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');
-                    if (!$wpdb->insert($cf7_table, $old_data, $format)) {
-                        array_push($old_cf7_table_transfer_err, 'error');
-                    }
-                }
-            }
-            if (empty($old_cf7_table_transfer_err)) {
-                $wpdb->query("DROP TABLE IF EXISTS $old_cf7_table");
-            }
-        }
-        if (is_plugin_active('lw-contact-form/localweb.php')) {
-            deactivate_plugins('lw-contact-form/localweb.php');
-            delete_plugins(array('lw-contact-form/localweb.php'));
-        } elseif (is_plugin_inactive('lw-contact-form/localweb.php')) {
-            delete_plugins(array('lw-contact-form/localweb.php'));
-        }
-
-        // if (version_compare($version, '1.0.1') < 0) {
-        //     $sql = "CREATE TABLE $table_name (
-        //     id mediumint(9) NOT NULL AUTO_INCREMENT,
-        //     time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-        //     views smallint(5) NOT NULL,
-        //     clicks smallint(5) NOT NULL,
-        //     blog_id smallint(5) NOT NULL,
-        //     UNIQUE KEY id (id)
-        //   ) $charset_collate;";
-        //     dbDelta($sql);
-
-        //     update_option('lw_all_in_one_version', '1.0.1');
-        // }
+      dbDelta($sql2);
     }
+
+    $old_cf7_table = $wpdb->prefix . 'inserimenti_cf';
+    $old_cf7_table_transfer_err = array();
+    if ($wpdb->get_var("show tables like '$old_cf7_table'") == $old_cf7_table) {
+      $inserimenti_cf_results = $wpdb->get_results("SELECT * FROM $old_cf7_table");
+      if ($wpdb->num_rows > 0) {
+        foreach ($inserimenti_cf_results as $cf) {
+          $old_data = array('subject' => $cf->soggetto, 'message' => $cf->messaggio, 'name' => $cf->nome, 'surname' => $cf->cognome, 'time' => $cf->time, 'email' => $cf->email, 'phone' => $cf->telefono, 'tipo_Contratto' => $cf->tipo_Contratto, 'id_Contratto' => $cf->id_Contratto, 'submited_page' => $cf->submited_page, 'sent' => $cf->inviato);
+          $format = array('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');
+          if (!$wpdb->insert($cf7_table, $old_data, $format)) {
+            array_push($old_cf7_table_transfer_err, 'error');
+          }
+        }
+      }
+      if (empty($old_cf7_table_transfer_err)) {
+        $wpdb->query("DROP TABLE IF EXISTS $old_cf7_table");
+      }
+    }
+    if (is_plugin_active('lw-contact-form/localweb.php')) {
+      deactivate_plugins('lw-contact-form/localweb.php');
+      delete_plugins(array('lw-contact-form/localweb.php'));
+    } elseif (is_plugin_inactive('lw-contact-form/localweb.php')) {
+      delete_plugins(array('lw-contact-form/localweb.php'));
+    }
+
+    // if (version_compare($version, '1.0.1') < 0) {
+    //     $sql = "CREATE TABLE $table_name (
+    //     id mediumint(9) NOT NULL AUTO_INCREMENT,
+    //     time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+    //     views smallint(5) NOT NULL,
+    //     clicks smallint(5) NOT NULL,
+    //     blog_id smallint(5) NOT NULL,
+    //     UNIQUE KEY id (id)
+    //   ) $charset_collate;";
+    //     dbDelta($sql);
+
+    //     update_option('lw_all_in_one_version', '1.0.1');
+    // }
+  }
 
 }

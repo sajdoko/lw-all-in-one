@@ -1,6 +1,6 @@
  /**
  * Author: Sajmir Doko
- * Author URI: https://www.linkedin.com/in/sajmirdoko/
+ * Author URI: https://localweb.it/
  * Copyright 2019 LocalWeb
  * License: GPLv2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -72,7 +72,7 @@ td.lw-aio-settings-title label {
 }
 
 /* Options pages ON/OFF Switch */
-.button-secondary.lw-aio-settings-switchoo {
+.button-secondary.lw-aio-settings-custom-switch {
 	position: relative;
 	width: 50px;
 	float: left;
@@ -89,11 +89,11 @@ td.lw-aio-settings-title label {
 	-ms-user-select: none;
 }
 
-input.lw-aio-settings-switchoo-checkbox {
+input.lw-aio-settings-custom-switch-checkbox {
 	display: none;
 }
 
-.lw-aio-settings-switchoo-label {
+.lw-aio-settings-custom-switch-label {
 	display: block;
 	overflow: hidden;
 	cursor: pointer;
@@ -103,7 +103,7 @@ input.lw-aio-settings-switchoo-checkbox {
 	text-shadow: none;
 }
 
-.lw-aio-settings-switchoo-inner {
+.lw-aio-settings-custom-switch-inner {
 	width: 200%;
 	margin-left: -100%;
 	border-radius: 2px;
@@ -113,7 +113,7 @@ input.lw-aio-settings-switchoo-checkbox {
 	transition: margin 0.2s ease-in 0s;
 }
 
-.lw-aio-settings-switchoo-inner:before, .lw-aio-settings-switchoo-inner:after {
+.lw-aio-settings-custom-switch-inner:before, .lw-aio-settings-custom-switch-inner:after {
 	float: left;
 	width: 50%;
 	font-weight: normal;
@@ -127,7 +127,7 @@ input.lw-aio-settings-switchoo-checkbox {
 	text-shadow: none;
 }
 
-.lw-aio-settings-switchoo-inner:before {
+.lw-aio-settings-custom-switch-inner:before {
 	content: "On";
 	padding-left: 5px;
 	border-bottom: none;
@@ -135,14 +135,14 @@ input.lw-aio-settings-switchoo-checkbox {
 	color: #fff;
 }
 
-.lw-aio-settings-switchoo-inner:after {
+.lw-aio-settings-custom-switch-inner:after {
 	content: "Off";
 	padding-right: 5px;
 	background-color: #ddd;
 	text-align: right;
 }
 
-.lw-aio-settings-switchoo-switch {
+.lw-aio-settings-custom-switch-switch {
 	width: 22px;
 	height: 22px;
 	background: #fff;
@@ -159,12 +159,12 @@ input.lw-aio-settings-switchoo-checkbox {
 	transition: all 0.2s ease-in 0s;
 }
 
-.lw-aio-settings-switchoo-switch:hover {
+.lw-aio-settings-custom-switch-switch:hover {
 	color: #aaa;
 	border-color: #aaa;
 }
 
-.lw-aio-settings-switchoo-switch:after {
+.lw-aio-settings-custom-switch-switch:after {
 	margin: 0;
 	outline: 0;
 	display: inline-block;
@@ -177,11 +177,11 @@ input.lw-aio-settings-switchoo-checkbox {
 	-moz-osx-font-smoothing: grayscale;
 }
 
-.lw-aio-settings-switchoo-checkbox:checked+.lw-aio-settings-switchoo-label .lw-aio-settings-switchoo-inner {
+.lw-aio-settings-custom-switch-checkbox:checked+.lw-aio-settings-custom-switch-label .lw-aio-settings-custom-switch-inner {
 	margin-left: 0;
 }
 
-.lw-aio-settings-switchoo-checkbox:checked+.lw-aio-settings-switchoo-label .lw-aio-settings-switchoo-switch {
+.lw-aio-settings-custom-switch-checkbox:checked+.lw-aio-settings-custom-switch-label .lw-aio-settings-custom-switch-switch {
 	right: 0px;
 }
 

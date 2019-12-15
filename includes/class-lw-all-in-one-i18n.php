@@ -6,7 +6,7 @@
  * Loads and defines the internationalization files for this plugin
  * so that it is ready for translation.
  *
- * @link       https://www.linkedin.com/in/sajmirdoko/
+ * @link       https://localweb.it/
  * @since      1.0.0
  *
  * @package    Lw_All_In_One
@@ -26,22 +26,19 @@
  */
 class Lw_All_In_One_i18n {
 
+  /**
+   * Load the plugin text domain for translation.
+   *
+   * @since    1.0.0
+   */
+  public function load_plugin_textdomain() {
 
-	/**
-	 * Load the plugin text domain for translation.
-	 *
-	 * @since    1.0.0
-	 */
-	public function load_plugin_textdomain() {
+    load_plugin_textdomain(
+      'lw-all-in-one',
+      false,
+      dirname(dirname(plugin_basename(__FILE__))) . '/languages/'
+    );
 
-		load_plugin_textdomain(
-			'lw-all-in-one',
-			false,
-			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
-		);
-
-	}
-
-
+  }
 
 }
