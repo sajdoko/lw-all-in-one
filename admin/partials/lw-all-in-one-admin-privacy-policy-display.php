@@ -40,7 +40,7 @@ $trattamento_dati_page_options = (isset($options['informativa-trattamento-dati']
     </p>
     <?php if ( !is_plugin_active( 'italy-cookie-choices/italy-cookie-choices.php' ) ) { $italy_cookie_choices_missing = true;?>
       <p class="danger">
-        <?php esc_attr_e('Italy Cookie Choices plugin is not active, you must install and active it before creating pages!!!', $this->plugin_name);?>
+        <?php printf(esc_attr__('%s plugin is not active, you must install and active it before creating pages!!!', $this->plugin_name), '<a href="plugin-install.php?s=Italy+Cookie+Choices+(for+EU+Cookie+Law)&tab=search&type=term">Italy Cookie Choices (for EU Cookie Law)</a>');?>
       </p>
     <?php }; ?>
   </div>

@@ -6,7 +6,7 @@ $patterns = array();
 $patterns[0] = '/replace_privacy_1/';
 $patterns[1] = '/replace_privacy_2/';
 $replacements = array();
-$replacements[0] = $_SERVER['HTTP_HOST'];
+$replacements[0] = $domain;
 $replacements[1] = $date;
 $policy_file = preg_replace($patterns, $replacements, $policy_file);
 

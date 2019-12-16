@@ -6,7 +6,7 @@ $patterns = array();
 $patterns[0] = '/replace_cookie_1/';
 $patterns[1] = '/replace_cookie_2/';
 $replacements = array();
-$replacements[0] = $_SERVER['HTTP_HOST'];
+$replacements[0] = $domain;
 $replacements[1] = $date;
 $cookie_file = preg_replace($patterns, $replacements, $cookie_file);
 
