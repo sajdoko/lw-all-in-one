@@ -186,20 +186,17 @@ echo "</pre>";
               </table>
             </div>
             <div id="tab_wim" class="tab-content<?php echo $active_tab != 'tab_wim' ? ' d-none' : ''; ?>">
-              <table class="lw-aio-settings-options">
+              <table class="lw-aio-settings-options<?php echo $wim_activate != 'on' ? ' d-none' : ''; ?>">
                 <tbody>
                   <tr>
                     <td colspan="2"><h2><?php esc_attr_e('Web Instant Messenger Options', $this->plugin_name);?></h2></td>
                   </tr>
-                  <?php if($wim_fields_verification_status != 1) : ?>
-                    <tr><td><div id="verification_status_response"></div></td></tr>
-                    <tr><td colspan="2"><?php submit_button(__('Verify Activation', $this->plugin_name), 'primary', 'wim_verify_attivation', TRUE);?></td></tr>
-                  <?php else: ?>
+                  <?php if($wim_fields_verification_status == 1 && strlen($wim_fields_token) == 32) : ?>
                   <tr>
-                    <td class="lw-aio-settings-title">
+                    <td class="lw-aio-settings-title-wim">
                       <label for="rag_soc"><?php esc_attr_e('Business Name', $this->plugin_name);?></label>
                     </td>
-                    <td>
+                    <td class="lw-aio-settings-field-wim">
                       <input type="text" id="rag_soc" name="<?php echo $this->plugin_name; ?>[wim_fields][rag_soc]" value="<?php echo !empty($wim_fields_rag_soc) ? $wim_fields_rag_soc : substr(get_option('blogname'), 0, 20) . ' ...';?>" maxlength="20">
                     </td>
                     <td>
@@ -207,22 +204,82 @@ echo "</pre>";
                     </td>
                   </tr>
                   <tr>
-                    <td class="lw-aio-settings-title">
+                    <td class="lw-aio-settings-title-wim">
                       <label for="auto_show_wim"><?php esc_attr_e('Auto show WIM', $this->plugin_name);?></label>
                     </td>
-                    <td>
-                      <select name="<?php echo $this->plugin_name; ?>[wim_fields][auto_show_wim]">
+                    <td class="lw-aio-settings-field-wim">
+                      <select name="<?php echo $this->plugin_name; ?>[wim_fields][auto_show_wim]" id="auto_show_wim">
                           <option value="SI" <?php selected($wim_fields_auto_show_wim, 'SI', TRUE ); ?>><?php esc_attr_e('YES', $this->plugin_name);?></option>
                           <option value="NO" <?php selected($wim_fields_auto_show_wim, 'NO', TRUE ); ?>><?php esc_attr_e('NO', $this->plugin_name);?></option>
                       </select>
                     </td>
                   </tr>
+                  <tr>
+                    <td class="lw-aio-settings-title-wim">
+                      <label for="show_wim_after"><?php esc_attr_e('Auto show WIM after', $this->plugin_name);?></label>
+                    </td>
+                    <td class="lw-aio-settings-field-wim">
+                      <select id="show_wim_after" name="<?php echo $this->plugin_name;?>[wim_fields][show_wim_after]">
+                          <option value="5" <?php selected( $wim_fields_show_wim_after, '5', TRUE ); ?>><?php _e('5s', $this->plugin_name);?></option>
+                          <option value="10" <?php selected( $wim_fields_show_wim_after, '10', TRUE ); ?>><?php _e('10s', $this->plugin_name);?></option>
+                          <option value="20" <?php selected( $wim_fields_show_wim_after, '20', TRUE ); ?>><?php _e('20s', $this->plugin_name);?></option>
+                          <option value="30" <?php selected( $wim_fields_show_wim_after, '30', TRUE ); ?>><?php _e('30s', $this->plugin_name);?></option>
+                          <option value="45" <?php selected( $wim_fields_show_wim_after, '45', TRUE ); ?>><?php _e('45s', $this->plugin_name);?></option>
+                          <option value="60" <?php selected( $wim_fields_show_wim_after, '60', TRUE ); ?>><?php _e('60s', $this->plugin_name);?></option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="lw-aio-settings-title-wim">
+                      <label for="show_mobile"><?php esc_attr_e('Show On Mobile', $this->plugin_name);?></label>
+                    </td>
+                    <td class="lw-aio-settings-field-wim">
+                      <select id="show_mobile" name="<?php echo $this->plugin_name;?>[wim_fields][show_mobile]">
+                          <option value="SI" <?php selected( $wim_fields_show_mobile, 'SI', TRUE ); ?>><?php _e('YES', $this->plugin_name);?></option>
+                          <option value="NO" <?php selected( $wim_fields_show_mobile, 'NO', TRUE ); ?>><?php _e('NO', $this->plugin_name);?></option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="lw-aio-settings-title-wim">
+                      <label for="lingua"><?php esc_attr_e('Language', $this->plugin_name);?></label>
+                    </td>
+                    <td class="lw-aio-settings-field-wim">
+                      <select id="lingua" name="<?php echo $this->plugin_name;?>[wim_fields][lingua]">
+                        <option value="it" <?php selected( $wim_fields_lingua, 'it', TRUE ); ?>><?php _e('IT', $this->plugin_name);?></option>
+                        <option value="en" <?php selected( $wim_fields_lingua, 'en', TRUE ); ?>><?php _e('EN', $this->plugin_name);?></option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="lw-aio-settings-title-wim">
+                      <label for="messaggio_0"><?php esc_attr_e('Automatic Message 0', $this->plugin_name);?></label>
+                    </td>
+                    <td class="lw-aio-settings-field-wim">
+                      <textarea id="messaggio_0" name="<?php echo $this->plugin_name;?>[wim_fields][messaggio_0]" maxlength="250" cols="55" rows="3" class=""><?php echo !empty($wim_fields_messaggio_0) ? $wim_fields_messaggio_0 : 'Salve! Come posso esserle utile?';?></textarea>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="lw-aio-settings-title-wim">
+                      <label for="messaggio_1"><?php esc_attr_e('Automatic Message 0', $this->plugin_name);?></label>
+                    </td>
+                    <td class="lw-aio-settings-field-wim">
+                      <textarea id="messaggio_1" name="<?php echo $this->plugin_name;?>[wim_fields][messaggio_1]" maxlength="250" cols="55" rows="3" class=""><?php echo !empty($wim_fields_messaggio_1) ? $wim_fields_messaggio_1 : 'Gentilmente, mi può lasciare un contatto telefonico o email in modo da poterla eventualmente ricontattare?';?></textarea>
+
+                      <input type="hidden" name="<?php echo $this->plugin_name;?>[wim_fields][token]" value="<?php echo !empty($wim_fields_token) ? $wim_fields_token : '';?>"/>
+                      <input type="hidden" name="<?php echo $this->plugin_name;?>[wim_fields][verification_status]" value="<?php echo !empty($wim_fields_verification_status) ? $wim_fields_verification_status : '';?>" />
+                      <input type="hidden" name="<?php echo $this->plugin_name;?>[wim_fields][save_wim_options]"/>
+                    </td>
+                  </tr>
+                  <?php else: ?>
+                  <tr><td><div id="verification_status_response"></div></td></tr>
+                  <tr><td colspan="2"><?php submit_button(__('Verify Activation', $this->plugin_name), 'secondary', 'wim_verify_attivation', TRUE);?></td></tr>
                   <?php endif; ?>
                 </tbody>
               </table>
             </div>
             <div id="tab_cf7" class="tab-content<?php echo $active_tab != 'tab_cf7' ? ' d-none' : ''; ?>">
-              <table class="lw-aio-settings-options">
+              <table class="lw-aio-settings-options<?php echo $cf7_activate != 'on' ? ' d-none' : ''; ?>">
                 <tbody>
                   <tr>
                     <td colspan="2"><h2><?php esc_attr_e('Contact Form 7 Addon Options', $this->plugin_name);?></h2></td>

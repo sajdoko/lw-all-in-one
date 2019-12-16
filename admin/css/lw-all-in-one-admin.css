@@ -33,6 +33,13 @@ td.lw-aio-settings-title, td.info {
 	width: 100px;
 	padding-left: 20px;
 }
+td.lw-aio-settings-title-wim {
+	width: 150px;
+	padding-left: 20px;
+}
+td.lw-aio-settings-field-wim {
+	width: 150px;
+}
 
 td.lw-aio-settings-title-s {
 	width: 300px;

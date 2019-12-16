@@ -145,7 +145,6 @@ class Lw_All_In_One_Admin {
       $valid['ga_fields']['monitor_tel_link'] = (isset($input['ga_fields']['monitor_tel_link']) && $input['ga_fields']['monitor_tel_link'] === 'on') ? 'on' : '';
       $valid['ga_fields']['monitor_form_submit'] = (isset($input['ga_fields']['monitor_form_submit']) && $input['ga_fields']['monitor_form_submit'] === 'on') ? 'on' : '';
     }
-    $valid['wim_activate'] = (isset($input['wim_activate']) && $input['wim_activate'] === 'on') ? 'on' : '';
     $valid['cf7_activate'] = (isset($input['cf7_activate']) && $input['cf7_activate'] === 'on') ? 'on' : '';
     $valid['lw_cf7_fields']['save_cf7_subm'] = (isset($input['lw_cf7_fields']['save_cf7_subm']) && $input['lw_cf7_fields']['save_cf7_subm'] === 'on') ? 'on' : '';
     if ($valid['cf7_activate'] !== '' && !is_plugin_active('contact-form-7/wp-contact-form-7.php')) {
@@ -157,6 +156,57 @@ class Lw_All_In_One_Admin {
         __('Contact Form 7 plugin is not active!', $this->plugin_name),
         'error'
       );
+    }
+    $valid['wim_activate'] = (isset($input['wim_activate']) && $input['wim_activate'] === 'on') ? 'on' : '';
+
+    if (isset($input['wim_fields']['verification_status']) && isset($input['wim_fields']['token']) && strlen($input['wim_fields']['token']) == 32) {
+      $wim_settings_arr = array();
+      $api_url = 'https://localweb.it/chat/api/cliente/aggiorna.php';
+      $wim_settings_arr['wim_fields']['token'] = (isset($input['wim_fields']['token']) && !empty($input['wim_fields']['token'])) ? sanitize_text_field($input['wim_fields']['token']) : "";
+      $wim_settings_arr['wim_fields']['auto_show_wim'] = (isset($input['wim_fields']['auto_show_wim']) && !empty($input['wim_fields']['auto_show_wim'])) ? sanitize_text_field($input['wim_fields']['auto_show_wim']) : "SI";
+      $wim_settings_arr['wim_fields']['show_wim_after'] = (isset($input['wim_fields']['show_wim_after']) && !empty($input['wim_fields']['show_wim_after'])) ? sanitize_text_field($input['wim_fields']['show_wim_after']) : "5";
+      $wim_settings_arr['wim_fields']['show_mobile'] = (isset($input['wim_fields']['show_mobile']) && !empty($input['wim_fields']['show_mobile'])) ? sanitize_text_field($input['wim_fields']['show_mobile']) : "SI";
+      $wim_settings_arr['wim_fields']['lingua'] = (isset($input['wim_fields']['lingua']) && !empty($input['wim_fields']['lingua'])) ? sanitize_text_field($input['wim_fields']['lingua']) : "it";
+      $wim_settings_arr['wim_fields']['messaggio_0'] = (isset($input['wim_fields']['messaggio_0']) && !empty($input['wim_fields']['messaggio_0'])) ? sanitize_textarea_field($input['wim_fields']['messaggio_0']) : "Salve! Come posso esserle utile?";
+      $wim_settings_arr['wim_fields']['messaggio_1'] = (isset($input['wim_fields']['messaggio_1']) && !empty($input['wim_fields']['messaggio_1'])) ? sanitize_textarea_field($input['wim_fields']['messaggio_1']) : "Gentilmente, mi può lasciare un contatto telefonico o email in modo da poterla eventualmente ricontattare?";
+      $response = wp_remote_post($api_url, array(
+          'method' => 'POST',
+          'timeout' => 45,
+          'redirection' => 5,
+          'httpversion' => '1.0',
+          'blocking' => true,
+          'headers' => array(),
+          'body' => json_encode(array('plugin_token' => $wim_settings_arr['wim_fields']['token'], 'auto_show_wim' => $wim_settings_arr['wim_fields']['auto_show_wim'], 'show_wim_after' => $wim_settings_arr['wim_fields']['show_wim_after'], 'show_mobile' => $wim_settings_arr['wim_fields']['show_mobile'], 'lingua' => $wim_settings_arr['wim_fields']['lingua'], 'messaggio_0' => $wim_settings_arr['wim_fields']['messaggio_0'], 'messaggio_1' => $wim_settings_arr['wim_fields']['messaggio_1'])),
+          'cookies' => array(),
+      )
+      );
+      $ret_body = wp_remote_retrieve_body($response);
+      $data = json_decode($ret_body);
+      if (is_wp_error($response)) {
+          $error_message = $response->get_error_message();
+          add_settings_error(
+              $this->plugin_name,
+              $this->plugin_name . '_settings_not_updated_error',
+              _e('Something went wrong: ' . $error_message, $this->plugin_name),
+              'error'
+          );
+      } elseif ($data->response == 'success') {
+        $valid = array_merge($valid, $wim_settings_arr);
+      } elseif ($data->response == 'danger') {
+          add_settings_error(
+              $this->plugin_name,
+              $this->plugin_name . '_settings_not_updated_danger',
+              $data->message,
+              'error'
+          );
+      } else {
+          add_settings_error(
+              $this->plugin_name,
+              $this->plugin_name . '_settings_not_updated_not_known',
+              $data->message,
+              'error'
+          );
+      }
     }
     $exiting_options = get_option($this->plugin_name);
     if ($exiting_options) {

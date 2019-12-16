@@ -261,9 +261,6 @@ class Lw_All_In_One {
 
     $plugin_wim = new Lw_All_In_One_Wim($this->get_plugin_name(), $this->get_version());
 
-    // // Add submenu item
-    // $this->loader->add_action('admin_menu', $plugin_wim, 'lw_all_in_one_ga_events_admin_menu', 99);
-
     // // Frontend Hooks
     // $this->loader->add_action('wp_head', $plugin_wim, 'lw_all_in_one_header_scripts');
 
