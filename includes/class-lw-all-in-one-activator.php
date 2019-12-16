@@ -39,6 +39,7 @@ class Lw_All_In_One_Activator {
         'ga_activate' => '',
         'ga_fields' => array(
           'tracking_id' => '',
+          'save_ga_events' => '',
           'monitor_email_link' => '',
           'monitor_tel_link' => '',
           'monitor_form_submit' => '',

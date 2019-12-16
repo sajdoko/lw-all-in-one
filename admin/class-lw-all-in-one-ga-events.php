@@ -92,6 +92,7 @@ class Lw_All_In_One_Ga_Events {
     $options = get_option($this->plugin_name);
     $ga_activate = (isset($options['ga_activate'])) ? $options['ga_activate'] : '';
     $ga_fields_tracking_id = (isset($options['ga_fields']['tracking_id'])) ? $options['ga_fields']['tracking_id'] : '';
+    $ga_fields_save_ga_events = (isset($options['ga_fields']['save_ga_events'])) ? $options['ga_fields']['save_ga_events'] : '';
     $ga_fields_monitor_email_link = (isset($options['ga_fields']['monitor_email_link'])) ? $options['ga_fields']['monitor_email_link'] : '';
     $ga_fields_monitor_tel_link = (isset($options['ga_fields']['monitor_tel_link'])) ? $options['ga_fields']['monitor_tel_link'] : '';
     $ga_fields_monitor_form_submit = (isset($options['ga_fields']['monitor_form_submit'])) ? $options['ga_fields']['monitor_form_submit'] : '';
@@ -104,6 +105,11 @@ class Lw_All_In_One_Ga_Events {
                     gtag(\'js\', new Date());
                     gtag(\'config\', \'' . $ga_fields_tracking_id . '\');';
       echo 'const lwAioGaActivate = true;';
+      if ($ga_fields_save_ga_events === 'on') {
+        echo 'const lwAioSaveGaEvents = true;';
+      } else {
+        echo 'const lwAioSaveGaEvents = false;';
+      }
       if ($ga_fields_monitor_email_link === 'on') {
         echo 'const lwAioMonitorEmailLink = true;';
       } else {

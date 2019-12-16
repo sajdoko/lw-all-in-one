@@ -8,6 +8,9 @@
 	var optionsEventBouncerateg = false;
 
 	function saveGaEvent(gaCategory, gaAction, gaLabel) {
+		if (lwAioSaveGaEvents === false){
+			return;
+		}
 
 		var data = {
 			action: 'lw_all_in_one_save_ga_event',
@@ -17,21 +20,8 @@
 			event_label: gaLabel
 		};
 		jQuery.post(lw_all_in_one_save_ga_event_object.ajaxurl, data, function(response) {
-			console.log(response);
+			// console.log(response);
 		});
-		// jQuery.ajax({
-		// 	url: lw_all_in_one_front_ajax_object.ajaxurl,
-		// 	type: 'POST',
-		// 	data: {
-		// 		'action': 'lw_all_in_one_save_ga_event',
-		// 		'event_category': gaCategory,
-		// 		'event_action': gaAction,
-		// 		'event_label': gaLabel
-		// 	},
-		// 	success: function (response) {
-		// 		console.log(response);
-		// 	},
-		// });
 	}
 
 	function lwAioRedirect() {

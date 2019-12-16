@@ -212,6 +212,7 @@ class Lw_All_In_One {
     $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
 
     if ($this->check_plugin_options(false, 'ga_activate') === 'on' && $this->check_plugin_options('ga_fields', 'tracking_id') !== '') {
+      $this->loader->add_action('wp_ajax_lw_all_in_one_save_ga_event', $plugin_public, 'lw_all_in_one_save_ga_event');
       $this->loader->add_action('wp_ajax_nopriv_lw_all_in_one_save_ga_event', $plugin_public, 'lw_all_in_one_save_ga_event');
     }
   }

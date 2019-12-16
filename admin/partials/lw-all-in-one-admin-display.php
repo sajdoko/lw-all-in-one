@@ -31,6 +31,7 @@
       $wim_activate = (isset($options['wim_activate'])) ? $options['wim_activate'] : '';
       $lw_cf7 = (isset($options['lw_cf7'])) ? $options['lw_cf7'] : '';
       $ga_fields_tracking_id = (isset($options['ga_fields']['tracking_id'])) ? $options['ga_fields']['tracking_id'] : '';
+      $ga_fields_save_ga_events = (isset($options['ga_fields']['save_ga_events'])) ? $options['ga_fields']['save_ga_events'] : '';
       $ga_fields_monitor_email_link = (isset($options['ga_fields']['monitor_email_link'])) ? $options['ga_fields']['monitor_email_link'] : '';
       $ga_fields_monitor_tel_link = (isset($options['ga_fields']['monitor_tel_link'])) ? $options['ga_fields']['monitor_tel_link'] : '';
       $ga_fields_monitor_form_submit = (isset($options['ga_fields']['monitor_form_submit'])) ? $options['ga_fields']['monitor_form_submit'] : '';
@@ -109,6 +110,18 @@
                     </td>
                     <td>
                       <input type="text" id="ga_tracking_id" name="<?php echo $this->plugin_name; ?>[ga_fields][tracking_id]" <?php echo ($ga_fields_tracking_id !== '') ? 'value="'.$ga_fields_tracking_id.'"' : '';?> placeholder="UA-XXXXX-XX" size="25">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="lw-aio-settings-title">
+                      <div class="button-secondary lw-aio-settings-custom-switch">
+                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][save_ga_events]" class="lw-aio-settings-custom-switch-checkbox" id="save_ga_events" <?php echo ($ga_fields_save_ga_events === 'on') ? 'checked="checked"' : '';?>>
+                        <label class="lw-aio-settings-custom-switch-label" for="save_ga_events">
+                          <div class="lw-aio-settings-custom-switch-inner"></div>
+                          <div class="lw-aio-settings-custom-switch-switch"></div>
+                        </label>
+                      </div>
+                      <div class="switch-desc"> <?php esc_attr_e('Save Google Analytics events locally on the database?', $this->plugin_name);?></div>
                     </td>
                   </tr>
                   <tr>
