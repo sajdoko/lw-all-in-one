@@ -139,8 +139,10 @@ class Lw_All_In_One_Admin {
     }
     $valid['wim_activate'] = (isset($input['wim_activate']) && $input['wim_activate'] === 'on') ? 'on' : '';
     $valid['lw_cf7'] = (isset($input['lw_cf7']) && $input['lw_cf7'] === 'on') ? 'on' : '';
+    $valid['lw_cf7_fields']['save_cf7_subm'] = (isset($input['lw_cf7_fields']['save_cf7_subm']) && $input['lw_cf7_fields']['save_cf7_subm'] === 'on') ? 'on' : '';
     if ($valid['lw_cf7'] !== '' && !is_plugin_active('contact-form-7/wp-contact-form-7.php')) {
       $valid['lw_cf7'] = '';
+      $valid['lw_cf7_fields']['save_cf7_subm'] = '';
       add_settings_error(
         $this->plugin_name,
         $this->plugin_name . '_lw_cf7_main_not_active',

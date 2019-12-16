@@ -44,8 +44,11 @@ class Lw_All_In_One_Activator {
           'monitor_tel_link' => '',
           'monitor_form_submit' => '',
         ),
-        'wim_activate' => '',
         'lw_cf7' => '',
+        'lw_cf7_fields' => array(
+          'save_cf7_subm' => '',
+        ),
+        'wim_activate' => '',
       );
       add_option(LW_ALL_IN_ONE_PLUGIN_NAME, $initial_empty_options);
     }

@@ -131,24 +131,28 @@ class Lw_All_In_One_Cf7 {
       $tipo_Contratto = $mapped_field['tipo_Contratto'];
       $id_Contratto = $mapped_field['id_Contratto'];
       $time = time();
-
-      $cf7_table = $wpdb->prefix . LW_ALL_IN_ONE_CF7_TABLE;
-      $wpdb->insert(
-        $cf7_table,
-        array(
-          'time' => $time,
-          'name' => $name,
-          'surname' => $surname,
-          'email' => $email,
-          'phone' => $phone,
-          'subject' => $subject,
-          'message' => $message,
-          'tipo_Contratto' => $tipo_Contratto,
-          'id_Contratto' => $id_Contratto,
-          'submited_page' => $submited_page,
-          'sent' => $sent,
-        )
-      );
+      //Plugin options
+      $options = get_option($this->plugin_name);
+      $lw_cf7_fields_saved_cf7_subm = (isset($options['lw_cf7_fields']['save_cf7_subm'])) ? $options['lw_cf7_fields']['save_cf7_subm'] : '';
+      if ($lw_cf7_fields_saved_cf7_subm === 'on') {
+        $cf7_table = $wpdb->prefix . LW_ALL_IN_ONE_CF7_TABLE;
+        $wpdb->insert(
+          $cf7_table,
+          array(
+            'time' => $time,
+            'name' => $name,
+            'surname' => $surname,
+            'email' => $email,
+            'phone' => $phone,
+            'subject' => $subject,
+            'message' => $message,
+            'tipo_Contratto' => $tipo_Contratto,
+            'id_Contratto' => $id_Contratto,
+            'submited_page' => $submited_page,
+            'sent' => $sent,
+          )
+        );
+      }
     }
   }
   public function lw_all_in_one_cf7_add_every_five_minutes($schedules) {

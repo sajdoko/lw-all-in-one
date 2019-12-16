@@ -30,6 +30,7 @@
       $ga_activate = (isset($options['ga_activate'])) ? $options['ga_activate'] : '';
       $wim_activate = (isset($options['wim_activate'])) ? $options['wim_activate'] : '';
       $lw_cf7 = (isset($options['lw_cf7'])) ? $options['lw_cf7'] : '';
+      $lw_cf7_fields_save_cf7_subm = (isset($options['lw_cf7_fields']['save_cf7_subm'])) ? $options['lw_cf7_fields']['save_cf7_subm'] : '';
       $ga_fields_tracking_id = (isset($options['ga_fields']['tracking_id'])) ? $options['ga_fields']['tracking_id'] : '';
       $ga_fields_save_ga_events = (isset($options['ga_fields']['save_ga_events'])) ? $options['ga_fields']['save_ga_events'] : '';
       $ga_fields_monitor_email_link = (isset($options['ga_fields']['monitor_email_link'])) ? $options['ga_fields']['monitor_email_link'] : '';
@@ -39,7 +40,16 @@
       settings_fields($this->plugin_name);
       do_settings_sections($this->plugin_name);
 
-      $active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'tab_ga_events';
+      if ($ga_activate === 'on') {
+        $default_tab = 'tab_ga_events';
+      } else if ($wim_activate === 'on') {
+        $default_tab = 'tab_wim';
+      } else if ($lw_cf7 === 'on') {
+        $default_tab = 'tab_cf7';
+      } else {
+        $default_tab = '';
+      }
+      $active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : $default_tab;
     ?>
 
     <div id="poststuff" class="lw-aio">
@@ -95,11 +105,12 @@
         <div id="post-body-content">
           <div class="inside">
             <h2 class="nav-tab-wrapper">
-              <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_ga_events" class="nav-tab <?php echo $active_tab == 'tab_ga_events' ? 'nav-tab-active' : ''; ?>"><?php esc_attr_e('Google Analytics', $this->plugin_name);?></a>
-              <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_wim" class="nav-tab <?php echo $active_tab == 'tab_wim' ? 'nav-tab-active' : ''; ?>"><?php esc_attr_e('Web Instant Messenger', $this->plugin_name);?></a>
+              <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_ga_events" class="nav-tab <?php echo $active_tab == 'tab_ga_events' ? 'nav-tab-active' : ''; ?><?php echo $ga_activate != 'on' ? ' d-none' : ''; ?>"><?php esc_attr_e('Google Analytics', $this->plugin_name);?></a>
+              <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_wim" class="nav-tab <?php echo $active_tab == 'tab_wim' ? 'nav-tab-active' : ''; ?><?php echo $wim_activate != 'on' ? ' d-none' : ''; ?>"><?php esc_attr_e('Web Instant Messenger', $this->plugin_name);?></a>
+              <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_cf7" class="nav-tab <?php echo $active_tab == 'tab_cf7' ? 'nav-tab-active' : ''; ?><?php echo $lw_cf7 != 'on' ? ' d-none' : ''; ?>"><?php esc_attr_e('LocalWeb Contact Form 7', $this->plugin_name);?></a>
             </h2>
             <div id="tab_ga_events" class="tab-content<?php echo $active_tab != 'tab_ga_events' ? ' d-none' : ''; ?>">
-              <table class="lw-aio-settings-options">
+              <table class="lw-aio-settings-options<?php echo $ga_activate != 'on' ? ' d-none' : ''; ?>">
                 <tbody>
                   <tr>
                     <td colspan="2"><h2><?php esc_attr_e('Google Analytics Options', $this->plugin_name);?></h2></td>
@@ -168,6 +179,27 @@
                 <tbody>
                   <tr>
                     <td colspan="2"><h2><?php esc_attr_e('Web Instant Messenger Options', $this->plugin_name);?></h2></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div id="tab_cf7" class="tab-content<?php echo $active_tab != 'tab_cf7' ? ' d-none' : ''; ?>">
+              <table class="lw-aio-settings-options">
+                <tbody>
+                  <tr>
+                    <td colspan="2"><h2><?php esc_attr_e('Contact Form 7 Addon Options', $this->plugin_name);?></h2></td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="lw-aio-settings-title">
+                      <div class="button-secondary lw-aio-settings-custom-switch">
+                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[lw_cf7_fields][save_cf7_subm]" class="lw-aio-settings-custom-switch-checkbox" id="save_cf7_subm" <?php echo ($lw_cf7_fields_save_cf7_subm === 'on') ? 'checked="checked"' : '';?>>
+                        <label class="lw-aio-settings-custom-switch-label" for="save_cf7_subm">
+                          <div class="lw-aio-settings-custom-switch-inner"></div>
+                          <div class="lw-aio-settings-custom-switch-switch"></div>
+                        </label>
+                      </div>
+                      <div class="switch-desc"> <?php esc_attr_e('Save Contact Form 7 submissions locally on the database?', $this->plugin_name);?></div>
+                    </td>
                   </tr>
                 </tbody>
               </table>
