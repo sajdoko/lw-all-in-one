@@ -63,13 +63,13 @@ class Lw_All_In_One_Privacy_Policy_Pages {
   }
   public function localize_script() {
     wp_localize_script($this->plugin_name, 'lw_all_in_one_create_privacy_pages_object',
-    array(
-      'ajaxurl' => admin_url('admin-ajax.php'),
-      'security' => wp_create_nonce($this->plugin_name),
-      // 'data_var_1' => 'value 1',
-      // 'data_var_2' => 'value 2',
-    )
-  );
+      array(
+        'ajaxurl' => admin_url('admin-ajax.php'),
+        'security' => wp_create_nonce($this->plugin_name),
+        // 'data_var_1' => 'value 1',
+        // 'data_var_2' => 'value 2',
+      )
+    );
   }
 
   public function lw_all_in_one_create_privacy_pages() {
@@ -77,8 +77,56 @@ class Lw_All_In_One_Privacy_Policy_Pages {
       wp_send_json_error(__('Security is not valid!', $this->plugin_name));
       die();
     }
-    wp_send_json_success(__('Event Saved!', $this->plugin_name));
-    die();
+    if (isset($_POST['action']) && $_POST['action'] === "lw_all_in_one_create_privacy_pages") {
+
+      $create_cookie_page = (isset($_POST[$this->plugin_name . '_cookie_page']) && $_POST[$this->plugin_name . '_cookie_page'] == 'on') ? true : false;
+      $create_privacy_page = (isset($_POST[$this->plugin_name . '_privacy_page']) && $_POST[$this->plugin_name . '_privacy_page'] == 'on') ? true : false;
+      $create_info_dati_page = (isset($_POST[$this->plugin_name . '_trattamento_dati_page']) && $_POST[$this->plugin_name . '_trattamento_dati_page'] == 'on') ? true : false;
+
+      $date = date('d-m-Y', time());
+      $domain = $_SERVER['HTTP_HOST'];
+      $domain = preg_replace('/^www\./', '', $domain);
+      $create_pages_resposes = array();
+      $created_pages_save_option = array();
+
+      if ($create_cookie_page) {
+        include_once 'privacy-pages/cookie.php';
+        if ($create_pages_resposes['cookie-policy']['status'] == 'success') {
+          $created_pages_save_option['cookie-policy'] = array(
+            'action' => $create_pages_resposes['cookie-policy']['action'],
+            'post_id' => $create_pages_resposes['cookie-policy']['post_id'],
+          );
+        }
+      }
+      if ($create_privacy_page) {
+        include_once 'privacy-pages/privacy.php';
+        if ($create_pages_resposes['informativa-sul-trattamento-dei-dati-personali']['status'] == 'success') {
+          $created_pages_save_option['informativa-sul-trattamento-dei-dati-personali'] = array(
+            'action' => $create_pages_resposes['informativa-sul-trattamento-dei-dati-personali']['action'],
+            'post_id' => $create_pages_resposes['informativa-sul-trattamento-dei-dati-personali']['post_id'],
+          );
+        }
+      }
+      if ($create_info_dati_page) {
+        include_once 'privacy-pages/contact.php';
+        if ($create_pages_resposes['informativa-trattamento-dati']['status'] == 'success') {
+          $created_pages_save_option['informativa-trattamento-dati'] = array(
+            'action' => $create_pages_resposes['informativa-trattamento-dati']['action'],
+            'post_id' => $create_pages_resposes['informativa-trattamento-dati']['post_id'],
+          );
+        }
+      }
+      $exiting_option = get_option($this->plugin_name . '_privacy_pages');
+      if ($exiting_option) {
+        $created_pages_save_option = array_merge($exiting_option, $created_pages_save_option);
+      }
+      update_option($this->plugin_name . '_privacy_pages', $created_pages_save_option);
+      wp_send_json_success($create_pages_resposes);
+      die();
+    } else {
+      wp_send_json_error(__('Action is not valid!', $this->plugin_name));
+      die();
+    }
   }
 
 }

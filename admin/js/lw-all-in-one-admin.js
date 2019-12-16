@@ -68,12 +68,18 @@
                 cache: false,
                 processData: false
             })
-            .done(function (response) { //
-                // response = JSON.parse(response)
-                if (response.status == 'success') {
-									alert(response.data);
+            .done(function (response) {
+                if (response.success === true) {
+									var createdPages = response.data;
+									$.each(createdPages, function (index, value) {
+										if (value.status === 'success') {
+											$('#created_pages_response').append('<div class="notice notice-success inline"><p>' + value.message + '</p></div>');
+										} else {
+											$('#created_pages_response').append('<div class="notice notice-error inline"><p>' + value.message + '</p></div>');
+										}
+									});
                 } else {
-									alert(response.data);
+									$('#created_pages_response').append('<div class="notice notice-error inline"><p>Something went wrong with the request!</p></div>');
                 }
             });
     });
