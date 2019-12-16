@@ -61,16 +61,6 @@ class Lw_All_In_One_Privacy_Policy_Pages {
   public function lw_all_in_one_privacy_policy_display_page() {
     include_once 'partials/lw-all-in-one-admin-privacy-policy-display.php';
   }
-  public function localize_script() {
-    wp_localize_script($this->plugin_name, 'lw_all_in_one_create_privacy_pages_object',
-      array(
-        'ajaxurl' => admin_url('admin-ajax.php'),
-        'security' => wp_create_nonce($this->plugin_name),
-        // 'data_var_1' => 'value 1',
-        // 'data_var_2' => 'value 2',
-      )
-    );
-  }
 
   public function lw_all_in_one_create_privacy_pages() {
     if (!check_ajax_referer($this->plugin_name, 'security')) {

@@ -85,7 +85,10 @@ class Lw_All_In_One {
     if ($this->check_plugin_options(false, 'ga_activate') === 'on') {
       $this->define_ga_events_hooks();
     }
-    if ($this->check_plugin_options(false, 'lw_cf7') === 'on') {
+    if ($this->check_plugin_options(false, 'wim_activate') === 'on') {
+      $this->define_wim_hooks();
+    }
+    if ($this->check_plugin_options(false, 'cf7_activate') === 'on') {
       $this->define_cf7_hooks();
     }
     $this->define_privacy_policy_hooks();
@@ -101,8 +104,9 @@ class Lw_All_In_One {
    * - Lw_All_In_One_i18n. Defines internationalization functionality.
    * - Lw_All_In_One_Admin. Defines all hooks for the admin area.
    * - Lw_All_In_One_Public. Defines all hooks for the public side of the site.
-   * - Lw_All_In_One_Cf7. Defines all hooks for the Contact Form 7 integration.
    * - Lw_All_In_One_Ga_Events. Defines all hooks for the Google Analytics integration.
+   * - Lw_All_In_One_Wim. Defines all hooks for the Web Instant Messenger integration.
+   * - Lw_All_In_One_Cf7. Defines all hooks for the Contact Form 7 integration.
    * - Lw_All_In_One_Privacy_Policy_Pages. Defines all hooks for the LocalWeb Privacy&Policy pages.
    *
    * Create an instance of the loader which will be used to register the hooks
@@ -137,14 +141,19 @@ class Lw_All_In_One {
     require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-lw-all-in-one-public.php';
 
     /**
-     * The class responsible for Contact Form 7 integration functionality.
-     */
-    require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-lw-all-in-one-cf7.php';
-
-    /**
      * The class responsible for Google Analytics integration functionality.
      */
     require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-lw-all-in-one-ga-events.php';
+
+    /**
+     * The class responsible for Web Instant Messenger integration functionality.
+     */
+    require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-lw-all-in-one-wim.php';
+
+    /**
+     * The class responsible for Contact Form 7 integration functionality.
+     */
+    require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-lw-all-in-one-cf7.php';
 
     /**
      * The class responsible for LocalWeb Privacy&Policy pages functionality.
@@ -248,6 +257,29 @@ class Lw_All_In_One {
    * @since    1.0.0
    * @access   private
    */
+  private function define_wim_hooks() {
+
+    $plugin_wim = new Lw_All_In_One_Wim($this->get_plugin_name(), $this->get_version());
+
+    // // Add submenu item
+    // $this->loader->add_action('admin_menu', $plugin_wim, 'lw_all_in_one_ga_events_admin_menu', 99);
+
+    // // Frontend Hooks
+    // $this->loader->add_action('wp_head', $plugin_wim, 'lw_all_in_one_header_scripts');
+
+    $this->loader->add_action('wp_ajax_lw_all_in_one_verify_wim_attivation', $plugin_wim, 'lw_all_in_one_verify_wim_attivation');
+
+    // // Check if Google Analytics Dashboard for WP (GADWP) plugin is active
+    // $this->loader->add_action('admin_init', $plugin_wim, 'lw_all_in_one_gadwp_is_active_deactivate');
+  }
+
+  /**
+   * Register all of the hooks related to the admin area functionality
+   * of the plugin.
+   *
+   * @since    1.0.0
+   * @access   private
+   */
   private function define_cf7_hooks() {
 
     $plugin_cf7 = new Lw_All_In_One_Cf7($this->get_plugin_name(), $this->get_version());
@@ -274,7 +306,6 @@ class Lw_All_In_One {
   private function define_privacy_policy_hooks() {
 
     $plugin_privacy_policy = new Lw_All_In_One_Privacy_Policy_Pages($this->get_plugin_name(), $this->get_version());
-    $this->loader->add_action('admin_enqueue_scripts', $plugin_privacy_policy, 'localize_script');
     $this->loader->add_action('wp_ajax_lw_all_in_one_create_privacy_pages', $plugin_privacy_policy, 'lw_all_in_one_create_privacy_pages');
 
     // Add submenu item

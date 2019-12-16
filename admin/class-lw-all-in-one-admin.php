@@ -75,6 +75,14 @@ class Lw_All_In_One_Admin {
     // die();
     if (preg_match('/page_lw_all_in_one/', $hook)) {
       wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/lw-all-in-one-admin.js', array('jquery'), $this->version, false);
+      wp_localize_script($this->plugin_name, 'lw_all_in_one_admin_ajax_object',
+        array(
+          'ajaxurl' => admin_url('admin-ajax.php'),
+          'security' => wp_create_nonce($this->plugin_name),
+          // 'data_var_1' => 'value 1',
+          // 'data_var_2' => 'value 2',
+        )
+      );
     }
   }
 
@@ -138,10 +146,10 @@ class Lw_All_In_One_Admin {
       $valid['ga_fields']['monitor_form_submit'] = (isset($input['ga_fields']['monitor_form_submit']) && $input['ga_fields']['monitor_form_submit'] === 'on') ? 'on' : '';
     }
     $valid['wim_activate'] = (isset($input['wim_activate']) && $input['wim_activate'] === 'on') ? 'on' : '';
-    $valid['lw_cf7'] = (isset($input['lw_cf7']) && $input['lw_cf7'] === 'on') ? 'on' : '';
+    $valid['cf7_activate'] = (isset($input['cf7_activate']) && $input['cf7_activate'] === 'on') ? 'on' : '';
     $valid['lw_cf7_fields']['save_cf7_subm'] = (isset($input['lw_cf7_fields']['save_cf7_subm']) && $input['lw_cf7_fields']['save_cf7_subm'] === 'on') ? 'on' : '';
-    if ($valid['lw_cf7'] !== '' && !is_plugin_active('contact-form-7/wp-contact-form-7.php')) {
-      $valid['lw_cf7'] = '';
+    if ($valid['cf7_activate'] !== '' && !is_plugin_active('contact-form-7/wp-contact-form-7.php')) {
+      $valid['cf7_activate'] = '';
       $valid['lw_cf7_fields']['save_cf7_subm'] = '';
       add_settings_error(
         $this->plugin_name,
@@ -149,6 +157,10 @@ class Lw_All_In_One_Admin {
         __('Contact Form 7 plugin is not active!', $this->plugin_name),
         'error'
       );
+    }
+    $exiting_options = get_option($this->plugin_name);
+    if ($exiting_options) {
+      $valid = array_merge($exiting_options, $valid);
     }
 
     return $valid;

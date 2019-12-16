@@ -59,7 +59,7 @@
         event.preventDefault();
 				var form_data = new FormData(this);
 				form_data.append('action', 'lw_all_in_one_create_privacy_pages');
-				form_data.append('security', lw_all_in_one_create_privacy_pages_object.security);
+				form_data.append('security', lw_all_in_one_admin_ajax_object.security);
         $.ajax({
                 url: ajaxurl,
                 type: 'POST',
@@ -80,6 +80,27 @@
 									});
                 } else {
 									$('#created_pages_response').append('<div class="notice notice-error inline"><p>Something went wrong with the request!</p></div>');
+                }
+            });
+		});
+		$(document).on('click', '#wim_verify_attivation', function (event) {
+        event.preventDefault();
+				var form_data = new FormData();
+				form_data.append('action', 'lw_all_in_one_verify_wim_attivation');
+				form_data.append('security', lw_all_in_one_admin_ajax_object.security);
+        $.ajax({
+                url: ajaxurl,
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                cache: false,
+                processData: false
+            })
+            .done(function (response) {
+                if (response.success === true) {
+									$('#verification_status_response').append('<div class="notice notice-success inline"><p>' + response.data + '</p></div>');
+                } else {
+									$('#verification_status_response').append('<div class="notice notice-error inline"><p>' + response.data + '</p></div>');
                 }
             });
     });

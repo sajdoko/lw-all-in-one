@@ -90,10 +90,10 @@
 			}
 		}
 	}
-	jQuery(window).on("load", function () {
+	$(window).on("load", function () {
 		if (lwAioGaActivate) {
 			if (lwAioMonitorEmailLink) {
-				jQuery('a[href^="mailto"]').click(function () {
+				$('a[href^="mailto"]').click(function () {
 					var gaCategory = this.getAttribute("data-vars-ga-category") || "email";
 					var gaAction = this.getAttribute("data-vars-ga-action") || "send";
 					var gaLabel = this.getAttribute("data-vars-ga-label") || this.href;
@@ -102,7 +102,7 @@
 				});
 			}
 			if (lwAioMonitorTelLink) {
-				jQuery('a[href^="tel"]').click(function () {
+				$('a[href^="tel"]').click(function () {
 					var gaCategory = this.getAttribute("data-vars-ga-category") || "telephone";
 					var gaAction = this.getAttribute("data-vars-ga-action") || "call";
 					var gaLabel = this.getAttribute("data-vars-ga-label") || this.href;
@@ -111,7 +111,7 @@
 				});
 			}
 			if (lwAioMonitorFormSubmit) {
-				jQuery(".wpcf7").on( 'wpcf7:mailsent', function( event ){
+				$(".wpcf7").on( 'wpcf7:mailsent', function( event ){
 					// console.log(event);
 					// return;
 					var gaCategory = "form";
@@ -123,6 +123,10 @@
 			}
 		}
 	});
-
+	$( window ).load(function() {
+		if ($('[id="rag_soc"]').length > 1) {
+			console.log('wim_twice');
+		}
+	});
 
 })(jQuery);

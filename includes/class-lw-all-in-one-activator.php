@@ -44,11 +44,22 @@ class Lw_All_In_One_Activator {
           'monitor_tel_link' => '',
           'monitor_form_submit' => '',
         ),
-        'lw_cf7' => '',
+        'wim_activate' => '',
+        'wim_fields' => array(
+          'verification_status' => '',
+          'token' => '',
+          'rag_soc' => '',
+          'auto_show_wim' => '',
+          'show_wim_after' => '',
+          'show_mobile' => '',
+          'lingua' => '',
+          'messaggio_0' => '',
+          'messaggio_1' => '',
+        ),
+        'cf7_activate' => '',
         'lw_cf7_fields' => array(
           'save_cf7_subm' => '',
         ),
-        'wim_activate' => '',
       );
       add_option(LW_ALL_IN_ONE_PLUGIN_NAME, $initial_empty_options);
     }
