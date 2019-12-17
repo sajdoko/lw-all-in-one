@@ -52,7 +52,6 @@ class Lw_All_In_One_Wim {
     $this->plugin_name = $plugin_name;
     $this->version = $version;
     $this->wim_veify_api_url = "https://localweb.it/chat/api/cliente/verifica-plugin.php";
-    $this->wim_update_api_url = "https://localweb.it/chat/api/cliente/aggiorna.php";
 
   }
 
@@ -76,32 +75,25 @@ class Lw_All_In_One_Wim {
       );
       $ret_body = wp_remote_retrieve_body($response);
       $data = json_decode($ret_body);
-      $option_activation_status = array();
       if (is_wp_error($response)) {
         $error_message = $response->get_error_message();
         wp_send_json_error(__('Something went wrong!', $this->plugin_name));
         die();
       } elseif ($data->response == 'verified') {
-        $option_activation_status['wim_fields']['verification_status'] = 1;
-        $option_activation_status['wim_fields']['token'] = ($data->token != '') ? $data->token : '';
-        $exiting_options = get_option($this->plugin_name);
-        if ($exiting_options) {
-          $option_activation_status = array_merge($exiting_options, $option_activation_status);
+        if ($data->token == '') {
+          wp_send_json_error(__('WIM authorized but token returned was empty!', $this->plugin_name));
+          die();
+        } else if (strlen($data->token) == 32) {
+          wp_send_json_success(array('token' => $data->token, 'message' => __('Web Instant Messenger authorized!', $this->plugin_name)));
+          die();
+        } else {
+          wp_send_json_error(__('There was an unknown error!', $this->plugin_name));
+          die();
         }
-        update_option($this->plugin_name, $option_activation_status);
-        wp_send_json_success(__('Web Instant Messenger authorized!', $this->plugin_name));
-        die();
       } elseif ($data->response == 'unverified') {
         wp_send_json_error(__('Web Instant Messenger unauthorized!', $this->plugin_name));
         die();
       } else {
-        $option_activation_status['wim_fields']['verification_status'] = 1;
-        $option_activation_status['wim_fields']['token'] = ($data->token != '') ? $data->token : '';
-        $exiting_options = get_option($this->plugin_name);
-        if ($exiting_options) {
-          $option_activation_status = array_merge($exiting_options, $option_activation_status);
-        }
-        update_option($this->plugin_name, $option_activation_status);
         wp_send_json_error(__('Not a valid domain!', $this->plugin_name));
         die();
       }
@@ -111,12 +103,58 @@ class Lw_All_In_One_Wim {
     }
   }
 
-  // public function lw_all_in_one_ga_events_admin_menu() {
-  //   add_submenu_page($this->plugin_name, __('Saved Google Analytics Events', $this->plugin_name), __('Saved GA Events', $this->plugin_name), 'manage_options', $this->plugin_name . '_ga_events', array($this, 'lw_all_in_one_ga_events_display_page'));
-  // }
+  public function lw_all_in_one_insert_wim_footer() {
+    //Plugin options
+    $options = get_option($this->plugin_name);
+    $wim_activate = (isset($options['wim_activate'])) ? $options['wim_activate'] : '';
+    $wim_fields_verification_status = (isset($options['wim_fields']['verification_status'])) ? $options['wim_fields']['verification_status'] : '';
+    $wim_fields_rag_soc = (isset($options['wim_fields']['rag_soc'])) ? $options['wim_fields']['rag_soc'] : '';
+    if ($wim_activate === 'on' && $wim_fields_verification_status === 'verified' && $wim_fields_rag_soc !== '') {
+      echo '<script type="text/javascript">
+              (function(d){
+                var s = d.getElementsByTagName(\'script\'),f = s[s.length-1], p = d.createElement(\'script\');
+                window.WidgetId = "USC_WIDGET";
+                p.type = \'text/javascript\';
+                p.setAttribute(\'charset\',\'utf-8\');
+                p.async = 1;
+                p.id = "ultimate_support_chat";
+                p.src = "//www.localweb.it/chat/widget/ultimate_chat_widget.js";
+                f.parentNode.insertBefore(p, f);
+              }(document));
+            </script>';
+      echo '<p id="rag_soc" style="display:none">';
+      echo $wim_fields_rag_soc;
+      echo '</p>';
+    } elseif ($wim_activate !== 'on') {
+      echo '<script type="text/javascript">
+            console.log("'. esc_attr__('WIM not activated!', $this->plugin_name).'");
+            </script>';
+    } elseif ($wim_fields_verification_status !== 'verified') {
+      echo '<script type="text/javascript">
+            console.log("'. esc_attr__('WIM not verified!', $this->plugin_name).'");
+            </script>';
+    } elseif ($wim_fields_rag_soc === '') {
+      echo '<script type="text/javascript">
+            console.log("'. esc_attr__('Missing business name!', $this->plugin_name).'");
+            </script>';
+    } else {
+      echo '<script type="text/javascript">
+            console.log("'. esc_attr__('WIM installed!', $this->plugin_name).'");
+            </script>';
+    }
+  }
 
-  // public function lw_all_in_one_ga_events_display_page() {
-  //   include_once 'partials/lw-all-in-one-admin-ga-events-display.php';
-  // }
+  public function lw_all_in_one_old_wim_is_active_deactivate() {
+    if (is_plugin_active('web-instant-messenger/web-instant-messenger.php')) {
+			delete_option( 'wim_activation_status' );
+			delete_option( 'web-instant-messenger' );
+      deactivate_plugins('web-instant-messenger/web-instant-messenger.php');
+      delete_plugins(array('web-instant-messenger/web-instant-messenger.php'));
+    } elseif (is_plugin_inactive('web-instant-messenger/web-instant-messenger.php')) {
+			delete_option( 'wim_activation_status' );
+			delete_option( 'web-instant-messenger' );
+      delete_plugins(array('web-instant-messenger/web-instant-messenger.php'));
+    }
+  }
 
 }

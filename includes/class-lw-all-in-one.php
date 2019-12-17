@@ -263,11 +263,13 @@ class Lw_All_In_One {
 
     // // Frontend Hooks
     // $this->loader->add_action('wp_head', $plugin_wim, 'lw_all_in_one_header_scripts');
+		// Frontend Hooks
+		$this->loader->add_action( 'wp_footer', $plugin_wim, 'lw_all_in_one_insert_wim_footer');
 
     $this->loader->add_action('wp_ajax_lw_all_in_one_verify_wim_attivation', $plugin_wim, 'lw_all_in_one_verify_wim_attivation');
 
-    // // Check if Google Analytics Dashboard for WP (GADWP) plugin is active
-    // $this->loader->add_action('admin_init', $plugin_wim, 'lw_all_in_one_gadwp_is_active_deactivate');
+    // Check if Web Instant Messenger plugin is active
+    $this->loader->add_action('admin_init', $plugin_wim, 'lw_all_in_one_old_wim_is_active_deactivate');
   }
 
   /**
@@ -283,14 +285,14 @@ class Lw_All_In_One {
 
     // Add submenu item
     $this->loader->add_action('admin_menu', $plugin_cf7, 'lw_all_in_one_cf7_admin_submenu', 99);
-    // Check if LW Contact Form exists
-    $this->loader->add_action('admin_init', $plugin_cf7, 'lw_all_in_one_cf7_does_old_exists');
 
     // Save Contact Form 7 submmisions
     $this->loader->add_action('wpcf7_before_send_mail', $plugin_cf7, 'lw_all_in_one_cf7_to_db');
     $this->loader->add_filter('cron_schedules', $plugin_cf7, 'lw_all_in_one_cf7_add_every_five_minutes');
     $this->loader->add_action('lw_all_in_one_cf7_check_sent_data', $plugin_cf7, 'lw_all_in_one_cf7_every_5_minutes');
 
+    // Check if LW Contact Form 7 Addon plugin exist
+    $this->loader->add_action('admin_init', $plugin_cf7, 'lw_all_in_one_old_cf7_is_active_deactivate');
   }
 
   /**

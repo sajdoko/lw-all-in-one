@@ -159,16 +159,18 @@ class Lw_All_In_One_Admin {
     }
     $valid['wim_activate'] = (isset($input['wim_activate']) && $input['wim_activate'] === 'on') ? 'on' : '';
 
-    if (isset($input['wim_fields']['verification_status']) && isset($input['wim_fields']['token']) && strlen($input['wim_fields']['token']) == 32) {
+    if (isset($input['wim_fields']['verification_status']) && isset($input['wim_fields']['save_wim_options']) && isset($input['wim_fields']['token']) && strlen($input['wim_fields']['token']) == 32) {
       $wim_settings_arr = array();
       $api_url = 'https://localweb.it/chat/api/cliente/aggiorna.php';
-      $wim_settings_arr['wim_fields']['token'] = (isset($input['wim_fields']['token']) && !empty($input['wim_fields']['token'])) ? sanitize_text_field($input['wim_fields']['token']) : "";
-      $wim_settings_arr['wim_fields']['auto_show_wim'] = (isset($input['wim_fields']['auto_show_wim']) && !empty($input['wim_fields']['auto_show_wim'])) ? sanitize_text_field($input['wim_fields']['auto_show_wim']) : "SI";
-      $wim_settings_arr['wim_fields']['show_wim_after'] = (isset($input['wim_fields']['show_wim_after']) && !empty($input['wim_fields']['show_wim_after'])) ? sanitize_text_field($input['wim_fields']['show_wim_after']) : "5";
-      $wim_settings_arr['wim_fields']['show_mobile'] = (isset($input['wim_fields']['show_mobile']) && !empty($input['wim_fields']['show_mobile'])) ? sanitize_text_field($input['wim_fields']['show_mobile']) : "SI";
-      $wim_settings_arr['wim_fields']['lingua'] = (isset($input['wim_fields']['lingua']) && !empty($input['wim_fields']['lingua'])) ? sanitize_text_field($input['wim_fields']['lingua']) : "it";
-      $wim_settings_arr['wim_fields']['messaggio_0'] = (isset($input['wim_fields']['messaggio_0']) && !empty($input['wim_fields']['messaggio_0'])) ? sanitize_textarea_field($input['wim_fields']['messaggio_0']) : "Salve! Come posso esserle utile?";
-      $wim_settings_arr['wim_fields']['messaggio_1'] = (isset($input['wim_fields']['messaggio_1']) && !empty($input['wim_fields']['messaggio_1'])) ? sanitize_textarea_field($input['wim_fields']['messaggio_1']) : "Gentilmente, mi può lasciare un contatto telefonico o email in modo da poterla eventualmente ricontattare?";
+      $wim_settings_arr['wim_fields']['verification_status'] = (isset($input['wim_fields']['verification_status'])) ? sanitize_text_field($input['wim_fields']['verification_status']) : "";
+      $wim_settings_arr['wim_fields']['token'] = (isset($input['wim_fields']['token'])) ? sanitize_text_field($input['wim_fields']['token']) : "";
+      $wim_settings_arr['wim_fields']['rag_soc'] = (isset($input['wim_fields']['rag_soc'])) ? sanitize_text_field($input['wim_fields']['rag_soc']) : "";
+      $wim_settings_arr['wim_fields']['auto_show_wim'] = (isset($input['wim_fields']['auto_show_wim'])) ? sanitize_text_field($input['wim_fields']['auto_show_wim']) : "SI";
+      $wim_settings_arr['wim_fields']['show_wim_after'] = (isset($input['wim_fields']['show_wim_after'])) ? sanitize_text_field($input['wim_fields']['show_wim_after']) : "5";
+      $wim_settings_arr['wim_fields']['show_mobile'] = (isset($input['wim_fields']['show_mobile'])) ? sanitize_text_field($input['wim_fields']['show_mobile']) : "SI";
+      $wim_settings_arr['wim_fields']['lingua'] = (isset($input['wim_fields']['lingua'])) ? sanitize_text_field($input['wim_fields']['lingua']) : "it";
+      $wim_settings_arr['wim_fields']['messaggio_0'] = (isset($input['wim_fields']['messaggio_0'])) ? sanitize_textarea_field($input['wim_fields']['messaggio_0']) : "Salve! Come posso esserle utile?";
+      $wim_settings_arr['wim_fields']['messaggio_1'] = (isset($input['wim_fields']['messaggio_1'])) ? sanitize_textarea_field($input['wim_fields']['messaggio_1']) : "Gentilmente, mi può lasciare un contatto telefonico o email in modo da poterla eventualmente ricontattare?";
       $response = wp_remote_post($api_url, array(
           'method' => 'POST',
           'timeout' => 45,

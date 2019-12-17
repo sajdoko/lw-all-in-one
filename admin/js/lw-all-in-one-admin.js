@@ -98,7 +98,13 @@
             })
             .done(function (response) {
                 if (response.success === true) {
-									$('#verification_status_response').append('<div class="notice notice-success inline"><p>' + response.data + '</p></div>');
+									$('#verification_status_response').append('<div class="notice notice-success inline"><p>' + response.data['message'] + '</p></div>');
+									$('#wim_fields_verification_status_resp').val('verified');
+									$('#wim_fields_token_resp').val(response.data['token']);
+									window.setTimeout(
+										document.getElementById("lw_all_in_one_options").submit.click(),
+										3000
+									);
                 } else {
 									$('#verification_status_response').append('<div class="notice notice-error inline"><p>' + response.data + '</p></div>');
                 }

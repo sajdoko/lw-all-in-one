@@ -45,9 +45,7 @@
       $wim_fields_messaggio_1 = (isset($options['wim_fields']['messaggio_1'])) ? $options['wim_fields']['messaggio_1'] : '';
       $cf7_activate = (isset($options['cf7_activate'])) ? $options['cf7_activate'] : '';
       $lw_cf7_fields_save_cf7_subm = (isset($options['lw_cf7_fields']['save_cf7_subm'])) ? $options['lw_cf7_fields']['save_cf7_subm'] : '';
-echo "<pre>";
-print_r($options);
-echo "</pre>";
+
       settings_fields($this->plugin_name);
       do_settings_sections($this->plugin_name);
 
@@ -191,13 +189,13 @@ echo "</pre>";
                   <tr>
                     <td colspan="2"><h2><?php esc_attr_e('Web Instant Messenger Options', $this->plugin_name);?></h2></td>
                   </tr>
-                  <?php if($wim_fields_verification_status == 1 && strlen($wim_fields_token) == 32) : ?>
+                  <?php if($wim_fields_verification_status == 'verified' && strlen($wim_fields_token) == 32) : ?>
                   <tr>
                     <td class="lw-aio-settings-title-wim">
                       <label for="rag_soc"><?php esc_attr_e('Business Name', $this->plugin_name);?></label>
                     </td>
                     <td class="lw-aio-settings-field-wim">
-                      <input type="text" id="rag_soc" name="<?php echo $this->plugin_name; ?>[wim_fields][rag_soc]" value="<?php echo !empty($wim_fields_rag_soc) ? $wim_fields_rag_soc : substr(get_option('blogname'), 0, 20) . ' ...';?>" maxlength="20">
+                      <input type="text" id="rag_soc" name="<?php echo $this->plugin_name; ?>[wim_fields][rag_soc]" value="<?php echo ($wim_fields_rag_soc != '') ? $wim_fields_rag_soc : substr(get_option('blogname'), 0, 16) . '...';?>" maxlength="20">
                     </td>
                     <td>
                       <?php esc_attr_e('Insert here your business name which will appear on the chat header', $this->plugin_name);?>
@@ -256,7 +254,7 @@ echo "</pre>";
                       <label for="messaggio_0"><?php esc_attr_e('Automatic Message 0', $this->plugin_name);?></label>
                     </td>
                     <td class="lw-aio-settings-field-wim">
-                      <textarea id="messaggio_0" name="<?php echo $this->plugin_name;?>[wim_fields][messaggio_0]" maxlength="250" cols="55" rows="3" class=""><?php echo !empty($wim_fields_messaggio_0) ? $wim_fields_messaggio_0 : 'Salve! Come posso esserle utile?';?></textarea>
+                      <textarea id="messaggio_0" name="<?php echo $this->plugin_name;?>[wim_fields][messaggio_0]" maxlength="250" cols="55" rows="3" class=""><?php echo ($wim_fields_messaggio_0 != '') ? $wim_fields_messaggio_0 : 'Salve! Come posso esserle utile?';?></textarea>
                     </td>
                   </tr>
                   <tr>
@@ -264,15 +262,22 @@ echo "</pre>";
                       <label for="messaggio_1"><?php esc_attr_e('Automatic Message 0', $this->plugin_name);?></label>
                     </td>
                     <td class="lw-aio-settings-field-wim">
-                      <textarea id="messaggio_1" name="<?php echo $this->plugin_name;?>[wim_fields][messaggio_1]" maxlength="250" cols="55" rows="3" class=""><?php echo !empty($wim_fields_messaggio_1) ? $wim_fields_messaggio_1 : 'Gentilmente, mi può lasciare un contatto telefonico o email in modo da poterla eventualmente ricontattare?';?></textarea>
+                      <textarea id="messaggio_1" name="<?php echo $this->plugin_name;?>[wim_fields][messaggio_1]" maxlength="250" cols="55" rows="3" class=""><?php echo ($wim_fields_messaggio_1 != '') ? $wim_fields_messaggio_1 : 'Gentilmente, mi può lasciare un contatto telefonico o email in modo da poterla eventualmente ricontattare?';?></textarea>
 
-                      <input type="hidden" name="<?php echo $this->plugin_name;?>[wim_fields][token]" value="<?php echo !empty($wim_fields_token) ? $wim_fields_token : '';?>"/>
-                      <input type="hidden" name="<?php echo $this->plugin_name;?>[wim_fields][verification_status]" value="<?php echo !empty($wim_fields_verification_status) ? $wim_fields_verification_status : '';?>" />
-                      <input type="hidden" name="<?php echo $this->plugin_name;?>[wim_fields][save_wim_options]"/>
+                      <input type="hidden" name="<?php echo $this->plugin_name;?>[wim_fields][token]" value="<?php echo ($wim_fields_token != '') ? $wim_fields_token : '';?>"/>
+                      <input type="hidden" name="<?php echo $this->plugin_name;?>[wim_fields][verification_status]" value="<?php echo ($wim_fields_verification_status != '') ? $wim_fields_verification_status : '';?>" />
+                      <input type="hidden" name="<?php echo $this->plugin_name;?>[wim_fields][save_wim_options]" />
                     </td>
                   </tr>
                   <?php else: ?>
-                  <tr><td><div id="verification_status_response"></div></td></tr>
+                  <tr>
+                    <td>
+                      <div id="verification_status_response"></div>
+                        <input type="hidden" id="wim_fields_verification_status_resp" value="" name="<?php echo $this->plugin_name;?>[wim_fields][verification_status]"/>
+                        <input type="hidden" id="wim_fields_token_resp" value="" name="<?php echo $this->plugin_name;?>[wim_fields][token]"/>
+                        <input type="hidden" name="<?php echo $this->plugin_name;?>[wim_fields][save_wim_options]"/>
+                      </td>
+                    </tr>
                   <tr><td colspan="2"><?php submit_button(__('Verify Activation', $this->plugin_name), 'secondary', 'wim_verify_attivation', TRUE);?></td></tr>
                   <?php endif; ?>
                 </tbody>

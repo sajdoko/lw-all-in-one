@@ -34,6 +34,26 @@ class Lw_All_In_One_Activator {
     if (!get_option('lw_all_in_one_version')) {
       add_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);
     }
+    // Check if Web Instant Messenger options exist
+    $verification_status = $token = $wim_activate = $rag_soc = $auto_show_wim = $show_wim_after = $show_mobile = $lingua = $messaggio_0 = $messaggio_1 = $cf7_activate = $save_cf7_subm = '';
+    if ($wim_activation_status = get_option('wim_activation_status')) {
+      $verification_status = ($wim_activation_status['activation_status'] == 1) ? 'verified' : '';
+      $token = $wim_activation_status['token'];
+    }
+    if ($wim_old_options = get_option('web-instant-messenger')) {
+      $wim_activate = ($wim_old_options['activate'] == 1) ? 'on' : '';
+      $rag_soc = $wim_old_options['rag_soc'];
+      $auto_show_wim = $wim_old_options['auto_show_wim'];
+      $show_wim_after = $wim_old_options['show_wim_after'];
+      $show_mobile = $wim_old_options['show_mobile'];
+      $lingua = $wim_old_options['lingua'];
+      $messaggio_0 = $wim_old_options['messaggio_0'];
+      $messaggio_1 = $wim_old_options['messaggio_1'];
+    }
+    // Check if LW Contact Form 7 Addon plugin is activated
+    if (is_plugin_active('lw-contact-form/localweb.php')) {
+      $cf7_activate = $save_cf7_subm = 'on';
+    }
     if (!get_option(LW_ALL_IN_ONE_PLUGIN_NAME)) {
       $initial_empty_options = array(
         'ga_activate' => '',
@@ -44,21 +64,21 @@ class Lw_All_In_One_Activator {
           'monitor_tel_link' => '',
           'monitor_form_submit' => '',
         ),
-        'wim_activate' => '',
+        'wim_activate' => $wim_activate,
         'wim_fields' => array(
-          'verification_status' => '',
-          'token' => '',
-          'rag_soc' => '',
-          'auto_show_wim' => '',
-          'show_wim_after' => '',
-          'show_mobile' => '',
-          'lingua' => '',
-          'messaggio_0' => '',
-          'messaggio_1' => '',
+          'verification_status' => $verification_status,
+          'token' => $token,
+          'rag_soc' => $rag_soc,
+          'auto_show_wim' => $auto_show_wim,
+          'show_wim_after' => $show_wim_after,
+          'show_mobile' => $show_mobile,
+          'lingua' => $lingua,
+          'messaggio_0' => $messaggio_0,
+          'messaggio_1' => $messaggio_1,
         ),
-        'cf7_activate' => '',
+        'cf7_activate' => $cf7_activate,
         'lw_cf7_fields' => array(
-          'save_cf7_subm' => '',
+          'save_cf7_subm' => $save_cf7_subm,
         ),
       );
       add_option(LW_ALL_IN_ONE_PLUGIN_NAME, $initial_empty_options);
@@ -116,12 +136,6 @@ class Lw_All_In_One_Activator {
       if (empty($old_cf7_table_transfer_err)) {
         $wpdb->query("DROP TABLE IF EXISTS $old_cf7_table");
       }
-    }
-    if (is_plugin_active('lw-contact-form/localweb.php')) {
-      deactivate_plugins('lw-contact-form/localweb.php');
-      delete_plugins(array('lw-contact-form/localweb.php'));
-    } elseif (is_plugin_inactive('lw-contact-form/localweb.php')) {
-      delete_plugins(array('lw-contact-form/localweb.php'));
     }
 
     // if (version_compare($version, '1.0.1') < 0) {
