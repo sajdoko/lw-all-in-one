@@ -35,7 +35,7 @@ class Lw_All_In_One_Activator {
       add_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);
     }
     // Check if Web Instant Messenger options exist
-    $verification_status = $token = $wim_activate = $rag_soc = $auto_show_wim = $show_wim_after = $show_mobile = $lingua = $messaggio_0 = $messaggio_1 = $cf7_activate = $save_cf7_subm = '';
+    $verification_status = $token = $wim_activate = $rag_soc = $auto_show_wim = $show_wim_after = $show_mobile = $lingua = $messaggio_0 = $messaggio_1 = $cf7_activate = $save_cf7_subm = $ga_activate = $tracking_id = $save_ga_events = $monitor_email_link = $monitor_tel_link = $monitor_form_submit = '';
     if ($wim_activation_status = get_option('wim_activation_status')) {
       $verification_status = ($wim_activation_status['activation_status'] == 1) ? 'verified' : '';
       $token = $wim_activation_status['token'];
@@ -54,15 +54,31 @@ class Lw_All_In_One_Activator {
     if (is_plugin_active('lw-contact-form/localweb.php')) {
       $cf7_activate = $save_cf7_subm = 'on';
     }
+    //
+    if (get_option('gadwp_options')) {
+      $gadwp_options = (array) json_decode( get_option( 'gadwp_options' ) );
+      $locked_profile = $gadwp_options['tableid_jail'];
+      $profiles = $gadwp_options['ga_profiles_list'];
+      if (!empty($profiles) ) {
+				foreach ( $profiles as $item ) {
+					if ( $item[1] == $locked_profile ) {
+						$tracking_id = $item[2];
+					}
+				}
+			}
+    }
+    if (preg_match('/^ua-\d{4,9}-\d{1,4}$/i', strval($tracking_id))) {
+      $ga_activate = $save_ga_events = $monitor_email_link = $monitor_tel_link = $monitor_form_submit = 'on';
+    }
     if (!get_option(LW_ALL_IN_ONE_PLUGIN_NAME)) {
       $initial_empty_options = array(
-        'ga_activate' => '',
+        'ga_activate' => $ga_activate,
         'ga_fields' => array(
-          'tracking_id' => '',
-          'save_ga_events' => '',
-          'monitor_email_link' => '',
-          'monitor_tel_link' => '',
-          'monitor_form_submit' => '',
+          'tracking_id' => $tracking_id,
+          'save_ga_events' => $save_ga_events,
+          'monitor_email_link' => $monitor_email_link,
+          'monitor_tel_link' => $monitor_tel_link,
+          'monitor_form_submit' => $monitor_form_submit,
         ),
         'wim_activate' => $wim_activate,
         'wim_fields' => array(
