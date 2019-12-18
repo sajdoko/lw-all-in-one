@@ -96,6 +96,10 @@ class Lw_All_In_One_Activator {
         'lw_cf7_fields' => array(
           'save_cf7_subm' => $save_cf7_subm,
         ),
+        'lw_hf_fields' => array(
+          'insert_header' => '',
+          'insert_footer' => '',
+        ),
       );
       add_option(LW_ALL_IN_ONE_PLUGIN_NAME, $initial_empty_options);
     }

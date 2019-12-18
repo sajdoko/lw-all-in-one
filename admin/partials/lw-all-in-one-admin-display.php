@@ -45,6 +45,8 @@
       $wim_fields_messaggio_1 = (isset($options['wim_fields']['messaggio_1'])) ? $options['wim_fields']['messaggio_1'] : '';
       $cf7_activate = (isset($options['cf7_activate'])) ? $options['cf7_activate'] : '';
       $lw_cf7_fields_save_cf7_subm = (isset($options['lw_cf7_fields']['save_cf7_subm'])) ? $options['lw_cf7_fields']['save_cf7_subm'] : '';
+      $lw_hf_fields_insert_header = (isset($options['lw_hf_fields']['insert_header'])) ? $options['lw_hf_fields']['insert_header'] : '';
+      $lw_hf_fields_insert_footer = (isset($options['lw_hf_fields']['insert_footer'])) ? $options['lw_hf_fields']['insert_footer'] : '';
 
       settings_fields($this->plugin_name);
       do_settings_sections($this->plugin_name);
@@ -117,6 +119,7 @@
               <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_ga_events" class="nav-tab <?php echo $active_tab == 'tab_ga_events' ? 'nav-tab-active' : ''; ?><?php echo $ga_activate != 'on' ? ' d-none' : ''; ?>"><?php esc_attr_e('Google Analytics', LW_ALL_IN_ONE_PLUGIN_NAME);?></a>
               <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_wim" class="nav-tab <?php echo $active_tab == 'tab_wim' ? 'nav-tab-active' : ''; ?><?php echo $wim_activate != 'on' ? ' d-none' : ''; ?>"><?php esc_attr_e('Web Instant Messenger', LW_ALL_IN_ONE_PLUGIN_NAME);?></a>
               <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_cf7" class="nav-tab <?php echo $active_tab == 'tab_cf7' ? 'nav-tab-active' : ''; ?><?php echo $cf7_activate != 'on' ? ' d-none' : ''; ?>"><?php esc_attr_e('LocalWeb Contact Form 7', LW_ALL_IN_ONE_PLUGIN_NAME);?></a>
+              <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_hf" class="nav-tab <?php echo $active_tab == 'tab_hf' ? 'nav-tab-active' : ''; ?>"><?php esc_attr_e('Header/Footer Scripts', LW_ALL_IN_ONE_PLUGIN_NAME);?></a>
             </h2>
             <div id="tab_ga_events" class="tab-content<?php echo $active_tab != 'tab_ga_events' ? ' d-none' : ''; ?>">
               <table class="lw-aio-settings-options<?php echo $ga_activate != 'on' ? ' d-none' : ''; ?>">
@@ -299,6 +302,24 @@
                         </label>
                       </div>
                       <div class="switch-desc"> <?php esc_attr_e('Save Contact Form 7 submissions locally on the database?', LW_ALL_IN_ONE_PLUGIN_NAME);?></div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div id="tab_hf" class="tab-content<?php echo $active_tab != 'tab_hf' ? ' d-none' : ''; ?>">
+              <table class="lw-aio-settings-options">
+                <tbody>
+                  <tr>
+                    <td>
+                      <h3 class="shfs-labels" for="insert_header"><?php esc_attr_e( 'Scripts in header:', LW_ALL_IN_ONE_PLUGIN_NAME); ?></h3>
+                      <textarea rows="10" cols="100" id="insert_header" name="<?php echo $this->plugin_name; ?>[lw_hf_fields][insert_header]"><?php echo ($lw_hf_fields_insert_header !== '') ? htmlspecialchars_decode($lw_hf_fields_insert_header) : ''; ?></textarea>
+                      <p> <?php _e('Above script will be inserted into the <code>&lt;head&gt;</code> section.', LW_ALL_IN_ONE_PLUGIN_NAME);?></p>
+                    </td>
+                    <td>
+                      <h3 class="shfs-labels" for="insert_footer"><?php esc_attr_e( 'Scripts in footer:', LW_ALL_IN_ONE_PLUGIN_NAME); ?></h3>
+                      <textarea rows="10" cols="100" id="insert_footer" name="<?php echo $this->plugin_name; ?>[lw_hf_fields][insert_footer]"><?php echo ($lw_hf_fields_insert_footer !== '') ? htmlspecialchars_decode($lw_hf_fields_insert_footer) : ''; ?></textarea>
+                      <p> <?php _e('Above script will be inserted just before <code>&lt;/body&gt;</code> tag using <code>wp_footer</code> hook.', LW_ALL_IN_ONE_PLUGIN_NAME);?></p>
                     </td>
                   </tr>
                 </tbody>

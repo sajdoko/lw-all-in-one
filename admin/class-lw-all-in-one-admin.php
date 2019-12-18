@@ -145,20 +145,8 @@ class Lw_All_In_One_Admin {
       $valid['ga_fields']['monitor_tel_link'] = (isset($input['ga_fields']['monitor_tel_link']) && $input['ga_fields']['monitor_tel_link'] === 'on') ? 'on' : '';
       $valid['ga_fields']['monitor_form_submit'] = (isset($input['ga_fields']['monitor_form_submit']) && $input['ga_fields']['monitor_form_submit'] === 'on') ? 'on' : '';
     }
-    $valid['cf7_activate'] = (isset($input['cf7_activate']) && $input['cf7_activate'] === 'on') ? 'on' : '';
-    $valid['lw_cf7_fields']['save_cf7_subm'] = (isset($input['lw_cf7_fields']['save_cf7_subm']) && $input['lw_cf7_fields']['save_cf7_subm'] === 'on') ? 'on' : '';
-    if ($valid['cf7_activate'] !== '' && !is_plugin_active('contact-form-7/wp-contact-form-7.php')) {
-      $valid['cf7_activate'] = '';
-      $valid['lw_cf7_fields']['save_cf7_subm'] = '';
-      add_settings_error(
-        $this->plugin_name,
-        $this->plugin_name . '_lw_cf7_main_not_active',
-        __('Contact Form 7 plugin is not active!', LW_ALL_IN_ONE_PLUGIN_NAME),
-        'error'
-      );
-    }
-    $valid['wim_activate'] = (isset($input['wim_activate']) && $input['wim_activate'] === 'on') ? 'on' : '';
 
+    $valid['wim_activate'] = (isset($input['wim_activate']) && $input['wim_activate'] === 'on') ? 'on' : '';
     if (isset($input['wim_fields']['verification_status']) && isset($input['wim_fields']['save_wim_options']) && isset($input['wim_fields']['token']) && strlen($input['wim_fields']['token']) == 32) {
       $wim_settings_arr = array();
       $api_url = 'https://localweb.it/chat/api/cliente/aggiorna.php';
@@ -210,6 +198,22 @@ class Lw_All_In_One_Admin {
           );
       }
     }
+
+    $valid['cf7_activate'] = (isset($input['cf7_activate']) && $input['cf7_activate'] === 'on') ? 'on' : '';
+    $valid['lw_cf7_fields']['save_cf7_subm'] = (isset($input['lw_cf7_fields']['save_cf7_subm']) && $input['lw_cf7_fields']['save_cf7_subm'] === 'on') ? 'on' : '';
+    if ($valid['cf7_activate'] !== '' && !is_plugin_active('contact-form-7/wp-contact-form-7.php')) {
+      $valid['cf7_activate'] = '';
+      $valid['lw_cf7_fields']['save_cf7_subm'] = '';
+      add_settings_error(
+        $this->plugin_name,
+        $this->plugin_name . '_lw_cf7_main_not_active',
+        __('Contact Form 7 plugin is not active!', LW_ALL_IN_ONE_PLUGIN_NAME),
+        'error'
+      );
+    }
+    $valid['lw_hf_fields']['insert_header'] = (isset($input['lw_hf_fields']['insert_header'])) ? esc_html($input['lw_hf_fields']['insert_header']) : '';
+    $valid['lw_hf_fields']['insert_footer'] = (isset($input['lw_hf_fields']['insert_footer'])) ? esc_html($input['lw_hf_fields']['insert_footer']) : '';
+
     $exiting_options = get_option($this->plugin_name);
     if ($exiting_options) {
       $valid = array_merge($exiting_options, $valid);
@@ -259,6 +263,26 @@ class Lw_All_In_One_Admin {
    */
   public function lw_all_in_one_validate_tracking_id($str) {
     return preg_match('/^ua-\d{4,9}-\d{1,4}$/i', strval($str)) ? true : false;
+  }
+
+  public function lw_all_in_one_header_scripts_from_tab() {
+    //Plugin options
+    $options = get_option($this->plugin_name);
+    $lw_hf_fields_insert_header = (isset($options['lw_hf_fields']['insert_header'])) ? $options['lw_hf_fields']['insert_header'] : '';
+
+    if ($lw_hf_fields_insert_header !== '') {
+      echo htmlspecialchars_decode($lw_hf_fields_insert_header), "\n";
+    }
+  }
+
+  public function lw_all_in_one_footer_scripts_from_tab() {
+    //Plugin options
+    $options = get_option($this->plugin_name);
+    $lw_hf_fields_insert_footer = (isset($options['lw_hf_fields']['insert_footer'])) ? $options['lw_hf_fields']['insert_footer'] : '';
+
+    if ($lw_hf_fields_insert_footer !== '') {
+      echo htmlspecialchars_decode($lw_hf_fields_insert_footer), "\n";
+    }
   }
 
 }
