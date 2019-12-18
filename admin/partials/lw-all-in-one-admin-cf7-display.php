@@ -36,26 +36,13 @@ if ($lw_all_in_one_total_page > 1) {
         'next_text' => __('&raquo;'),
         'total' => $lw_all_in_one_total_page,
         'current' => $lw_all_in_one_page,
-    )) . '<span class="lw-aio-pagi-span-tot">' . $lw_all_in_one_total . __( ' Results', $this->plugin_name )  . '</span></div>';
+    )) . '<span class="lw-aio-pagi-span-tot">' . $lw_all_in_one_total . __( ' Results', LW_ALL_IN_ONE_PLUGIN_NAME )  . '</span></div>';
 }
 ?>
 <div class="wrap">
 
   <h2><?php echo esc_html(get_admin_page_title()); ?></h2>
   <hr>
-<?php
-        $old_cf7_table = $wpdb->prefix . 'inserimenti_cf';
-        if ($wpdb->get_var("show tables like '$old_cf7_table'") == $old_cf7_table) {
-          $inserimenti_cf_results = $wpdb->get_results("SELECT * FROM $old_cf7_table");
-          if ($inserimenti_cf_results !== null) {
-            foreach ($inserimenti_cf_results as $inserimenti_cf) {
-              echo "<pre>";
-              print_r($inserimenti_cf->soggetto);
-              echo "</pre>";
-            }
-          }
-        }
-?>
   <div id="poststuff" class="lw-aio">
     <div id="post-body" class="metabox-holder columns-2">
       <!-- main content -->
@@ -65,12 +52,12 @@ if ($lw_all_in_one_total_page > 1) {
             <?php if ($lw_all_in_one_total > 0) : ?>
             <table class="lw-aio-settings-options">
               <tr class="lw-aio-table-heading">
-                <td><?php esc_attr_e( 'Nr.', $this->plugin_name ); ?></td>
-                <td><?php esc_attr_e( 'Time', $this->plugin_name ); ?></td>
-                <td><?php esc_attr_e( 'Name', $this->plugin_name ); ?></td>
-                <td><?php esc_attr_e( 'Surname', $this->plugin_name ); ?></td>
-                <td><?php esc_attr_e( 'Email', $this->plugin_name ); ?></td>
-                <td><?php esc_attr_e( 'Phone', $this->plugin_name ); ?></td>
+                <td><?php esc_attr_e( 'Nr.', LW_ALL_IN_ONE_PLUGIN_NAME ); ?></td>
+                <td><?php esc_attr_e( 'Time', LW_ALL_IN_ONE_PLUGIN_NAME ); ?></td>
+                <td><?php esc_attr_e( 'Name', LW_ALL_IN_ONE_PLUGIN_NAME ); ?></td>
+                <td><?php esc_attr_e( 'Surname', LW_ALL_IN_ONE_PLUGIN_NAME ); ?></td>
+                <td><?php esc_attr_e( 'Email', LW_ALL_IN_ONE_PLUGIN_NAME ); ?></td>
+                <td><?php esc_attr_e( 'Phone', LW_ALL_IN_ONE_PLUGIN_NAME ); ?></td>
               </tr>
               <?php $nr= $lw_all_in_one_offset +1; foreach ($ga_event_results as $ga_event_result) : ?>
               <tr class="lw-aio-table-row">
@@ -86,7 +73,7 @@ if ($lw_all_in_one_total_page > 1) {
             <br class="clear" />
             <?php echo $lw_all_in_one_pagination_html; ?>
             <?php else : ?>
-              <h2><?php esc_attr_e( 'There are no contact form 7 submissions saved yet!', $this->plugin_name ); ?></h2>
+              <h2><?php esc_attr_e( 'There are no contact form 7 submissions saved yet!', LW_ALL_IN_ONE_PLUGIN_NAME ); ?></h2>
             <?php endif; ?>
           </div>
         </div>

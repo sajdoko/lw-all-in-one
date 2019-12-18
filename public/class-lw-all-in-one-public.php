@@ -90,7 +90,7 @@ class Lw_All_In_One_Public {
   }
   public function lw_all_in_one_save_ga_event() {
     if (!check_ajax_referer($this->plugin_name, 'security')) {
-      wp_send_json_error(__('Security is not valid!', $this->plugin_name));
+      wp_send_json_error(__('Security is not valid!', LW_ALL_IN_ONE_PLUGIN_NAME));
       die();
     }
 
@@ -104,14 +104,14 @@ class Lw_All_In_One_Public {
       $data = array('time' => current_time('mysql', 1), 'ga_category' => $event_category, 'ga_action' => $event_action, 'ga_label' => $event_label);
       $format = array('%s', '%s', '%s', '%s');
       if ($wpdb->insert($table, $data, $format)) {
-        wp_send_json_success(__('Event Saved!', $this->plugin_name));
+        wp_send_json_success(__('Event Saved!', LW_ALL_IN_ONE_PLUGIN_NAME));
         die();
       } else {
-        wp_send_json_error(__('Event was not Saved!', $this->plugin_name));
+        wp_send_json_error(__('Event was not Saved!', LW_ALL_IN_ONE_PLUGIN_NAME));
         die();
       }
     } else {
-      wp_send_json_error(__('Action is not valid!', $this->plugin_name));
+      wp_send_json_error(__('Action is not valid!', LW_ALL_IN_ONE_PLUGIN_NAME));
       die();
     }
   }

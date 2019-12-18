@@ -91,7 +91,7 @@ class Lw_All_In_One_Admin {
      * Add a settings page for this plugin to the Settings menu.
      *
      */
-    add_menu_page(__('LocalWeb All In One Options', $this->plugin_name), __('LW AIO Options', $this->plugin_name), 'manage_options', $this->plugin_name, array($this, 'display_plugin_setup_page'), plugin_dir_url(__FILE__) . '/img/icon.png', 81
+    add_menu_page(__('LocalWeb All In One Options', LW_ALL_IN_ONE_PLUGIN_NAME), __('LW AIO Options', LW_ALL_IN_ONE_PLUGIN_NAME), 'manage_options', $this->plugin_name, array($this, 'display_plugin_setup_page'), plugin_dir_url(__FILE__) . '/img/icon.png', 81
     );
   }
 
@@ -113,7 +113,7 @@ class Lw_All_In_One_Admin {
 
   public function lw_all_in_one_add_action_links($links) {
     $settings_link = array(
-      '<a href="' . admin_url('admin.php?page=' . $this->plugin_name) . '">' . __('Settings', $this->plugin_name) . '</a>',
+      '<a href="' . admin_url('admin.php?page=' . $this->plugin_name) . '">' . __('Settings', LW_ALL_IN_ONE_PLUGIN_NAME) . '</a>',
     );
     return array_merge($settings_link, $links);
   }
@@ -136,7 +136,7 @@ class Lw_All_In_One_Admin {
       add_settings_error(
         $this->plugin_name,
         $this->plugin_name . '_ga_fields_tracking_id_not_valid',
-        __('Tracking ID is NOT valid!', $this->plugin_name),
+        __('Tracking ID is NOT valid!', LW_ALL_IN_ONE_PLUGIN_NAME),
         'error'
       );
     } else {
@@ -153,7 +153,7 @@ class Lw_All_In_One_Admin {
       add_settings_error(
         $this->plugin_name,
         $this->plugin_name . '_lw_cf7_main_not_active',
-        __('Contact Form 7 plugin is not active!', $this->plugin_name),
+        __('Contact Form 7 plugin is not active!', LW_ALL_IN_ONE_PLUGIN_NAME),
         'error'
       );
     }
@@ -189,7 +189,7 @@ class Lw_All_In_One_Admin {
           add_settings_error(
               $this->plugin_name,
               $this->plugin_name . '_settings_not_updated_error',
-              _e('Something went wrong: ' . $error_message, $this->plugin_name),
+              _e('Something went wrong: ' . $error_message, LW_ALL_IN_ONE_PLUGIN_NAME),
               'error'
           );
       } elseif ($data->response == 'success') {

@@ -36,7 +36,7 @@ if ($lw_all_in_one_total_page > 1) {
         'next_text' => __('&raquo;'),
         'total' => $lw_all_in_one_total_page,
         'current' => $lw_all_in_one_page,
-    )) . '<span class="lw-aio-pagi-span-tot">' . $lw_all_in_one_total . __( ' Results', $this->plugin_name )  . '</span></div>';
+    )) . '<span class="lw-aio-pagi-span-tot">' . $lw_all_in_one_total . __( ' Results', LW_ALL_IN_ONE_PLUGIN_NAME )  . '</span></div>';
 }
 
 ?>
@@ -54,11 +54,11 @@ if ($lw_all_in_one_total_page > 1) {
             <?php if ($lw_all_in_one_total > 0) : ?>
             <table class="lw-aio-settings-options">
               <tr class="lw-aio-table-heading">
-                <td><?php esc_attr_e( 'Nr.', $this->plugin_name ); ?></td>
-                <td><?php esc_attr_e( 'Time', $this->plugin_name ); ?></td>
-                <td><?php esc_attr_e( 'Category', $this->plugin_name ); ?></td>
-                <td><?php esc_attr_e( 'Action', $this->plugin_name ); ?></td>
-                <td><?php esc_attr_e( 'Label', $this->plugin_name ); ?></td>
+                <td><?php esc_attr_e( 'Nr.', LW_ALL_IN_ONE_PLUGIN_NAME ); ?></td>
+                <td><?php esc_attr_e( 'Time', LW_ALL_IN_ONE_PLUGIN_NAME ); ?></td>
+                <td><?php esc_attr_e( 'Category', LW_ALL_IN_ONE_PLUGIN_NAME ); ?></td>
+                <td><?php esc_attr_e( 'Action', LW_ALL_IN_ONE_PLUGIN_NAME ); ?></td>
+                <td><?php esc_attr_e( 'Label', LW_ALL_IN_ONE_PLUGIN_NAME ); ?></td>
               </tr>
               <?php $nr= $lw_all_in_one_offset +1; foreach ($ga_event_results as $ga_event_result) : ?>
               <tr class="lw-aio-table-row">
@@ -73,7 +73,7 @@ if ($lw_all_in_one_total_page > 1) {
             <br class="clear" />
             <?php echo $lw_all_in_one_pagination_html; ?>
             <?php else : ?>
-              <h2><?php esc_attr_e( 'There are no events saved yet!', $this->plugin_name ); ?></h2>
+              <h2><?php esc_attr_e( 'There are no events saved yet!', LW_ALL_IN_ONE_PLUGIN_NAME ); ?></h2>
             <?php endif; ?>
           </div>
         </div>

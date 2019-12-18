@@ -34,7 +34,7 @@ class Lw_All_In_One_i18n {
   public function load_plugin_textdomain() {
 
     load_plugin_textdomain(
-      'lw-all-in-one',
+      'lw_all_in_one',
       false,
       dirname(dirname(plugin_basename(__FILE__))) . '/languages/'
     );

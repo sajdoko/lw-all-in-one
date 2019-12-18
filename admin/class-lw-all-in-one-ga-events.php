@@ -55,7 +55,7 @@ class Lw_All_In_One_Ga_Events {
   }
 
   public function lw_all_in_one_ga_events_admin_menu() {
-    add_submenu_page($this->plugin_name, __('Saved Google Analytics Events', $this->plugin_name), __('Saved GA Events', $this->plugin_name), 'manage_options', $this->plugin_name . '_ga_events', array($this, 'lw_all_in_one_ga_events_display_page'));
+    add_submenu_page($this->plugin_name, __('Saved Google Analytics Events', LW_ALL_IN_ONE_PLUGIN_NAME), __('Saved GA Events', LW_ALL_IN_ONE_PLUGIN_NAME), 'manage_options', $this->plugin_name . '_ga_events', array($this, 'lw_all_in_one_ga_events_display_page'));
   }
 
   public function lw_all_in_one_ga_events_display_page() {
@@ -137,7 +137,7 @@ class Lw_All_In_One_Ga_Events {
   public function woocommerce_google_analytics_missing_notice() {
     // Checks if WooCommerce is installed.
     if (is_plugin_active('woocommerce/woocommerce.php') && !is_plugin_active('woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php')) {
-      echo '<div class="error"><p><img src="' . plugin_dir_url(__FILE__) . '/img/icon.png' . '"/> ' . sprintf(__('You have Woocommerce active. Install %s to better track your store events!', $this->plugin_name), '<a href="https://wordpress.org/plugins/woocommerce-google-analytics-integration/" target="_blank">' . __('WooCommerce Google Analytics Integration', $this->plugin_name) . '</a>') . '</p></div>';
+      echo '<div class="error"><p><img src="' . plugin_dir_url(__FILE__) . '/img/icon.png' . '"/> ' . sprintf(__('You have Woocommerce active. Install %s to better track your store events!', LW_ALL_IN_ONE_PLUGIN_NAME), '<a href="https://wordpress.org/plugins/woocommerce-google-analytics-integration/" target="_blank">' . __('WooCommerce Google Analytics Integration', LW_ALL_IN_ONE_PLUGIN_NAME) . '</a>') . '</p></div>';
     }
   }
 

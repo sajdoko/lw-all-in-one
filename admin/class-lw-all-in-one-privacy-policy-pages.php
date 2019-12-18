@@ -55,7 +55,7 @@ class Lw_All_In_One_Privacy_Policy_Pages {
   }
 
   public function lw_all_in_one_privacy_policy_admin_menu() {
-    add_submenu_page($this->plugin_name, __('LocalWeb Privacy&Policy Pages Options', $this->plugin_name), __('Privacy&Policy Pages', $this->plugin_name), 'manage_options', $this->plugin_name . '_privacy_policy', array($this, 'lw_all_in_one_privacy_policy_display_page'));
+    add_submenu_page($this->plugin_name, __('LocalWeb Privacy&Policy Pages Options', LW_ALL_IN_ONE_PLUGIN_NAME), __('Privacy&Policy Pages', LW_ALL_IN_ONE_PLUGIN_NAME), 'manage_options', LW_ALL_IN_ONE_PLUGIN_NAME . '_privacy_policy', array($this, 'lw_all_in_one_privacy_policy_display_page'));
   }
 
   public function lw_all_in_one_privacy_policy_display_page() {
@@ -64,7 +64,7 @@ class Lw_All_In_One_Privacy_Policy_Pages {
 
   public function lw_all_in_one_create_privacy_pages() {
     if (!check_ajax_referer($this->plugin_name, 'security')) {
-      wp_send_json_error(__('Security is not valid!', $this->plugin_name));
+      wp_send_json_error(__('Security is not valid!', LW_ALL_IN_ONE_PLUGIN_NAME));
       die();
     }
     if (isset($_POST['action']) && $_POST['action'] === "lw_all_in_one_create_privacy_pages") {
@@ -113,7 +113,7 @@ class Lw_All_In_One_Privacy_Policy_Pages {
       wp_send_json_success($create_pages_resposes);
       die();
     } else {
-      wp_send_json_error(__('Action is not valid!', $this->plugin_name));
+      wp_send_json_error(__('Action is not valid!', LW_ALL_IN_ONE_PLUGIN_NAME));
       die();
     }
   }

@@ -56,7 +56,7 @@ class Lw_All_In_One_Cf7 {
   }
 
   public function lw_all_in_one_cf7_admin_submenu() {
-    add_submenu_page($this->plugin_name, __('Saved Contact Form Submissions', $this->plugin_name), __('Saved CF7', $this->plugin_name), 'manage_options', $this->plugin_name . '_cf7', array($this, 'lw_all_in_one_cf7_display_page'));
+    add_submenu_page($this->plugin_name, __('Saved Contact Form Submissions', LW_ALL_IN_ONE_PLUGIN_NAME), __('Saved CF7', LW_ALL_IN_ONE_PLUGIN_NAME), 'manage_options', $this->plugin_name . '_cf7', array($this, 'lw_all_in_one_cf7_display_page'));
   }
 
   public function lw_all_in_one_cf7_display_page() {

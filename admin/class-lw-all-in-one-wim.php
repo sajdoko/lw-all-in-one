@@ -57,7 +57,7 @@ class Lw_All_In_One_Wim {
 
   public function lw_all_in_one_verify_wim_attivation() {
     if (!check_ajax_referer($this->plugin_name, 'security')) {
-      wp_send_json_error(__('Security is not valid!', $this->plugin_name));
+      wp_send_json_error(__('Security is not valid!', LW_ALL_IN_ONE_PLUGIN_NAME));
       die();
     }
     if (isset($_POST['action']) && $_POST['action'] === "lw_all_in_one_verify_wim_attivation") {
@@ -77,28 +77,28 @@ class Lw_All_In_One_Wim {
       $data = json_decode($ret_body);
       if (is_wp_error($response)) {
         $error_message = $response->get_error_message();
-        wp_send_json_error(__('Something went wrong!', $this->plugin_name));
+        wp_send_json_error(__('Something went wrong!', LW_ALL_IN_ONE_PLUGIN_NAME));
         die();
       } elseif ($data->response == 'verified') {
         if ($data->token == '') {
-          wp_send_json_error(__('WIM authorized but token returned was empty!', $this->plugin_name));
+          wp_send_json_error(__('WIM authorized but token returned was empty!', LW_ALL_IN_ONE_PLUGIN_NAME));
           die();
         } else if (strlen($data->token) == 32) {
-          wp_send_json_success(array('token' => $data->token, 'message' => __('Web Instant Messenger authorized!', $this->plugin_name)));
+          wp_send_json_success(array('token' => $data->token, 'message' => __('Web Instant Messenger authorized!', LW_ALL_IN_ONE_PLUGIN_NAME)));
           die();
         } else {
-          wp_send_json_error(__('There was an unknown error!', $this->plugin_name));
+          wp_send_json_error(__('There was an unknown error!', LW_ALL_IN_ONE_PLUGIN_NAME));
           die();
         }
       } elseif ($data->response == 'unverified') {
-        wp_send_json_error(__('Web Instant Messenger unauthorized!', $this->plugin_name));
+        wp_send_json_error(__('Web Instant Messenger unauthorized!', LW_ALL_IN_ONE_PLUGIN_NAME));
         die();
       } else {
-        wp_send_json_error(__('Not a valid domain!', $this->plugin_name));
+        wp_send_json_error(__('Not a valid domain!', LW_ALL_IN_ONE_PLUGIN_NAME));
         die();
       }
     } else {
-      wp_send_json_error(__('Action is not valid!', $this->plugin_name));
+      wp_send_json_error(__('Action is not valid!', LW_ALL_IN_ONE_PLUGIN_NAME));
       die();
     }
   }
@@ -127,19 +127,19 @@ class Lw_All_In_One_Wim {
       echo '</p>';
     } elseif ($wim_activate !== 'on') {
       echo '<script type="text/javascript">
-            console.log("'. esc_attr__('WIM not activated!', $this->plugin_name).'");
+            console.log("'. esc_attr__('WIM not activated!', LW_ALL_IN_ONE_PLUGIN_NAME).'");
             </script>';
     } elseif ($wim_fields_verification_status !== 'verified') {
       echo '<script type="text/javascript">
-            console.log("'. esc_attr__('WIM not verified!', $this->plugin_name).'");
+            console.log("'. esc_attr__('WIM not verified!', LW_ALL_IN_ONE_PLUGIN_NAME).'");
             </script>';
     } elseif ($wim_fields_rag_soc === '') {
       echo '<script type="text/javascript">
-            console.log("'. esc_attr__('Missing business name!', $this->plugin_name).'");
+            console.log("'. esc_attr__('Missing business name!', LW_ALL_IN_ONE_PLUGIN_NAME).'");
             </script>';
     } else {
       echo '<script type="text/javascript">
-            console.log("'. esc_attr__('WIM installed!', $this->plugin_name).'");
+            console.log("'. esc_attr__('WIM installed!', LW_ALL_IN_ONE_PLUGIN_NAME).'");
             </script>';
     }
   }

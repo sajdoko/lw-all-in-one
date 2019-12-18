@@ -67,7 +67,7 @@
         <div id="post-body-content">
           <div class="postbox">
             <div class="inside">
-              <h2><?php esc_attr_e('Activate Services', $this->plugin_name);?></h2>
+              <h2><?php esc_attr_e('Activate Services', LW_ALL_IN_ONE_PLUGIN_NAME);?></h2>
               <table class="lw-aio-settings-options">
                 <tbody>
                   <tr>
@@ -79,7 +79,7 @@
                           <div class="lw-aio-settings-custom-switch-switch"></div>
                         </label>
                       </div>
-                      <div class="switch-desc"> <?php esc_attr_e('Activate Google Analytics?', $this->plugin_name);?></div>
+                      <div class="switch-desc"> <?php esc_attr_e('Activate Google Analytics?', LW_ALL_IN_ONE_PLUGIN_NAME);?></div>
                     </td>
                   </tr>
                   <tr>
@@ -91,7 +91,7 @@
                           <div class="lw-aio-settings-custom-switch-switch"></div>
                         </label>
                       </div>
-                      <div class="switch-desc"> <?php esc_attr_e('Activate Web Instant Messenger?', $this->plugin_name);?></div>
+                      <div class="switch-desc"> <?php esc_attr_e('Activate Web Instant Messenger?', LW_ALL_IN_ONE_PLUGIN_NAME);?></div>
                     </td>
                   </tr>
                   <tr>
@@ -103,7 +103,7 @@
                           <div class="lw-aio-settings-custom-switch-switch"></div>
                         </label>
                       </div>
-                      <div class="switch-desc"> <?php esc_attr_e('Activate LocalWeb Contact Form 7?', $this->plugin_name);?></div>
+                      <div class="switch-desc"> <?php esc_attr_e('Activate LocalWeb Contact Form 7?', LW_ALL_IN_ONE_PLUGIN_NAME);?></div>
                     </td>
                   </tr>
                 </tbody>
@@ -114,15 +114,15 @@
         <div id="post-body-content">
           <div class="inside">
             <h2 class="nav-tab-wrapper">
-              <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_ga_events" class="nav-tab <?php echo $active_tab == 'tab_ga_events' ? 'nav-tab-active' : ''; ?><?php echo $ga_activate != 'on' ? ' d-none' : ''; ?>"><?php esc_attr_e('Google Analytics', $this->plugin_name);?></a>
-              <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_wim" class="nav-tab <?php echo $active_tab == 'tab_wim' ? 'nav-tab-active' : ''; ?><?php echo $wim_activate != 'on' ? ' d-none' : ''; ?>"><?php esc_attr_e('Web Instant Messenger', $this->plugin_name);?></a>
-              <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_cf7" class="nav-tab <?php echo $active_tab == 'tab_cf7' ? 'nav-tab-active' : ''; ?><?php echo $cf7_activate != 'on' ? ' d-none' : ''; ?>"><?php esc_attr_e('LocalWeb Contact Form 7', $this->plugin_name);?></a>
+              <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_ga_events" class="nav-tab <?php echo $active_tab == 'tab_ga_events' ? 'nav-tab-active' : ''; ?><?php echo $ga_activate != 'on' ? ' d-none' : ''; ?>"><?php esc_attr_e('Google Analytics', LW_ALL_IN_ONE_PLUGIN_NAME);?></a>
+              <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_wim" class="nav-tab <?php echo $active_tab == 'tab_wim' ? 'nav-tab-active' : ''; ?><?php echo $wim_activate != 'on' ? ' d-none' : ''; ?>"><?php esc_attr_e('Web Instant Messenger', LW_ALL_IN_ONE_PLUGIN_NAME);?></a>
+              <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_cf7" class="nav-tab <?php echo $active_tab == 'tab_cf7' ? 'nav-tab-active' : ''; ?><?php echo $cf7_activate != 'on' ? ' d-none' : ''; ?>"><?php esc_attr_e('LocalWeb Contact Form 7', LW_ALL_IN_ONE_PLUGIN_NAME);?></a>
             </h2>
             <div id="tab_ga_events" class="tab-content<?php echo $active_tab != 'tab_ga_events' ? ' d-none' : ''; ?>">
               <table class="lw-aio-settings-options<?php echo $ga_activate != 'on' ? ' d-none' : ''; ?>">
                 <tbody>
                   <tr>
-                    <td colspan="2"><h2><?php esc_attr_e('Google Analytics Options', $this->plugin_name);?></h2></td>
+                    <td colspan="2"><h2><?php esc_attr_e('Google Analytics Options', LW_ALL_IN_ONE_PLUGIN_NAME);?></h2></td>
                   </tr>
                   <tr>
                     <td class="lw-aio-settings-title">
@@ -141,7 +141,7 @@
                           <div class="lw-aio-settings-custom-switch-switch"></div>
                         </label>
                       </div>
-                      <div class="switch-desc"> <?php esc_attr_e('Save Google Analytics events locally on the database?', $this->plugin_name);?></div>
+                      <div class="switch-desc"> <?php esc_attr_e('Save Google Analytics events locally on the database?', LW_ALL_IN_ONE_PLUGIN_NAME);?></div>
                     </td>
                   </tr>
                   <tr>
@@ -153,7 +153,7 @@
                           <div class="lw-aio-settings-custom-switch-switch"></div>
                         </label>
                       </div>
-                      <div class="switch-desc"> <?php esc_attr_e('Track Email link clicks', $this->plugin_name);?></div>
+                      <div class="switch-desc"> <?php esc_attr_e('Track Email link clicks', LW_ALL_IN_ONE_PLUGIN_NAME);?></div>
                     </td>
                   </tr>
                   <tr>
@@ -165,7 +165,7 @@
                           <div class="lw-aio-settings-custom-switch-switch"></div>
                         </label>
                       </div>
-                      <div class="switch-desc"> <?php esc_attr_e('Track Telephone link clicks', $this->plugin_name);?></div>
+                      <div class="switch-desc"> <?php esc_attr_e('Track Telephone link clicks', LW_ALL_IN_ONE_PLUGIN_NAME);?></div>
                     </td>
                   </tr>
                   <tr>
@@ -177,7 +177,7 @@
                           <div class="lw-aio-settings-custom-switch-switch"></div>
                         </label>
                       </div>
-                      <div class="switch-desc"> <?php esc_attr_e('Track Contact Form submission', $this->plugin_name);?></div>
+                      <div class="switch-desc"> <?php esc_attr_e('Track Contact Form submission', LW_ALL_IN_ONE_PLUGIN_NAME);?></div>
                     </td>
                   </tr>
                 </tbody>
@@ -187,71 +187,71 @@
               <table class="lw-aio-settings-options<?php echo $wim_activate != 'on' ? ' d-none' : ''; ?>">
                 <tbody>
                   <tr>
-                    <td colspan="2"><h2><?php esc_attr_e('Web Instant Messenger Options', $this->plugin_name);?></h2></td>
+                    <td colspan="2"><h2><?php esc_attr_e('Web Instant Messenger Options', LW_ALL_IN_ONE_PLUGIN_NAME);?></h2></td>
                   </tr>
                   <?php if($wim_fields_verification_status == 'verified' && strlen($wim_fields_token) == 32) : ?>
                   <tr>
                     <td class="lw-aio-settings-title-wim">
-                      <label for="rag_soc"><?php esc_attr_e('Business Name', $this->plugin_name);?></label>
+                      <label for="rag_soc"><?php esc_attr_e('Business Name', LW_ALL_IN_ONE_PLUGIN_NAME);?></label>
                     </td>
                     <td class="lw-aio-settings-field-wim">
                       <input type="text" id="rag_soc" name="<?php echo $this->plugin_name; ?>[wim_fields][rag_soc]" value="<?php echo ($wim_fields_rag_soc != '') ? $wim_fields_rag_soc : substr(get_option('blogname'), 0, 16) . '...';?>" maxlength="20">
                     </td>
                     <td>
-                      <?php esc_attr_e('Insert here your business name which will appear on the chat header', $this->plugin_name);?>
+                      <?php esc_attr_e('Insert here your business name which will appear on the chat header', LW_ALL_IN_ONE_PLUGIN_NAME);?>
                     </td>
                   </tr>
                   <tr>
                     <td class="lw-aio-settings-title-wim">
-                      <label for="auto_show_wim"><?php esc_attr_e('Auto show WIM', $this->plugin_name);?></label>
+                      <label for="auto_show_wim"><?php esc_attr_e('Auto show WIM', LW_ALL_IN_ONE_PLUGIN_NAME);?></label>
                     </td>
                     <td class="lw-aio-settings-field-wim">
                       <select name="<?php echo $this->plugin_name; ?>[wim_fields][auto_show_wim]" id="auto_show_wim">
-                          <option value="SI" <?php selected($wim_fields_auto_show_wim, 'SI', TRUE ); ?>><?php esc_attr_e('YES', $this->plugin_name);?></option>
-                          <option value="NO" <?php selected($wim_fields_auto_show_wim, 'NO', TRUE ); ?>><?php esc_attr_e('NO', $this->plugin_name);?></option>
+                          <option value="SI" <?php selected($wim_fields_auto_show_wim, 'SI', TRUE ); ?>><?php esc_attr_e('YES', LW_ALL_IN_ONE_PLUGIN_NAME);?></option>
+                          <option value="NO" <?php selected($wim_fields_auto_show_wim, 'NO', TRUE ); ?>><?php esc_attr_e('NO', LW_ALL_IN_ONE_PLUGIN_NAME);?></option>
                       </select>
                     </td>
                   </tr>
                   <tr>
                     <td class="lw-aio-settings-title-wim">
-                      <label for="show_wim_after"><?php esc_attr_e('Auto show WIM after', $this->plugin_name);?></label>
+                      <label for="show_wim_after"><?php esc_attr_e('Auto show WIM after', LW_ALL_IN_ONE_PLUGIN_NAME);?></label>
                     </td>
                     <td class="lw-aio-settings-field-wim">
                       <select id="show_wim_after" name="<?php echo $this->plugin_name;?>[wim_fields][show_wim_after]">
-                          <option value="5" <?php selected( $wim_fields_show_wim_after, '5', TRUE ); ?>><?php _e('5s', $this->plugin_name);?></option>
-                          <option value="10" <?php selected( $wim_fields_show_wim_after, '10', TRUE ); ?>><?php _e('10s', $this->plugin_name);?></option>
-                          <option value="20" <?php selected( $wim_fields_show_wim_after, '20', TRUE ); ?>><?php _e('20s', $this->plugin_name);?></option>
-                          <option value="30" <?php selected( $wim_fields_show_wim_after, '30', TRUE ); ?>><?php _e('30s', $this->plugin_name);?></option>
-                          <option value="45" <?php selected( $wim_fields_show_wim_after, '45', TRUE ); ?>><?php _e('45s', $this->plugin_name);?></option>
-                          <option value="60" <?php selected( $wim_fields_show_wim_after, '60', TRUE ); ?>><?php _e('60s', $this->plugin_name);?></option>
+                          <option value="5" <?php selected( $wim_fields_show_wim_after, '5', TRUE ); ?>><?php _e('5s', LW_ALL_IN_ONE_PLUGIN_NAME);?></option>
+                          <option value="10" <?php selected( $wim_fields_show_wim_after, '10', TRUE ); ?>><?php _e('10s', LW_ALL_IN_ONE_PLUGIN_NAME);?></option>
+                          <option value="20" <?php selected( $wim_fields_show_wim_after, '20', TRUE ); ?>><?php _e('20s', LW_ALL_IN_ONE_PLUGIN_NAME);?></option>
+                          <option value="30" <?php selected( $wim_fields_show_wim_after, '30', TRUE ); ?>><?php _e('30s', LW_ALL_IN_ONE_PLUGIN_NAME);?></option>
+                          <option value="45" <?php selected( $wim_fields_show_wim_after, '45', TRUE ); ?>><?php _e('45s', LW_ALL_IN_ONE_PLUGIN_NAME);?></option>
+                          <option value="60" <?php selected( $wim_fields_show_wim_after, '60', TRUE ); ?>><?php _e('60s', LW_ALL_IN_ONE_PLUGIN_NAME);?></option>
                       </select>
                     </td>
                   </tr>
                   <tr>
                     <td class="lw-aio-settings-title-wim">
-                      <label for="show_mobile"><?php esc_attr_e('Show On Mobile', $this->plugin_name);?></label>
+                      <label for="show_mobile"><?php esc_attr_e('Show On Mobile', LW_ALL_IN_ONE_PLUGIN_NAME);?></label>
                     </td>
                     <td class="lw-aio-settings-field-wim">
                       <select id="show_mobile" name="<?php echo $this->plugin_name;?>[wim_fields][show_mobile]">
-                          <option value="SI" <?php selected( $wim_fields_show_mobile, 'SI', TRUE ); ?>><?php _e('YES', $this->plugin_name);?></option>
-                          <option value="NO" <?php selected( $wim_fields_show_mobile, 'NO', TRUE ); ?>><?php _e('NO', $this->plugin_name);?></option>
+                          <option value="SI" <?php selected( $wim_fields_show_mobile, 'SI', TRUE ); ?>><?php _e('YES', LW_ALL_IN_ONE_PLUGIN_NAME);?></option>
+                          <option value="NO" <?php selected( $wim_fields_show_mobile, 'NO', TRUE ); ?>><?php _e('NO', LW_ALL_IN_ONE_PLUGIN_NAME);?></option>
                       </select>
                     </td>
                   </tr>
                   <tr>
                     <td class="lw-aio-settings-title-wim">
-                      <label for="lingua"><?php esc_attr_e('Language', $this->plugin_name);?></label>
+                      <label for="lingua"><?php esc_attr_e('Language', LW_ALL_IN_ONE_PLUGIN_NAME);?></label>
                     </td>
                     <td class="lw-aio-settings-field-wim">
                       <select id="lingua" name="<?php echo $this->plugin_name;?>[wim_fields][lingua]">
-                        <option value="it" <?php selected( $wim_fields_lingua, 'it', TRUE ); ?>><?php _e('IT', $this->plugin_name);?></option>
-                        <option value="en" <?php selected( $wim_fields_lingua, 'en', TRUE ); ?>><?php _e('EN', $this->plugin_name);?></option>
+                        <option value="it" <?php selected( $wim_fields_lingua, 'it', TRUE ); ?>><?php _e('IT', LW_ALL_IN_ONE_PLUGIN_NAME);?></option>
+                        <option value="en" <?php selected( $wim_fields_lingua, 'en', TRUE ); ?>><?php _e('EN', LW_ALL_IN_ONE_PLUGIN_NAME);?></option>
                       </select>
                     </td>
                   </tr>
                   <tr>
                     <td class="lw-aio-settings-title-wim">
-                      <label for="messaggio_0"><?php esc_attr_e('Automatic Message 0', $this->plugin_name);?></label>
+                      <label for="messaggio_0"><?php esc_attr_e('Automatic Message 0', LW_ALL_IN_ONE_PLUGIN_NAME);?></label>
                     </td>
                     <td class="lw-aio-settings-field-wim">
                       <textarea id="messaggio_0" name="<?php echo $this->plugin_name;?>[wim_fields][messaggio_0]" maxlength="250" cols="55" rows="3" class=""><?php echo ($wim_fields_messaggio_0 != '') ? $wim_fields_messaggio_0 : 'Salve! Come posso esserle utile?';?></textarea>
@@ -259,7 +259,7 @@
                   </tr>
                   <tr>
                     <td class="lw-aio-settings-title-wim">
-                      <label for="messaggio_1"><?php esc_attr_e('Automatic Message 0', $this->plugin_name);?></label>
+                      <label for="messaggio_1"><?php esc_attr_e('Automatic Message 0', LW_ALL_IN_ONE_PLUGIN_NAME);?></label>
                     </td>
                     <td class="lw-aio-settings-field-wim">
                       <textarea id="messaggio_1" name="<?php echo $this->plugin_name;?>[wim_fields][messaggio_1]" maxlength="250" cols="55" rows="3" class=""><?php echo ($wim_fields_messaggio_1 != '') ? $wim_fields_messaggio_1 : 'Gentilmente, mi può lasciare un contatto telefonico o email in modo da poterla eventualmente ricontattare?';?></textarea>
@@ -278,7 +278,7 @@
                         <input type="hidden" name="<?php echo $this->plugin_name;?>[wim_fields][save_wim_options]"/>
                       </td>
                     </tr>
-                  <tr><td colspan="2"><?php submit_button(__('Verify Activation', $this->plugin_name), 'secondary', 'wim_verify_attivation', TRUE);?></td></tr>
+                  <tr><td colspan="2"><?php submit_button(__('Verify Activation', LW_ALL_IN_ONE_PLUGIN_NAME), 'secondary', 'wim_verify_attivation', TRUE);?></td></tr>
                   <?php endif; ?>
                 </tbody>
               </table>
@@ -287,7 +287,7 @@
               <table class="lw-aio-settings-options<?php echo $cf7_activate != 'on' ? ' d-none' : ''; ?>">
                 <tbody>
                   <tr>
-                    <td colspan="2"><h2><?php esc_attr_e('Contact Form 7 Addon Options', $this->plugin_name);?></h2></td>
+                    <td colspan="2"><h2><?php esc_attr_e('Contact Form 7 Addon Options', LW_ALL_IN_ONE_PLUGIN_NAME);?></h2></td>
                   </tr>
                   <tr>
                     <td colspan="2" class="lw-aio-settings-title">
@@ -298,7 +298,7 @@
                           <div class="lw-aio-settings-custom-switch-switch"></div>
                         </label>
                       </div>
-                      <div class="switch-desc"> <?php esc_attr_e('Save Contact Form 7 submissions locally on the database?', $this->plugin_name);?></div>
+                      <div class="switch-desc"> <?php esc_attr_e('Save Contact Form 7 submissions locally on the database?', LW_ALL_IN_ONE_PLUGIN_NAME);?></div>
                     </td>
                   </tr>
                 </tbody>
@@ -320,6 +320,6 @@
       <br class="clear">
     </div>
 
-    <?php submit_button(__('Save Options', $this->plugin_name), 'primary', 'submit', TRUE);?>
+    <?php submit_button(__('Save Options', LW_ALL_IN_ONE_PLUGIN_NAME), 'primary', 'submit', TRUE);?>
   </form>
 </div>
