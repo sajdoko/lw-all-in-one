@@ -211,8 +211,8 @@ class Lw_All_In_One_Admin {
         'error'
       );
     }
-    $valid['lw_hf_fields']['insert_header'] = (isset($input['lw_hf_fields']['insert_header'])) ? esc_html($input['lw_hf_fields']['insert_header']) : '';
-    $valid['lw_hf_fields']['insert_footer'] = (isset($input['lw_hf_fields']['insert_footer'])) ? esc_html($input['lw_hf_fields']['insert_footer']) : '';
+    $valid['lw_hf_fields']['insert_header'] = (isset($input['lw_hf_fields']['insert_header'])) ? base64_encode($input['lw_hf_fields']['insert_header']) : '';
+    $valid['lw_hf_fields']['insert_footer'] = (isset($input['lw_hf_fields']['insert_footer'])) ? base64_encode($input['lw_hf_fields']['insert_footer']) : '';
 
     $exiting_options = get_option($this->plugin_name);
     if ($exiting_options) {
@@ -271,7 +271,7 @@ class Lw_All_In_One_Admin {
     $lw_hf_fields_insert_header = (isset($options['lw_hf_fields']['insert_header'])) ? $options['lw_hf_fields']['insert_header'] : '';
 
     if ($lw_hf_fields_insert_header !== '') {
-      echo htmlspecialchars_decode($lw_hf_fields_insert_header), "\n";
+      echo (base64_decode($lw_hf_fields_insert_header)), "\n";
     }
   }
 
@@ -281,7 +281,7 @@ class Lw_All_In_One_Admin {
     $lw_hf_fields_insert_footer = (isset($options['lw_hf_fields']['insert_footer'])) ? $options['lw_hf_fields']['insert_footer'] : '';
 
     if ($lw_hf_fields_insert_footer !== '') {
-      echo htmlspecialchars_decode($lw_hf_fields_insert_footer), "\n";
+      echo (base64_decode($lw_hf_fields_insert_footer)), "\n";
     }
   }
 

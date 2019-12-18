@@ -313,12 +313,12 @@
                   <tr>
                     <td>
                       <h3 class="shfs-labels" for="insert_header"><?php esc_attr_e( 'Scripts in header:', LW_ALL_IN_ONE_PLUGIN_NAME); ?></h3>
-                      <textarea rows="10" cols="100" id="insert_header" name="<?php echo $this->plugin_name; ?>[lw_hf_fields][insert_header]"><?php echo ($lw_hf_fields_insert_header !== '') ? htmlspecialchars_decode($lw_hf_fields_insert_header) : ''; ?></textarea>
+                      <textarea rows="10" cols="100" id="insert_header" name="<?php echo $this->plugin_name; ?>[lw_hf_fields][insert_header]"><?php echo ($lw_hf_fields_insert_header !== '') ? esc_textarea(base64_decode($lw_hf_fields_insert_header)) : ''; ?></textarea>
                       <p> <?php _e('Above script will be inserted into the <code>&lt;head&gt;</code> section.', LW_ALL_IN_ONE_PLUGIN_NAME);?></p>
                     </td>
                     <td>
                       <h3 class="shfs-labels" for="insert_footer"><?php esc_attr_e( 'Scripts in footer:', LW_ALL_IN_ONE_PLUGIN_NAME); ?></h3>
-                      <textarea rows="10" cols="100" id="insert_footer" name="<?php echo $this->plugin_name; ?>[lw_hf_fields][insert_footer]"><?php echo ($lw_hf_fields_insert_footer !== '') ? htmlspecialchars_decode($lw_hf_fields_insert_footer) : ''; ?></textarea>
+                      <textarea rows="10" cols="100" id="insert_footer" name="<?php echo $this->plugin_name; ?>[lw_hf_fields][insert_footer]"><?php echo ($lw_hf_fields_insert_footer !== '') ? esc_textarea(base64_decode($lw_hf_fields_insert_footer)) : ''; ?></textarea>
                       <p> <?php _e('Above script will be inserted just before <code>&lt;/body&gt;</code> tag using <code>wp_footer</code> hook.', LW_ALL_IN_ONE_PLUGIN_NAME);?></p>
                     </td>
                   </tr>
