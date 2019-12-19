@@ -10,7 +10,7 @@
  * Plugin Name:       LocalWeb All In One
  * Plugin URI:        https://localweb.it/
  * Description:       LocalWeb All In One should be installed only on websites created by LocalWeb S.R.L, because it extends certain functionalities of the website which may send certain data to LocalWeb's servers. This is to make possible showing data on LocalWeb App.
- * Version:           1.1.0
+ * Version:           1.1.1
  * Author:            LocalWeb S.R.L
  * Author URI:        https://localweb.it/
  * License:           GPL-2.0+
@@ -27,7 +27,7 @@ if (!defined('WPINC')) {
 /**
  * Currently plugin version.
  */
-define('LW_ALL_IN_ONE_VERSION', '1.1.0');
+define('LW_ALL_IN_ONE_VERSION', '1.1.1');
 
 /**
  * Plugin name.

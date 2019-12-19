@@ -250,7 +250,7 @@ class Lw_All_In_One_Admin {
    * @return  Boolean
    */
   public function lw_all_in_one_validate_tracking_id($str) {
-    return preg_match('/^ua-\d{4,9}-\d{1,4}$/i', strval($str)) ? true : false;
+    return (bool) preg_match('/^ua-\d{4,9}-\d{1,4}$/i', strval($str));
   }
 
   public function lw_all_in_one_header_scripts_from_tab() {

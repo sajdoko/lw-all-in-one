@@ -51,7 +51,7 @@ class Lw_All_In_One_Activator {
     if (is_plugin_active('lw-contact-form/localweb.php')) {
       $cf7_activate = $save_cf7_subm = 'on';
     }
-    //
+    // Check if Google Analytics Dashboard per WP (GADWP) plugin options exist
     if (get_option('gadwp_options')) {
       $gadwp_options = (array) json_decode( get_option( 'gadwp_options' ) );
       $locked_profile = $gadwp_options['tableid_jail'];
@@ -63,9 +63,24 @@ class Lw_All_In_One_Activator {
 					}
 				}
 			}
+    } else {
+      // Check if Google Analytics Tracking ID exist in themes header.php
+      $header_file = get_template_directory() . '/header.php';
+      $source = file_get_contents($header_file);
+      if (preg_match_all('/\bUA-\d{4,9}-\d{1,4}\b/', $source, $match)) {
+        if ($file = fopen($header_file, "w")) {
+          $source = preg_replace('/<!-- Global site tag \(gtag.js\) - Google Analytics -->([^`]*?)gtag\(\'config\', \'\bUA-\d{4,9}-\d{1,4}\b\'\);\n<\/script>/', '', $source);
+          fwrite($file, $source);
+          fclose($file);
+        }
+        $tracking_id = $match[0][0];
+      }
     }
+    // Validate $tracking_id
     if (preg_match('/^ua-\d{4,9}-\d{1,4}$/i', strval($tracking_id))) {
       $ga_activate = $save_ga_events = $monitor_email_link = $monitor_tel_link = $monitor_form_submit = 'on';
+    } else {
+      $tracking_id = '';
     }
     if (!get_option(LW_ALL_IN_ONE_PLUGIN_NAME)) {
       $initial_empty_options = array(

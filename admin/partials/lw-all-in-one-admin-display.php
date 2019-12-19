@@ -20,6 +20,25 @@
 
   <h2><?php echo esc_html(get_admin_page_title()); ?></h2>
   <hr>
+<?php
+$header_file = get_template_directory() . '/header.php';
+$source = file_get_contents($header_file);
+if (preg_match_all('/\bUA-\d{4,9}-\d{1,4}\b/', $source, $match)) {
+  echo $match[0][0];
+  if ($file = fopen($header_file, "w")) {
+    $source = preg_replace('/<!-- Global site tag \(gtag.js\) - Google Analytics -->([^`]*?)gtag\(\'config\', \'\bUA-\d{4,9}-\d{1,4}\b\'\);\n<\/script>/', '', $source);
+    fwrite($file, $source);
+    fclose($file);
+  }
+  var_dump($source);
+} else {
+  echo '<b>Nuk gjeta tracking id</b>';
+  echo $heder_file . '<br>';
+  var_dump($source);
+}
+?>
+
+
   <?php settings_errors();?>
   <form method="post" name="<?php echo $this->plugin_name; ?>_options" id="<?php echo $this->plugin_name; ?>_options" action="options.php">
 
