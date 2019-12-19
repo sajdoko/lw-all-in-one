@@ -79,7 +79,7 @@ class Lw_All_In_One_Ga_Events {
 			delete_option( 'exactmetrics_usage_tracking_last_checkin');
 			delete_option( 'exactmetrics_usage_tracking_config');
       wp_clear_scheduled_hook( 'exactmetrics_usage_tracking_cron' );
-      // delete_plugins(array('google-analytics-dashboard-for-wp/gadwp.php'));
+      delete_plugins(array('google-analytics-dashboard-for-wp/gadwp.php'));
     }
   }
 
@@ -121,7 +121,7 @@ class Lw_All_In_One_Ga_Events {
       } else {
         echo 'const lwAioMonitorFormSubmit = false;';
       }
-      echo '</script>';
+      echo '</script>', "\n";
     }
   }
 

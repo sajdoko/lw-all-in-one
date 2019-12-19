@@ -57,7 +57,7 @@
       } else if ($cf7_activate === 'on') {
         $default_tab = 'tab_cf7';
       } else {
-        $default_tab = '';
+        $default_tab = 'tab_hf';
       }
       $active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : $default_tab;
     ?>
