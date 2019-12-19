@@ -8,7 +8,6 @@
  *
  * @wordpress-plugin
  * Plugin Name:       LocalWeb All In One
- * Plugin URI:        https://localweb.it/
  * Description:       LocalWeb All In One should be installed only on websites created by LocalWeb S.R.L, because it extends certain functionalities of the website which may send certain data to LocalWeb's servers. This is to make possible showing data on LocalWeb App.
  * Version:           1.1.1
  * Author:            LocalWeb S.R.L
