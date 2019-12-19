@@ -68,12 +68,13 @@ class Lw_All_In_One_Activator {
       $header_file = get_template_directory() . '/header.php';
       $source = file_get_contents($header_file);
       if (preg_match_all('/\bUA-\d{4,9}-\d{1,4}\b/', $source, $match)) {
+        $tracking_id = $match[0][0];
+        // It exists, remove it since we're going to use our script integration
         if ($file = fopen($header_file, "w")) {
           $source = preg_replace('/<!-- Global site tag \(gtag.js\) - Google Analytics -->([^`]*?)gtag\(\'config\', \'\bUA-\d{4,9}-\d{1,4}\b\'\);\n<\/script>/', '', $source);
           fwrite($file, $source);
           fclose($file);
         }
-        $tracking_id = $match[0][0];
       }
     }
     // Validate $tracking_id
