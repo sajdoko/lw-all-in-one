@@ -312,6 +312,11 @@
                 <tbody>
                   <tr>
                     <td>
+                    <p><?php _e('<b>*</b><code>HTML, JS, CSS</code> code is allowed. <b>Be careful</b> what you insert here because it may break the website!', LW_ALL_IN_ONE_PLUGIN_NAME);?></p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
                       <h3 class="shfs-labels" for="insert_header"><?php esc_attr_e( 'Scripts in header:', LW_ALL_IN_ONE_PLUGIN_NAME); ?></h3>
                       <textarea rows="10" cols="100" id="insert_header" name="<?php echo $this->plugin_name; ?>[lw_hf_fields][insert_header]"><?php echo ($lw_hf_fields_insert_header !== '') ? esc_textarea(base64_decode($lw_hf_fields_insert_header)) : ''; ?></textarea>
                       <p> <?php _e('Above script will be inserted into the <code>&lt;head&gt;</code> section.', LW_ALL_IN_ONE_PLUGIN_NAME);?></p>

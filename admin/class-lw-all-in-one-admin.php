@@ -211,8 +211,8 @@ class Lw_All_In_One_Admin {
         'error'
       );
     }
-    $valid['lw_hf_fields']['insert_header'] = (isset($input['lw_hf_fields']['insert_header'])) ? base64_encode($input['lw_hf_fields']['insert_header']) : '';
-    $valid['lw_hf_fields']['insert_footer'] = (isset($input['lw_hf_fields']['insert_footer'])) ? base64_encode($input['lw_hf_fields']['insert_footer']) : '';
+    $valid['lw_hf_fields']['insert_header'] = (isset($input['lw_hf_fields']['insert_header'])) ? $this->sanitize_header_footer_scripts($input['lw_hf_fields']['insert_header']) : '';
+    $valid['lw_hf_fields']['insert_footer'] = (isset($input['lw_hf_fields']['insert_footer'])) ? $this->sanitize_header_footer_scripts($input['lw_hf_fields']['insert_footer']) : '';
 
     $exiting_options = get_option($this->plugin_name);
     if ($exiting_options) {
@@ -283,6 +283,12 @@ class Lw_All_In_One_Admin {
     if ($lw_hf_fields_insert_footer !== '') {
       echo (base64_decode($lw_hf_fields_insert_footer)), "\n";
     }
+  }
+
+  public function sanitize_header_footer_scripts($scripts) {
+    // Remove PHP code
+    $scripts = preg_replace('/<\?php.+?\?>$/ms', '', $scripts);
+    return base64_encode($scripts);
   }
 
 }
