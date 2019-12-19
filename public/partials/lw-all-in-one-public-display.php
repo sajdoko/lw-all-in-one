@@ -6,7 +6,6 @@
  * This file is used to markup the public-facing aspects of the plugin.
  *
  * @link       https://localweb.it/
- * @since      1.0.0
  *
  * @package    Lw_All_In_One
  * @subpackage Lw_All_In_One/public/partials

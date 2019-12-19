@@ -4,7 +4,6 @@
  * The admin-specific functionality of the plugin.
  *
  * @link       https://localweb.it/
- * @since      1.0.0
  *
  * @package    Lw_All_In_One
  * @subpackage Lw_All_In_One/admin
@@ -25,7 +24,6 @@ class Lw_All_In_One_Admin {
   /**
    * The ID of this plugin.
    *
-   * @since    1.0.0
    * @access   private
    * @var      string    $plugin_name    The ID of this plugin.
    */
@@ -34,7 +32,6 @@ class Lw_All_In_One_Admin {
   /**
    * The version of this plugin.
    *
-   * @since    1.0.0
    * @access   private
    * @var      string    $version    The current version of this plugin.
    */
@@ -43,7 +40,6 @@ class Lw_All_In_One_Admin {
   /**
    * Initialize the class and set its properties.
    *
-   * @since    1.0.0
    * @param      string    $plugin_name       The name of this plugin.
    * @param      string    $version    The version of this plugin.
    */
@@ -57,7 +53,6 @@ class Lw_All_In_One_Admin {
   /**
    * Register the stylesheets for the admin area.
    *
-   * @since    1.0.0
    */
   public function enqueue_styles($hook) {
     if (preg_match('/page_lw_all_in_one/', $hook)) {
@@ -68,7 +63,6 @@ class Lw_All_In_One_Admin {
   /**
    * Register the JavaScript for the admin area.
    *
-   * @since    1.0.0
    */
   public function enqueue_scripts($hook) {
     // echo $hook;
@@ -98,7 +92,6 @@ class Lw_All_In_One_Admin {
   /**
    * Render the settings page for this plugin.
    *
-   * @since    1.0.0
    */
 
   public function display_plugin_setup_page() {
@@ -108,7 +101,6 @@ class Lw_All_In_One_Admin {
   /**
    * Add's action links to the plugins page.
    *
-   * @since    1.0.0
    */
 
   public function lw_all_in_one_add_action_links($links) {
@@ -121,7 +113,6 @@ class Lw_All_In_One_Admin {
   /**
    * Sanitize plugin input options.
    *
-   * @since    1.0.0
    */
   public function validate_lw_all_in_one_settings($input) {
     $valid = array();
@@ -225,7 +216,6 @@ class Lw_All_In_One_Admin {
   /**
    * Register plugin input options.
    *
-   * @since    1.0.0
    */
   public function lw_all_in_one_options_update() {
     register_setting($this->plugin_name, $this->plugin_name, array($this, 'validate_lw_all_in_one_settings'));
@@ -234,7 +224,6 @@ class Lw_All_In_One_Admin {
   /**
    * Check if plugin option exists and returns it's vale, else return empty.
    *
-   * @since     1.0.0
    */
   public function get_plugin_options($parent_key = false, $key) {
     $options = get_option($this->plugin_name);
@@ -259,7 +248,6 @@ class Lw_All_In_One_Admin {
    *
    * @param   $str     string to be validated
    * @return  Boolean
-   * @since    1.0.0
    */
   public function lw_all_in_one_validate_tracking_id($str) {
     return preg_match('/^ua-\d{4,9}-\d{1,4}$/i', strval($str)) ? true : false;

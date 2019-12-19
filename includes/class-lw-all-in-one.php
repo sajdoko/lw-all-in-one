@@ -7,7 +7,6 @@
  * public-facing side of the site and the admin area.
  *
  * @link       https://localweb.it/
- * @since      1.0.0
  *
  * @package    Lw_All_In_One
  * @subpackage Lw_All_In_One/includes
@@ -22,7 +21,6 @@
  * Also maintains the unique identifier of this plugin as well as the current
  * version of the plugin.
  *
- * @since      1.0.0
  * @package    Lw_All_In_One
  * @subpackage Lw_All_In_One/includes
  * @author     sajdoko <sajmir.doko@localweb.it>
@@ -33,7 +31,6 @@ class Lw_All_In_One {
    * The loader that's responsible for maintaining and registering all hooks that power
    * the plugin.
    *
-   * @since    1.0.0
    * @access   protected
    * @var      Lw_All_In_One_Loader    $loader    Maintains and registers all hooks for the plugin.
    */
@@ -42,7 +39,6 @@ class Lw_All_In_One {
   /**
    * The unique identifier of this plugin.
    *
-   * @since    1.0.0
    * @access   protected
    * @var      string    $plugin_name    The string used to uniquely identify this plugin.
    */
@@ -51,7 +47,6 @@ class Lw_All_In_One {
   /**
    * The current version of the plugin.
    *
-   * @since    1.0.0
    * @access   protected
    * @var      string    $version    The current version of the plugin.
    */
@@ -64,7 +59,6 @@ class Lw_All_In_One {
    * Load the dependencies, define the locale, and set the hooks for the admin area and
    * the public-facing side of the site.
    *
-   * @since    1.0.0
    */
   public function __construct() {
     if (defined('LW_ALL_IN_ONE_VERSION')) {
@@ -112,7 +106,6 @@ class Lw_All_In_One {
    * Create an instance of the loader which will be used to register the hooks
    * with WordPress.
    *
-   * @since    1.0.0
    * @access   private
    */
   private function load_dependencies() {
@@ -170,7 +163,6 @@ class Lw_All_In_One {
    * Uses the Lw_All_In_One_i18n class in order to set the domain and to register the hook
    * with WordPress.
    *
-   * @since    1.0.0
    * @access   private
    */
   private function set_locale() {
@@ -185,7 +177,6 @@ class Lw_All_In_One {
    * Register all of the hooks related to the admin area functionality
    * of the plugin.
    *
-   * @since    1.0.0
    * @access   private
    */
   private function define_admin_hooks() {
@@ -214,7 +205,6 @@ class Lw_All_In_One {
    * Register all of the hooks related to the public-facing functionality
    * of the plugin.
    *
-   * @since    1.0.0
    * @access   private
    */
   private function define_public_hooks() {
@@ -234,7 +224,6 @@ class Lw_All_In_One {
    * Register all of the hooks related to the admin area functionality
    * of the plugin.
    *
-   * @since    1.0.0
    * @access   private
    */
   private function define_ga_events_hooks() {
@@ -258,7 +247,6 @@ class Lw_All_In_One {
    * Register all of the hooks related to the admin area functionality
    * of the plugin.
    *
-   * @since    1.0.0
    * @access   private
    */
   private function define_wim_hooks() {
@@ -280,7 +268,6 @@ class Lw_All_In_One {
    * Register all of the hooks related to the admin area functionality
    * of the plugin.
    *
-   * @since    1.0.0
    * @access   private
    */
   private function define_cf7_hooks() {
@@ -303,7 +290,6 @@ class Lw_All_In_One {
    * Register all of the hooks related to the admin area functionality
    * of the plugin.
    *
-   * @since    1.0.0
    * @access   private
    */
   private function define_privacy_policy_hooks() {
@@ -319,7 +305,6 @@ class Lw_All_In_One {
   /**
    * Run the loader to execute all of the hooks with WordPress.
    *
-   * @since    1.0.0
    */
   public function run() {
     $this->loader->run();
@@ -329,7 +314,6 @@ class Lw_All_In_One {
    * The name of the plugin used to uniquely identify it within the context of
    * WordPress and to define internationalization functionality.
    *
-   * @since     1.0.0
    * @return    string    The name of the plugin.
    */
   public function get_plugin_name() {
@@ -339,7 +323,6 @@ class Lw_All_In_One {
   /**
    * The reference to the class that orchestrates the hooks with the plugin.
    *
-   * @since     1.0.0
    * @return    Lw_All_In_One_Loader    Orchestrates the hooks of the plugin.
    */
   public function get_loader() {
@@ -349,7 +332,6 @@ class Lw_All_In_One {
   /**
    * Retrieve the version number of the plugin.
    *
-   * @since     1.0.0
    * @return    string    The version number of the plugin.
    */
   public function get_version() {
@@ -359,7 +341,6 @@ class Lw_All_In_One {
   /**
    * Check if plugin option exists and returns it's vale, else return false.
    *
-   * @since     1.0.0
    */
   public function check_plugin_options($parent_key = false, $key) {
     $options = get_option($this->plugin_name);

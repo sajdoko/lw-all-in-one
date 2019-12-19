@@ -4,7 +4,6 @@
  * The Contact Form 7 integration functionality of the plugin.
  *
  * @link       https://localweb.it/
- * @since      1.0.0
  *
  * @package    Lw_All_In_One
  * @subpackage Lw_All_In_One/admin
@@ -25,7 +24,6 @@ class Lw_All_In_One_Cf7 {
   /**
    * The ID of this plugin.
    *
-   * @since    1.0.0
    * @access   private
    * @var      string    $plugin_name    The ID of this plugin.
    */
@@ -34,7 +32,6 @@ class Lw_All_In_One_Cf7 {
   /**
    * The version of this plugin.
    *
-   * @since    1.0.0
    * @access   private
    * @var      string    $version    The current version of this plugin.
    */
@@ -43,7 +40,6 @@ class Lw_All_In_One_Cf7 {
   /**
    * Initialize the class and set its properties.
    *
-   * @since    1.0.0
    * @param      string    $plugin_name       The name of this plugin.
    * @param      string    $version    The version of this plugin.
    */

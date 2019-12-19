@@ -4,14 +4,13 @@
  * The plugin bootstrap file
  *
  * @link              https://localweb.it/
- * @since             1.0.0
  * @package           Lw_All_In_One
  *
  * @wordpress-plugin
  * Plugin Name:       LocalWeb All In One
  * Plugin URI:        https://localweb.it/
  * Description:       LocalWeb All In One should be installed only on websites created by LocalWeb S.R.L, because it extends certain functionalities of the website which may send certain data to LocalWeb's servers. This is to make possible showing data on LocalWeb App.
- * Version:           1.0.0
+ * Version:           1.1.0
  * Author:            LocalWeb S.R.L
  * Author URI:        https://localweb.it/
  * License:           GPL-2.0+
@@ -28,7 +27,7 @@ if (!defined('WPINC')) {
 /**
  * Currently plugin version.
  */
-define('LW_ALL_IN_ONE_VERSION', '1.0.0');
+define('LW_ALL_IN_ONE_VERSION', '1.1.0');
 
 /**
  * Plugin name.
@@ -71,7 +70,6 @@ require plugin_dir_path(__FILE__) . 'includes/class-lw-all-in-one.php';
 /**
  * Begins execution of the plugin.
  *
- * @since    1.0.0
  */
 function run_lw_all_in_one() {
 
