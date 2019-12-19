@@ -170,6 +170,11 @@ class Lw_All_In_One_Activator {
         $wpdb->query("DROP TABLE IF EXISTS $old_cf7_table");
       }
     }
+    if ( is_plugin_active( 'wp-fastest-cache/wpFastestCache.php' ) ) {
+      if(isset($GLOBALS['wp_fastest_cache']) && method_exists($GLOBALS['wp_fastest_cache'], 'deleteCache')){
+        $GLOBALS['wp_fastest_cache']->deleteCache(true);
+      }
+    }
 
     // if (version_compare($version, '1.0.1') < 0) {
     //     $sql = "CREATE TABLE $table_name (
