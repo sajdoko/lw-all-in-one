@@ -75,15 +75,15 @@ class Lw_All_In_One_Cf7 {
 
     if (isset($posted_data['nome'])) {
       $mapped_field = array();
-      $mapped_field['nome'] = $posted_data['nome'];
-      $mapped_field['cognome'] = $posted_data['cognome'];
-      $mapped_field['email'] = $posted_data['email'];
-      $mapped_field['telefono'] = $posted_data['telefono'];
-      $mapped_field['oggetto'] = $posted_data['oggetto'];
-      $mapped_field['messaggio'] = $posted_data['messaggio'];
-      $mapped_field['tipo_Contratto'] = $posted_data['tipo-contratto'];
-      $mapped_field['id_Contratto'] = $posted_data['id-contratto'];
-      $mapped_field['submited_page'] = $submited_page;
+      $mapped_field['nome'] = sanitize_text_field($posted_data['nome']);
+      $mapped_field['cognome'] = sanitize_text_field($posted_data['cognome']);
+      $mapped_field['email'] = sanitize_email($posted_data['email']);
+      $mapped_field['telefono'] = sanitize_text_field($posted_data['telefono']);
+      $mapped_field['oggetto'] = sanitize_text_field($posted_data['oggetto']);
+      $mapped_field['messaggio'] = sanitize_textarea_field($posted_data['messaggio']);
+      $mapped_field['tipo_Contratto'] = sanitize_text_field($posted_data['tipo-contratto']);
+      $mapped_field['id_Contratto'] = sanitize_text_field($posted_data['id-contratto']);
+      $mapped_field['submited_page'] = esc_url_raw($submited_page);
 
       $json_mapped_fields = json_encode($mapped_field);
 
@@ -120,7 +120,7 @@ class Lw_All_In_One_Cf7 {
       $time = time();
       //Plugin options
       $options = get_option($this->plugin_name);
-      $lw_cf7_fields_saved_cf7_subm = (isset($options['lw_cf7_fields']['save_cf7_subm'])) ? $options['lw_cf7_fields']['save_cf7_subm'] : '';
+      $lw_cf7_fields_saved_cf7_subm = (isset($options['lw_cf7_fields']['save_cf7_subm'])) ? sanitize_text_field($options['lw_cf7_fields']['save_cf7_subm']) : '';
       if ($lw_cf7_fields_saved_cf7_subm === 'on') {
         $cf7_table = $wpdb->prefix . LW_ALL_IN_ONE_CF7_TABLE;
         $wpdb->insert(
@@ -166,15 +166,15 @@ class Lw_All_In_One_Cf7 {
     $select_nn_inviato = $wpdb->get_row("SELECT * FROM " . $cf7_table . " WHERE sent !='Si'");
     if ($select_nn_inviato !== null) {
       $re_invia = array();
-      $re_invia['nome'] = $select_nn_inviato->name;
-      $re_invia['cognome'] = $select_nn_inviato->surname;
-      $re_invia['email'] = $select_nn_inviato->email;
-      $re_invia['telefono'] = $select_nn_inviato->phone;
-      $re_invia['soggetto'] = $select_nn_inviato->subject;
-      $re_invia['messaggio'] = $select_nn_inviato->message;
-      $re_invia['tipo_Contratto'] = $select_nn_inviato->tipo_Contratto;
-      $re_invia['id_Contratto'] = $select_nn_inviato->id_Contratto;
-      $re_invia['submited_page'] = $select_nn_inviato->submited_page;
+      $re_invia['nome'] = sanitize_text_field($select_nn_inviato->name);
+      $re_invia['cognome'] = sanitize_text_field($select_nn_inviato->surname);
+      $re_invia['email'] = sanitize_email($select_nn_inviato->email);
+      $re_invia['telefono'] = sanitize_text_field($select_nn_inviato->phone);
+      $re_invia['soggetto'] = sanitize_text_field($select_nn_inviato->subject);
+      $re_invia['messaggio'] = sanitize_textarea_field($select_nn_inviato->message);
+      $re_invia['tipo_Contratto'] = sanitize_text_field($select_nn_inviato->tipo_Contratto);
+      $re_invia['id_Contratto'] = sanitize_text_field($select_nn_inviato->id_Contratto);
+      $re_invia['submited_page'] = esc_url_raw($select_nn_inviato->submited_page);
 
       $json_re_invia = json_encode($re_invia);
       $args = array(
@@ -206,7 +206,6 @@ class Lw_All_In_One_Cf7 {
   public function lw_all_in_one_old_cf7_is_active_deactivate() {
     if (is_plugin_active('lw-contact-form/localweb.php')) {
       deactivate_plugins('lw-contact-form/localweb.php');
-      delete_plugins(array('lw-contact-form/localweb.php'));
     } elseif (is_plugin_inactive('lw-contact-form/localweb.php')) {
       delete_plugins(array('lw-contact-form/localweb.php'));
     }

@@ -62,10 +62,10 @@ if ($lw_all_in_one_total_page > 1) {
               <?php $nr= $lw_all_in_one_offset +1; foreach ($ga_event_results as $ga_event_result) : ?>
               <tr class="lw-aio-table-row">
                 <td><?php echo $nr; ?></td>
-                <td><?php echo $ga_event_result->time; ?></td>
-                <td><?php echo $ga_event_result->ga_category; ?></td>
-                <td><?php echo $ga_event_result->ga_action; ?></td>
-                <td><?php echo $ga_event_result->ga_label; ?></td>
+                <td><?php echo esc_html($ga_event_result->time); ?></td>
+                <td><?php echo esc_html($ga_event_result->ga_category); ?></td>
+                <td><?php echo esc_html($ga_event_result->ga_action); ?></td>
+                <td><?php echo esc_html($ga_event_result->ga_label); ?></td>
               </tr>
               <?php $nr++; endforeach; ?>
             </table>

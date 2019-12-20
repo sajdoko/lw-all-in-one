@@ -1,6 +1,6 @@
 <?php
 $page_cookie = get_page_by_path('cookie-policy');
-$cookie_file = file_get_contents(plugin_dir_path(dirname(__FILE__)) . '/privacy-pages/cookie.html');
+$cookie_file = file_get_contents(plugins_url( 'cookie.html', dirname(__FILE__) ));
 
 $patterns = array();
 $patterns[0] = '/replace_cookie_1/';
@@ -8,7 +8,7 @@ $patterns[1] = '/replace_cookie_2/';
 $replacements = array();
 $replacements[0] = $domain;
 $replacements[1] = $date;
-$cookie_file = preg_replace($patterns, $replacements, $cookie_file);
+$cookie_file = wp_filter_post_kses(preg_replace($patterns, $replacements, $cookie_file));
 
 if ($page_cookie->ID != '') {
   $cookie_page = array(

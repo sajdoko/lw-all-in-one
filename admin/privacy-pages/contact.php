@@ -1,12 +1,12 @@
 <?php
 $page_contact = get_page_by_path('informativa-trattamento-dati');
-$contact_file = file_get_contents(plugin_dir_path(dirname(__FILE__)) . '/privacy-pages/contact.html');
+$contact_file = file_get_contents(plugins_url( 'contact.html', dirname(__FILE__) ));
 
 $patterns = array();
 $patterns[0] = '/replace_contact_2/';
 $replacements = array();
 $replacements[0] = $date;
-$contact_file = preg_replace($patterns, $replacements, $contact_file);
+$contact_file = wp_filter_post_kses(preg_replace($patterns, $replacements, $contact_file));
 
 if ($page_contact->ID != '') {
   $contact_page = array(

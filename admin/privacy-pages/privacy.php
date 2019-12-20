@@ -1,6 +1,6 @@
 <?php
 $page_policy = get_page_by_path('informativa-sul-trattamento-dei-dati-personali');
-$policy_file = file_get_contents(plugin_dir_path(dirname(__FILE__)) . '/privacy-pages/privacy-policy.html');
+$policy_file = file_get_contents(plugins_url( 'privacy-policy.html', dirname(__FILE__) ));
 
 $patterns = array();
 $patterns[0] = '/replace_privacy_1/';
@@ -8,7 +8,7 @@ $patterns[1] = '/replace_privacy_2/';
 $replacements = array();
 $replacements[0] = $domain;
 $replacements[1] = $date;
-$policy_file = preg_replace($patterns, $replacements, $policy_file);
+$policy_file = wp_filter_post_kses(preg_replace($patterns, $replacements, $policy_file));
 
 if ($page_policy->ID != '') {
   $policy_page = array(

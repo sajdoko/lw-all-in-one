@@ -117,7 +117,7 @@ class Lw_All_In_One_Admin {
   public function validate_lw_all_in_one_settings($input) {
     $valid = array();
     $valid['ga_activate'] = (isset($input['ga_activate']) && $input['ga_activate'] === 'on') ? 'on' : '';
-    $valid['ga_fields']['tracking_id'] = (isset($input['ga_fields']['tracking_id'])) ? $input['ga_fields']['tracking_id'] : '';
+    $valid['ga_fields']['tracking_id'] = (isset($input['ga_fields']['tracking_id'])) ? sanitize_text_field($input['ga_fields']['tracking_id']) : '';
     if ($valid['ga_fields']['tracking_id'] !== '' && !$this->lw_all_in_one_validate_tracking_id($valid['ga_fields']['tracking_id'])) {
       $valid['ga_fields']['tracking_id'] = $this->get_plugin_options('ga_fields', 'tracking_id');
       $valid['ga_fields']['save_ga_events'] = $this->get_plugin_options('ga_fields', 'save_ga_events');

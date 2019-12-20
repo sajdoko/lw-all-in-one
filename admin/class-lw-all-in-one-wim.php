@@ -80,7 +80,7 @@ class Lw_All_In_One_Wim {
           wp_send_json_error(__('WIM authorized but token returned was empty!', LW_ALL_IN_ONE_PLUGIN_NAME));
           die();
         } else if (strlen($data->token) == 32) {
-          wp_send_json_success(array('token' => $data->token, 'message' => __('Web Instant Messenger authorized!', LW_ALL_IN_ONE_PLUGIN_NAME)));
+          wp_send_json_success(array('token' => sanitize_text_field($data->token), 'message' => __('Web Instant Messenger authorized!', LW_ALL_IN_ONE_PLUGIN_NAME)));
           die();
         } else {
           wp_send_json_error(__('There was an unknown error!', LW_ALL_IN_ONE_PLUGIN_NAME));
@@ -102,9 +102,9 @@ class Lw_All_In_One_Wim {
   public function lw_all_in_one_insert_wim_footer() {
     //Plugin options
     $options = get_option($this->plugin_name);
-    $wim_activate = (isset($options['wim_activate'])) ? $options['wim_activate'] : '';
-    $wim_fields_verification_status = (isset($options['wim_fields']['verification_status'])) ? $options['wim_fields']['verification_status'] : '';
-    $wim_fields_rag_soc = (isset($options['wim_fields']['rag_soc'])) ? $options['wim_fields']['rag_soc'] : '';
+    $wim_activate = (isset($options['wim_activate'])) ? sanitize_text_field($options['wim_activate']) : '';
+    $wim_fields_verification_status = (isset($options['wim_fields']['verification_status'])) ? sanitize_text_field($options['wim_fields']['verification_status']) : '';
+    $wim_fields_rag_soc = (isset($options['wim_fields']['rag_soc'])) ? sanitize_text_field($options['wim_fields']['rag_soc']) : '';
     if ($wim_activate === 'on' && $wim_fields_verification_status === 'verified' && $wim_fields_rag_soc !== '') {
       echo '<script type="text/javascript">
               (function(d){
@@ -145,7 +145,6 @@ class Lw_All_In_One_Wim {
 			delete_option( 'wim_activation_status' );
 			delete_option( 'web-instant-messenger' );
       deactivate_plugins('web-instant-messenger/web-instant-messenger.php');
-      delete_plugins(array('web-instant-messenger/web-instant-messenger.php'));
     } elseif (is_plugin_inactive('web-instant-messenger/web-instant-messenger.php')) {
 			delete_option( 'wim_activation_status' );
 			delete_option( 'web-instant-messenger' );

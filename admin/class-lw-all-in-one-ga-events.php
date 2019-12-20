@@ -69,7 +69,6 @@ class Lw_All_In_One_Ga_Events {
 			delete_option( 'exactmetrics_usage_tracking_config');
       wp_clear_scheduled_hook( 'exactmetrics_usage_tracking_cron' );
       deactivate_plugins('google-analytics-dashboard-for-wp/gadwp.php');
-      // delete_plugins(array('google-analytics-dashboard-for-wp/gadwp.php'));
     } elseif (is_plugin_inactive('google-analytics-dashboard-for-wp/gadwp.php')) {
 		  global $wpdb;
 			$sqlquery = $wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'gadwp_cache_%%'" );
@@ -87,11 +86,11 @@ class Lw_All_In_One_Ga_Events {
     //Plugin options
     $options = get_option($this->plugin_name);
     $ga_activate = (isset($options['ga_activate'])) ? $options['ga_activate'] : '';
-    $ga_fields_tracking_id = (isset($options['ga_fields']['tracking_id'])) ? $options['ga_fields']['tracking_id'] : '';
-    $ga_fields_save_ga_events = (isset($options['ga_fields']['save_ga_events'])) ? $options['ga_fields']['save_ga_events'] : '';
-    $ga_fields_monitor_email_link = (isset($options['ga_fields']['monitor_email_link'])) ? $options['ga_fields']['monitor_email_link'] : '';
-    $ga_fields_monitor_tel_link = (isset($options['ga_fields']['monitor_tel_link'])) ? $options['ga_fields']['monitor_tel_link'] : '';
-    $ga_fields_monitor_form_submit = (isset($options['ga_fields']['monitor_form_submit'])) ? $options['ga_fields']['monitor_form_submit'] : '';
+    $ga_fields_tracking_id = (isset($options['ga_fields']['tracking_id'])) ? sanitize_text_field($options['ga_fields']['tracking_id']) : '';
+    $ga_fields_save_ga_events = (isset($options['ga_fields']['save_ga_events'])) ? sanitize_text_field($options['ga_fields']['save_ga_events']) : '';
+    $ga_fields_monitor_email_link = (isset($options['ga_fields']['monitor_email_link'])) ? sanitize_text_field($options['ga_fields']['monitor_email_link']) : '';
+    $ga_fields_monitor_tel_link = (isset($options['ga_fields']['monitor_tel_link'])) ? sanitize_text_field($options['ga_fields']['monitor_tel_link']) : '';
+    $ga_fields_monitor_form_submit = (isset($options['ga_fields']['monitor_form_submit'])) ? sanitize_text_field($options['ga_fields']['monitor_form_submit']) : '';
 
     if ($ga_activate === 'on' && $ga_fields_tracking_id !== '') {
       echo '<script async src="https://www.googletagmanager.com/gtag/js?id=' . $ga_fields_tracking_id . '"></script>

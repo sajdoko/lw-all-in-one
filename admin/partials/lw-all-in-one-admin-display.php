@@ -27,23 +27,23 @@
       //Plugin options
       $options = get_option($this->plugin_name);
       $ga_activate = (isset($options['ga_activate'])) ? $options['ga_activate'] : '';
-      $ga_fields_tracking_id = (isset($options['ga_fields']['tracking_id'])) ? $options['ga_fields']['tracking_id'] : '';
-      $ga_fields_save_ga_events = (isset($options['ga_fields']['save_ga_events'])) ? $options['ga_fields']['save_ga_events'] : '';
-      $ga_fields_monitor_email_link = (isset($options['ga_fields']['monitor_email_link'])) ? $options['ga_fields']['monitor_email_link'] : '';
-      $ga_fields_monitor_tel_link = (isset($options['ga_fields']['monitor_tel_link'])) ? $options['ga_fields']['monitor_tel_link'] : '';
-      $ga_fields_monitor_form_submit = (isset($options['ga_fields']['monitor_form_submit'])) ? $options['ga_fields']['monitor_form_submit'] : '';
-      $wim_activate = (isset($options['wim_activate'])) ? $options['wim_activate'] : '';
-      $wim_fields_verification_status = (isset($options['wim_fields']['verification_status'])) ? $options['wim_fields']['verification_status'] : '';
-      $wim_fields_token = (isset($options['wim_fields']['token'])) ? $options['wim_fields']['token'] : '';
-      $wim_fields_rag_soc = (isset($options['wim_fields']['rag_soc'])) ? $options['wim_fields']['rag_soc'] : '';
-      $wim_fields_auto_show_wim = (isset($options['wim_fields']['auto_show_wim'])) ? $options['wim_fields']['auto_show_wim'] : '';
-      $wim_fields_show_wim_after = (isset($options['wim_fields']['show_wim_after'])) ? $options['wim_fields']['show_wim_after'] : '';
-      $wim_fields_show_mobile = (isset($options['wim_fields']['show_mobile'])) ? $options['wim_fields']['show_mobile'] : '';
-      $wim_fields_lingua = (isset($options['wim_fields']['lingua'])) ? $options['wim_fields']['lingua'] : '';
-      $wim_fields_messaggio_0 = (isset($options['wim_fields']['messaggio_0'])) ? $options['wim_fields']['messaggio_0'] : '';
-      $wim_fields_messaggio_1 = (isset($options['wim_fields']['messaggio_1'])) ? $options['wim_fields']['messaggio_1'] : '';
-      $cf7_activate = (isset($options['cf7_activate'])) ? $options['cf7_activate'] : '';
-      $lw_cf7_fields_save_cf7_subm = (isset($options['lw_cf7_fields']['save_cf7_subm'])) ? $options['lw_cf7_fields']['save_cf7_subm'] : '';
+      $ga_fields_tracking_id = (isset($options['ga_fields']['tracking_id'])) ? esc_attr($options['ga_fields']['tracking_id']) : '';
+      $ga_fields_save_ga_events = (isset($options['ga_fields']['save_ga_events'])) ? esc_attr($options['ga_fields']['save_ga_events']) : '';
+      $ga_fields_monitor_email_link = (isset($options['ga_fields']['monitor_email_link'])) ? esc_attr($options['ga_fields']['monitor_email_link']) : '';
+      $ga_fields_monitor_tel_link = (isset($options['ga_fields']['monitor_tel_link'])) ? esc_attr($options['ga_fields']['monitor_tel_link']) : '';
+      $ga_fields_monitor_form_submit = (isset($options['ga_fields']['monitor_form_submit'])) ? esc_attr($options['ga_fields']['monitor_form_submit']) : '';
+      $wim_activate = (isset($options['wim_activate'])) ? esc_attr($options['wim_activate']) : '';
+      $wim_fields_verification_status = (isset($options['wim_fields']['verification_status'])) ? esc_attr($options['wim_fields']['verification_status']) : '';
+      $wim_fields_token = (isset($options['wim_fields']['token'])) ? esc_attr($options['wim_fields']['token']) : '';
+      $wim_fields_rag_soc = (isset($options['wim_fields']['rag_soc'])) ? esc_attr($options['wim_fields']['rag_soc']) : '';
+      $wim_fields_auto_show_wim = (isset($options['wim_fields']['auto_show_wim'])) ? esc_attr($options['wim_fields']['auto_show_wim']) : '';
+      $wim_fields_show_wim_after = (isset($options['wim_fields']['show_wim_after'])) ? esc_attr($options['wim_fields']['show_wim_after']) : '';
+      $wim_fields_show_mobile = (isset($options['wim_fields']['show_mobile'])) ? esc_attr($options['wim_fields']['show_mobile']) : '';
+      $wim_fields_lingua = (isset($options['wim_fields']['lingua'])) ? esc_attr($options['wim_fields']['lingua']) : '';
+      $wim_fields_messaggio_0 = (isset($options['wim_fields']['messaggio_0'])) ? esc_attr($options['wim_fields']['messaggio_0']) : '';
+      $wim_fields_messaggio_1 = (isset($options['wim_fields']['messaggio_1'])) ? esc_attr($options['wim_fields']['messaggio_1']) : '';
+      $cf7_activate = (isset($options['cf7_activate'])) ? esc_attr($options['cf7_activate']) : '';
+      $lw_cf7_fields_save_cf7_subm = (isset($options['lw_cf7_fields']['save_cf7_subm'])) ? esc_attr($options['lw_cf7_fields']['save_cf7_subm']) : '';
       $lw_hf_fields_insert_header = (isset($options['lw_hf_fields']['insert_header'])) ? $options['lw_hf_fields']['insert_header'] : '';
       $lw_hf_fields_insert_footer = (isset($options['lw_hf_fields']['insert_footer'])) ? $options['lw_hf_fields']['insert_footer'] : '';
 
@@ -59,7 +59,9 @@
       } else {
         $default_tab = 'tab_hf';
       }
-      $active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : $default_tab;
+      $allowed_tabs = array('tab_ga_events', 'tab_wim', 'tab_cf7', 'tab_hf');
+      $get_tab = isset($_GET['tab']) ? esc_attr($_GET['tab']) : '';
+      $active_tab = (in_array($get_tab, $allowed_tabs)) ? $get_tab : $default_tab;
     ?>
 
     <div id="poststuff" class="lw-aio">
