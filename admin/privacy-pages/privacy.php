@@ -1,6 +1,6 @@
 <?php
 $page_policy = get_page_by_path('informativa-sul-trattamento-dei-dati-personali');
-$policy_file = file_get_contents(plugins_url( 'privacy-policy.html', dirname(__FILE__) ));
+$policy_file = file_get_contents(plugins_url( 'privacy-pages/privacy-policy.html', dirname(__FILE__) ));
 
 $patterns = array();
 $patterns[0] = '/replace_privacy_1/';

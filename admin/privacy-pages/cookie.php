@@ -1,6 +1,6 @@
 <?php
 $page_cookie = get_page_by_path('cookie-policy');
-$cookie_file = file_get_contents(plugins_url( 'cookie.html', dirname(__FILE__) ));
+$cookie_file = file_get_contents(plugins_url( 'privacy-pages/cookie.html', dirname(__FILE__) ));
 
 $patterns = array();
 $patterns[0] = '/replace_cookie_1/';

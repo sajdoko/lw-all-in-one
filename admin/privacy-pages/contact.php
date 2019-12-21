@@ -1,6 +1,6 @@
 <?php
 $page_contact = get_page_by_path('informativa-trattamento-dati');
-$contact_file = file_get_contents(plugins_url( 'contact.html', dirname(__FILE__) ));
+$contact_file = file_get_contents(plugins_url( 'privacy-pages/contact.html', dirname(__FILE__) ));
 
 $patterns = array();
 $patterns[0] = '/replace_contact_2/';

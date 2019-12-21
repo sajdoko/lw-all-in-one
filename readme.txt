@@ -31,4 +31,4 @@ A new options page \"LW AIO Options\" will appear on the left side menu.
 From there can be activated/deactivated the services
 
 == Changelog ==
-First version online, Version: 1.1.1
+First version online, Version: 1.1.2
