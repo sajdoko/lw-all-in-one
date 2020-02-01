@@ -44,6 +44,8 @@
       $wim_fields_messaggio_1 = (isset($options['wim_fields']['messaggio_1'])) ? esc_attr($options['wim_fields']['messaggio_1']) : '';
       $cf7_activate = (isset($options['cf7_activate'])) ? esc_attr($options['cf7_activate']) : '';
       $lw_cf7_fields_save_cf7_subm = (isset($options['lw_cf7_fields']['save_cf7_subm'])) ? esc_attr($options['lw_cf7_fields']['save_cf7_subm']) : '';
+      $lw_cf7_fields_tipo_contratto = (isset($options['lw_cf7_fields']['tipo_contratto'])) ? esc_attr($options['lw_cf7_fields']['tipo_contratto']) : '';
+      $lw_cf7_fields_id_contratto = (isset($options['lw_cf7_fields']['id_contratto'])) ? esc_attr($options['lw_cf7_fields']['id_contratto']) : '';
       $lw_hf_fields_insert_header = (isset($options['lw_hf_fields']['insert_header'])) ? $options['lw_hf_fields']['insert_header'] : '';
       $lw_hf_fields_insert_footer = (isset($options['lw_hf_fields']['insert_footer'])) ? $options['lw_hf_fields']['insert_footer'] : '';
 
@@ -303,6 +305,27 @@
                         </label>
                       </div>
                       <div class="switch-desc"> <?php esc_attr_e('Save Contact Form 7 submissions locally on the database?', LW_ALL_IN_ONE_PLUGIN_NAME);?></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="lw-aio-settings-title">
+                      <label for="tipo_contratto"><?php esc_attr_e('Packet Type', LW_ALL_IN_ONE_PLUGIN_NAME);?></label>
+                    </td>
+                    <td class="lw-aio-settings-field">
+                      <select id="tipo_contratto" name="<?php echo $this->plugin_name;?>[lw_cf7_fields][tipo_contratto]">
+                        <option></option>
+                        <option value="start" <?php selected( $lw_cf7_fields_tipo_contratto, 'start', TRUE ); ?>><?php _e('Go Start', LW_ALL_IN_ONE_PLUGIN_NAME);?></option>
+                        <option value="start_standard" <?php selected( $lw_cf7_fields_tipo_contratto, 'start_standard', TRUE ); ?>><?php _e('Start Standard', LW_ALL_IN_ONE_PLUGIN_NAME);?></option>
+                        <option value="web" <?php selected( $lw_cf7_fields_tipo_contratto, 'web', TRUE ); ?>><?php _e('Go Web', LW_ALL_IN_ONE_PLUGIN_NAME);?></option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="lw-aio-settings-title">
+                      <label for="id_contratto"><?php esc_attr_e('Packet Id', LW_ALL_IN_ONE_PLUGIN_NAME);?></label>
+                    </td>
+                    <td class="lw-aio-settings-field">
+                      <input type="number" id="id_contratto" name="<?php echo $this->plugin_name; ?>[lw_cf7_fields][id_contratto]" value="<?php echo ($lw_cf7_fields_id_contratto != '') ? $lw_cf7_fields_id_contratto : '';?>">
                     </td>
                   </tr>
                 </tbody>

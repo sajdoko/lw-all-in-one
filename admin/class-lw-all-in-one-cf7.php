@@ -61,6 +61,14 @@ class Lw_All_In_One_Cf7 {
 
   public function lw_all_in_one_cf7_to_db($WPCF7_ContactForm) {
 
+    //Plugin options
+    $options = get_option($this->plugin_name);
+    $cf7_activate = (isset($options['cf7_activate'])) ? esc_attr($options['cf7_activate']) : '';
+    $lw_cf7_fields_saved_cf7_subm = (isset($options['lw_cf7_fields']['save_cf7_subm'])) ? sanitize_text_field($options['lw_cf7_fields']['save_cf7_subm']) : '';
+    $lw_cf7_fields_saved_tipo_contratto = (isset($options['lw_cf7_fields']['tipo_contratto'])) ? sanitize_text_field($options['lw_cf7_fields']['tipo_contratto']) : '';
+    $lw_cf7_fields_saved_id_contratto = (isset($options['lw_cf7_fields']['id_contratto'])) ? sanitize_text_field($options['lw_cf7_fields']['id_contratto']) : '';
+
+
     $url_path = "http://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
     $domain = htmlspecialchars($url_path, ENT_QUOTES, 'UTF-8');
     $domain = trim($domain, '/');
@@ -73,7 +81,7 @@ class Lw_All_In_One_Cf7 {
     $submission = WPCF7_Submission::get_instance();
     $posted_data = &$submission->get_posted_data();
 
-    if (isset($posted_data['nome'])) {
+    if (isset($posted_data['nome']) && $cf7_activate == 'on') {
       $mapped_field = array();
       $mapped_field['nome'] = sanitize_text_field($posted_data['nome']);
       $mapped_field['cognome'] = sanitize_text_field($posted_data['cognome']);
@@ -81,8 +89,8 @@ class Lw_All_In_One_Cf7 {
       $mapped_field['telefono'] = sanitize_text_field($posted_data['telefono']);
       $mapped_field['oggetto'] = sanitize_text_field($posted_data['oggetto']);
       $mapped_field['messaggio'] = sanitize_textarea_field($posted_data['messaggio']);
-      $mapped_field['tipo_Contratto'] = sanitize_text_field($posted_data['tipo-contratto']);
-      $mapped_field['id_Contratto'] = sanitize_text_field($posted_data['id-contratto']);
+      $mapped_field['tipo_Contratto'] = ($lw_cf7_fields_saved_tipo_contratto != '') ? sanitize_text_field($lw_cf7_fields_saved_tipo_contratto) : sanitize_text_field($posted_data['tipo-contratto']);
+      $mapped_field['id_Contratto'] = ($lw_cf7_fields_saved_id_contratto != '') ? sanitize_text_field($lw_cf7_fields_saved_id_contratto) : sanitize_text_field($posted_data['id-contratto']);
       $mapped_field['submited_page'] = esc_url_raw($submited_page);
 
       $json_mapped_fields = json_encode($mapped_field);
@@ -117,10 +125,8 @@ class Lw_All_In_One_Cf7 {
       $message = $mapped_field['messaggio'];
       $tipo_Contratto = $mapped_field['tipo_Contratto'];
       $id_Contratto = $mapped_field['id_Contratto'];
-      $time = time();
-      //Plugin options
-      $options = get_option($this->plugin_name);
-      $lw_cf7_fields_saved_cf7_subm = (isset($options['lw_cf7_fields']['save_cf7_subm'])) ? sanitize_text_field($options['lw_cf7_fields']['save_cf7_subm']) : '';
+      $time = current_time('mysql', 1);
+
       if ($lw_cf7_fields_saved_cf7_subm === 'on') {
         $cf7_table = $wpdb->prefix . LW_ALL_IN_ONE_CF7_TABLE;
         $wpdb->insert(
@@ -203,6 +209,22 @@ class Lw_All_In_One_Cf7 {
     }
   }
 
+  /**
+   * Check if Packet Type and Packed Id are filled notice.
+   *
+   * @return string
+   */
+  public function lw_all_in_one_cf7_packet_notice() {
+    //Plugin options
+    $options = get_option($this->plugin_name);
+    $cf7_activate = (isset($options['cf7_activate'])) ? esc_attr($options['cf7_activate']) : '';
+    $lw_cf7_fields_saved_tipo_contratto = (isset($options['lw_cf7_fields']['tipo_contratto'])) ? sanitize_text_field($options['lw_cf7_fields']['tipo_contratto']) : '';
+    $lw_cf7_fields_saved_id_contratto = (isset($options['lw_cf7_fields']['id_contratto'])) ? sanitize_text_field($options['lw_cf7_fields']['id_contratto']) : '';
+    if ($cf7_activate == 'on' && ($lw_cf7_fields_saved_tipo_contratto == '' || $lw_cf7_fields_saved_id_contratto == '') ) {
+      echo '<div class="error"><p><img src="' . plugin_dir_url(__FILE__) . '/img/icon.png' . '"/> ' . sprintf(__('You have activated Contact Form 7 Addon but Packet Type and/or Packet Id seems to be missing. <a href="%s" title="Fix it Now">Fix it Now.</a>', LW_ALL_IN_ONE_PLUGIN_NAME), admin_url('admin.php?page=lw_all_in_one&tab=tab_cf7')) . '</p></div>';
+    }
+  }
+
   public function lw_all_in_one_old_cf7_is_active_deactivate() {
     if (is_plugin_active('lw-contact-form/localweb.php')) {
       deactivate_plugins('lw-contact-form/localweb.php');
@@ -210,5 +232,4 @@ class Lw_All_In_One_Cf7 {
       delete_plugins(array('lw-contact-form/localweb.php'));
     }
   }
-
 }

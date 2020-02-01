@@ -35,23 +35,23 @@ class Lw_All_In_One_Activator {
     $verification_status = $token = $wim_activate = $rag_soc = $auto_show_wim = $show_wim_after = $show_mobile = $lingua = $messaggio_0 = $messaggio_1 = $cf7_activate = $save_cf7_subm = $ga_activate = $tracking_id = $save_ga_events = $monitor_email_link = $monitor_tel_link = $monitor_form_submit = '';
     if ($wim_activation_status = get_option('wim_activation_status')) {
       $verification_status = ($wim_activation_status['activation_status'] == 1) ? 'verified' : '';
-      $token = sanitize_text_field($wim_activation_status['token']);
+      $token = $wim_activation_status['token'];
     }
     if ($wim_old_options = get_option('web-instant-messenger')) {
       $wim_activate = ($wim_old_options['activate'] == 1) ? 'on' : '';
-      $rag_soc = sanitize_text_field($wim_old_options['rag_soc']);
-      $auto_show_wim = sanitize_text_field($wim_old_options['auto_show_wim']);
-      $show_wim_after = sanitize_text_field($wim_old_options['show_wim_after']);
-      $show_mobile = sanitize_text_field($wim_old_options['show_mobile']);
-      $lingua = sanitize_text_field($wim_old_options['lingua']);
-      $messaggio_0 = sanitize_textarea_field($wim_old_options['messaggio_0']);
-      $messaggio_1 = sanitize_textarea_field($wim_old_options['messaggio_1']);
+      $rag_soc = $wim_old_options['rag_soc'];
+      $auto_show_wim = $wim_old_options['auto_show_wim'];
+      $show_wim_after = $wim_old_options['show_wim_after'];
+      $show_mobile = $wim_old_options['show_mobile'];
+      $lingua = $wim_old_options['lingua'];
+      $messaggio_0 = $wim_old_options['messaggio_0'];
+      $messaggio_1 = $wim_old_options['messaggio_1'];
     }
     // Check if LW Contact Form 7 Addon plugin is activated
     if (is_plugin_active('lw-contact-form/localweb.php')) {
       $cf7_activate = $save_cf7_subm = 'on';
     }
-    // Check if Google Analytics Dashboard per WP (GADWP) plugin options exist
+    //
     if (get_option('gadwp_options')) {
       $gadwp_options = (array) json_decode( get_option( 'gadwp_options' ) );
       $locked_profile = $gadwp_options['tableid_jail'];
@@ -59,29 +59,13 @@ class Lw_All_In_One_Activator {
       if (!empty($profiles) ) {
 				foreach ( $profiles as $item ) {
 					if ( $item[1] == $locked_profile ) {
-						$tracking_id = sanitize_text_field($item[2]);
+						$tracking_id = $item[2];
 					}
 				}
 			}
-    } else {
-      // Check if Google Analytics Tracking ID exist in themes header.php
-      $header_file = get_template_directory() . '/header.php';
-      $source = file_get_contents($header_file);
-      if (preg_match_all('/\bUA-\d{4,9}-\d{1,4}\b/', $source, $match)) {
-        $tracking_id = $match[0][0];
-        // It exists, remove it since we're going to use our script integration
-        if ($file = fopen($header_file, "w")) {
-          $source = preg_replace('/<!-- Global site tag \(gtag.js\) - Google Analytics -->([^`]*?)gtag\(\'config\', \'\bUA-\d{4,9}-\d{1,4}\b\'\);\n<\/script>/', '', $source);
-          fwrite($file, $source);
-          fclose($file);
-        }
-      }
     }
-    // Validate $tracking_id
     if (preg_match('/^ua-\d{4,9}-\d{1,4}$/i', strval($tracking_id))) {
       $ga_activate = $save_ga_events = $monitor_email_link = $monitor_tel_link = $monitor_form_submit = 'on';
-    } else {
-      $tracking_id = '';
     }
     if (!get_option(LW_ALL_IN_ONE_PLUGIN_NAME)) {
       $initial_empty_options = array(
@@ -159,19 +143,8 @@ class Lw_All_In_One_Activator {
       $inserimenti_cf_results = $wpdb->get_results("SELECT * FROM $old_cf7_table");
       if ($wpdb->num_rows > 0) {
         foreach ($inserimenti_cf_results as $cf) {
-          $old_data = array(
-            'subject' => sanitize_text_field($cf->soggetto),
-            'message' => sanitize_textarea_field($cf->messaggio),
-            'name' => sanitize_text_field($cf->nome),
-            'surname' => sanitize_text_field($cf->cognome),
-            'time' => sanitize_text_field($cf->time),
-            'email' => sanitize_email($cf->email),
-            'phone' => sanitize_text_field($cf->telefono),
-            'tipo_Contratto' => sanitize_text_field($cf->tipo_Contratto),
-            'id_Contratto' => sanitize_text_field($cf->id_Contratto),
-            'submited_page' => esc_url_raw($cf->submited_page),
-            'sent' => sanitize_text_field($cf->inviato)
-          );
+          $new_time = date('Y-m-d H:i:s', $cf->time);
+          $old_data = array('subject' => $cf->soggetto, 'message' => $cf->messaggio, 'name' => $cf->nome, 'surname' => $cf->cognome, 'time' => $new_time, 'email' => $cf->email, 'phone' => $cf->telefono, 'tipo_Contratto' => $cf->tipo_Contratto, 'id_Contratto' => $cf->id_Contratto, 'submited_page' => $cf->submited_page, 'sent' => $cf->inviato);
           $format = array('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');
           if (!$wpdb->insert($cf7_table, $old_data, $format)) {
             array_push($old_cf7_table_transfer_err, 'error');
@@ -182,7 +155,17 @@ class Lw_All_In_One_Activator {
         $wpdb->query("DROP TABLE IF EXISTS $old_cf7_table");
       }
     }
-    if ( is_plugin_active( 'wp-fastest-cache/wpFastestCache.php' ) ) {
+
+    if (is_plugin_active('web-instant-messenger/web-instant-messenger.php')) {
+      deactivate_plugins('web-instant-messenger/web-instant-messenger.php');
+    }
+    if (is_plugin_active('lw-contact-form/localweb.php')) {
+      deactivate_plugins('lw-contact-form/localweb.php');
+    }
+    if (is_plugin_active('google-analytics-dashboard-for-wp/gadwp.php')) {
+      deactivate_plugins('google-analytics-dashboard-for-wp/gadwp.php');
+    }
+    if (is_plugin_active('wp-fastest-cache/wpFastestCache.php')) {
       if(isset($GLOBALS['wp_fastest_cache']) && method_exists($GLOBALS['wp_fastest_cache'], 'deleteCache')){
         $GLOBALS['wp_fastest_cache']->deleteCache(true);
       }

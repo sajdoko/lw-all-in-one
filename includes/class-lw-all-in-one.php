@@ -277,6 +277,8 @@ class Lw_All_In_One {
     // Add submenu item
     $this->loader->add_action('admin_menu', $plugin_cf7, 'lw_all_in_one_cf7_admin_submenu', 99);
 
+    // Check if Packet Type and Packed Id are filled notice.
+    $this->loader->add_action('admin_notices', $plugin_cf7, 'lw_all_in_one_cf7_packet_notice');
     // Save Contact Form 7 submmisions
     $this->loader->add_action('wpcf7_before_send_mail', $plugin_cf7, 'lw_all_in_one_cf7_to_db');
     $this->loader->add_filter('cron_schedules', $plugin_cf7, 'lw_all_in_one_cf7_add_every_five_minutes');

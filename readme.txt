@@ -31,4 +31,6 @@ A new options page \"LW AIO Options\" will appear on the left side menu.
 From there can be activated/deactivated the services
 
 == Changelog ==
-First version online, Version: 1.1.2
+1.2.3 - Added option to insert Packet Type and Id in LW AIO Options instead of hidden field on contact forms.
+1.1.3 - Fixed time format when saving CF7 form on database.
+1.1.2 - First version online
