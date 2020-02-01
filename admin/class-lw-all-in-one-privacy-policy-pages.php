@@ -12,9 +12,6 @@
 /**
  * Creates LocalWeb Privacy&Policy pages.
  *
- * Defines the plugin name, version, and two examples hooks for how to
- * enqueue the admin-specific stylesheet and JavaScript.
- *
  * @package    Lw_All_In_One
  * @subpackage Lw_All_In_One/admin
  * @author     sajdoko <sajmir.doko@localweb.it>

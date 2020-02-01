@@ -54,11 +54,6 @@ class Lw_All_In_One {
 
   /**
    * Define the core functionality of the plugin.
-   *
-   * Set the plugin name and the plugin version that can be used throughout the plugin.
-   * Load the dependencies, define the locale, and set the hooks for the admin area and
-   * the public-facing side of the site.
-   *
    */
   public function __construct() {
     if (defined('LW_ALL_IN_ONE_VERSION')) {
@@ -74,6 +69,7 @@ class Lw_All_In_One {
 
     $this->load_dependencies();
     $this->set_locale();
+    $this->lw_all_in_one_schedule_data_retention();
     $this->define_admin_hooks();
     $this->define_public_hooks();
     if ($this->check_plugin_options(false, 'ga_activate') === 'on') {
@@ -84,87 +80,34 @@ class Lw_All_In_One {
     }
     if ($this->check_plugin_options(false, 'cf7_activate') === 'on') {
       $this->define_cf7_hooks();
+      $this->lw_all_in_one_schedule_cf7_sync();
     }
     $this->define_privacy_policy_hooks();
 
   }
 
-  /**
-   * Load the required dependencies for this plugin.
-   *
-   * Include the following files that make up the plugin:
-   *
-   * - Lw_All_In_One_Loader. Orchestrates the hooks of the plugin.
-   * - Lw_All_In_One_i18n. Defines internationalization functionality.
-   * - Lw_All_In_One_Admin. Defines all hooks for the admin area.
-   * - Lw_All_In_One_Public. Defines all hooks for the public side of the site.
-   * - Lw_All_In_One_Ga_Events. Defines all hooks for the Google Analytics integration.
-   * - Lw_All_In_One_Wim. Defines all hooks for the Web Instant Messenger integration.
-   * - Lw_All_In_One_Cf7. Defines all hooks for the Contact Form 7 integration.
-   * - Lw_All_In_One_Privacy_Policy_Pages. Defines all hooks for the LocalWeb Privacy&Policy pages.
-   *
-   * Create an instance of the loader which will be used to register the hooks
-   * with WordPress.
-   *
-   * @access   private
-   */
   private function load_dependencies() {
 
-    /**
-     * The class responsible for orchestrating the actions and filters of the
-     * core plugin.
-     */
     require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-lw-all-in-one-loader.php';
 
-    /**
-     * The class responsible for defining internationalization functionality
-     * of the plugin.
-     */
     require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-lw-all-in-one-i18n.php';
 
-    /**
-     * The class responsible for defining all actions that occur in the admin area.
-     */
     require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-lw-all-in-one-admin.php';
 
-    /**
-     * The class responsible for defining all actions that occur in the public-facing
-     * side of the site.
-     */
     require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-lw-all-in-one-public.php';
 
-    /**
-     * The class responsible for Google Analytics integration functionality.
-     */
     require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-lw-all-in-one-ga-events.php';
 
-    /**
-     * The class responsible for Web Instant Messenger integration functionality.
-     */
     require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-lw-all-in-one-wim.php';
 
-    /**
-     * The class responsible for Contact Form 7 integration functionality.
-     */
     require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-lw-all-in-one-cf7.php';
 
-    /**
-     * The class responsible for LocalWeb Privacy&Policy pages functionality.
-     */
     require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-lw-all-in-one-privacy-policy-pages.php';
 
     $this->loader = new Lw_All_In_One_Loader();
 
   }
 
-  /**
-   * Define the locale for this plugin for internationalization.
-   *
-   * Uses the Lw_All_In_One_i18n class in order to set the domain and to register the hook
-   * with WordPress.
-   *
-   * @access   private
-   */
   private function set_locale() {
 
     $plugin_i18n = new Lw_All_In_One_i18n();
@@ -173,12 +116,6 @@ class Lw_All_In_One {
 
   }
 
-  /**
-   * Register all of the hooks related to the admin area functionality
-   * of the plugin.
-   *
-   * @access   private
-   */
   private function define_admin_hooks() {
 
     $plugin_admin = new Lw_All_In_One_Admin($this->get_plugin_name(), $this->get_version());
@@ -186,27 +123,17 @@ class Lw_All_In_One {
     $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
     $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
 
-    // Add menu item
     $this->loader->add_action('admin_menu', $plugin_admin, 'lw_all_in_one_add_admin_menu', 99);
 
-    // Save/Update our plugin options
     $this->loader->add_action('admin_init', $plugin_admin, 'lw_all_in_one_options_update');
 
-    // Add Settings link to the plugin
     $plugin_basename = plugin_basename(plugin_dir_path(__DIR__) . 'lw-all-in-one.php');
     $this->loader->add_filter('plugin_action_links_' . $plugin_basename, $plugin_admin, 'lw_all_in_one_add_action_links');
 
-    // Frontend Hooks
     $this->loader->add_action('wp_head', $plugin_admin, 'lw_all_in_one_header_scripts_from_tab');
     $this->loader->add_action('wp_footer', $plugin_admin, 'lw_all_in_one_footer_scripts_from_tab');
   }
 
-  /**
-   * Register all of the hooks related to the public-facing functionality
-   * of the plugin.
-   *
-   * @access   private
-   */
   private function define_public_hooks() {
 
     $plugin_public = new Lw_All_In_One_Public($this->get_plugin_name(), $this->get_version());
@@ -220,130 +147,159 @@ class Lw_All_In_One {
     }
   }
 
-  /**
-   * Register all of the hooks related to the admin area functionality
-   * of the plugin.
-   *
-   * @access   private
-   */
   private function define_ga_events_hooks() {
 
     $plugin_ga_events = new Lw_All_In_One_Ga_Events($this->get_plugin_name(), $this->get_version());
 
-    // Add submenu item
     $this->loader->add_action('admin_menu', $plugin_ga_events, 'lw_all_in_one_ga_events_admin_menu', 99);
+    $this->loader->add_filter('set-screen-option', $plugin_ga_events, 'lw_all_in_one_ga_events_screen_options', 10, 3 );
+    $this->loader->add_action('load-lw-aio-options_page_lw_all_in_one_ga_events', $plugin_ga_events, 'lw_all_in_one_ga_events_set_screen_options');
 
-    // Frontend Hooks
     $this->loader->add_action('wp_head', $plugin_ga_events, 'lw_all_in_one_header_scripts');
 
-    // WooCommerce Google Analytics Integration Admin Notice
     $this->loader->add_action('admin_notices', $plugin_ga_events, 'woocommerce_google_analytics_missing_notice');
 
-    // Check if Google Analytics Dashboard for WP (GADWP) plugin is active
     $this->loader->add_action('admin_init', $plugin_ga_events, 'lw_all_in_one_gadwp_is_active_deactivate');
   }
 
-  /**
-   * Register all of the hooks related to the admin area functionality
-   * of the plugin.
-   *
-   * @access   private
-   */
   private function define_wim_hooks() {
 
     $plugin_wim = new Lw_All_In_One_Wim($this->get_plugin_name(), $this->get_version());
 
-    // // Frontend Hooks
-    // $this->loader->add_action('wp_head', $plugin_wim, 'lw_all_in_one_header_scripts');
-		// Frontend Hooks
 		$this->loader->add_action( 'wp_footer', $plugin_wim, 'lw_all_in_one_insert_wim_footer');
 
     $this->loader->add_action('wp_ajax_lw_all_in_one_verify_wim_attivation', $plugin_wim, 'lw_all_in_one_verify_wim_attivation');
 
-    // Check if Web Instant Messenger plugin is active
     $this->loader->add_action('admin_init', $plugin_wim, 'lw_all_in_one_old_wim_is_active_deactivate');
   }
 
-  /**
-   * Register all of the hooks related to the admin area functionality
-   * of the plugin.
-   *
-   * @access   private
-   */
   private function define_cf7_hooks() {
 
     $plugin_cf7 = new Lw_All_In_One_Cf7($this->get_plugin_name(), $this->get_version());
 
-    // Add submenu item
     $this->loader->add_action('admin_menu', $plugin_cf7, 'lw_all_in_one_cf7_admin_submenu', 99);
-
-    // Check if Packet Type and Packed Id are filled notice.
     $this->loader->add_action('admin_notices', $plugin_cf7, 'lw_all_in_one_cf7_packet_notice');
-    // Save Contact Form 7 submmisions
-    $this->loader->add_action('wpcf7_before_send_mail', $plugin_cf7, 'lw_all_in_one_cf7_to_db');
-    $this->loader->add_filter('cron_schedules', $plugin_cf7, 'lw_all_in_one_cf7_add_every_five_minutes');
-    $this->loader->add_action('lw_all_in_one_cf7_check_sent_data', $plugin_cf7, 'lw_all_in_one_cf7_every_5_minutes');
+    $this->loader->add_filter('set-screen-option', $plugin_cf7, 'lw_all_in_one_cf7_screen_options', 10, 3);
+    $this->loader->add_action('load-lw-aio-options_page_lw_all_in_one_cf7', $plugin_cf7, 'lw_all_in_one_cf7_set_screen_options');
 
-    // Check if LW Contact Form 7 Addon plugin exist
+    if ($this->check_plugin_options('lw_cf7_fields', 'save_cf7_subm') === 'on') {
+      $this->loader->add_action('wpcf7_before_send_mail', $plugin_cf7, 'lw_all_in_one_cf7_to_db');
+    }
+
     $this->loader->add_action('admin_init', $plugin_cf7, 'lw_all_in_one_old_cf7_is_active_deactivate');
+
   }
 
-  /**
-   * Register all of the hooks related to the admin area functionality
-   * of the plugin.
-   *
-   * @access   private
-   */
   private function define_privacy_policy_hooks() {
 
     $plugin_privacy_policy = new Lw_All_In_One_Privacy_Policy_Pages($this->get_plugin_name(), $this->get_version());
     $this->loader->add_action('wp_ajax_lw_all_in_one_create_privacy_pages', $plugin_privacy_policy, 'lw_all_in_one_create_privacy_pages');
 
-    // Add submenu item
     $this->loader->add_action('admin_menu', $plugin_privacy_policy, 'lw_all_in_one_privacy_policy_admin_menu', 99);
 
   }
 
-  /**
-   * Run the loader to execute all of the hooks with WordPress.
-   *
-   */
   public function run() {
     $this->loader->run();
   }
 
-  /**
-   * The name of the plugin used to uniquely identify it within the context of
-   * WordPress and to define internationalization functionality.
-   *
-   * @return    string    The name of the plugin.
-   */
   public function get_plugin_name() {
     return $this->plugin_name;
   }
 
-  /**
-   * The reference to the class that orchestrates the hooks with the plugin.
-   *
-   * @return    Lw_All_In_One_Loader    Orchestrates the hooks of the plugin.
-   */
   public function get_loader() {
     return $this->loader;
   }
 
-  /**
-   * Retrieve the version number of the plugin.
-   *
-   * @return    string    The version number of the plugin.
-   */
   public function get_version() {
     return $this->version;
   }
 
-  /**
-   * Check if plugin option exists and returns it's vale, else return false.
-   *
-   */
+  private function lw_all_in_one_schedule_data_retention() {
+    if ($this->check_plugin_options('lw_aio_fields', 'data_retention') === 'on') {
+      if (!wp_next_scheduled('lw_all_in_one_data_retention')) {
+          wp_schedule_event(time(), 'daily', 'lw_all_in_one_data_retention');
+      }
+      add_action('lw_all_in_one_data_retention', array( __CLASS__, 'lw_all_in_one_data_retention_run' ));
+    } else {
+      if (wp_next_scheduled('lw_all_in_one_data_retention')) {
+        wp_clear_scheduled_hook( 'lw_all_in_one_data_retention' );
+      }
+    }
+  }
+
+  public static function lw_all_in_one_data_retention_run() {
+    global $wpdb;
+    $cf7_table = $wpdb->prefix . LW_ALL_IN_ONE_CF7_TABLE;
+
+    $wpdb->query(" DELETE FROM $cf7_table WHERE DATE(time) < DATE_SUB(DATE(NOW()), INTERVAL 14 DAY) ");
+  }
+
+  public function lw_all_in_one_5_min_schedule($schedules) {
+    $schedules['lw_all_in_one_every_5_min_schedule'] = array(
+      'interval' => 300,
+      'display' => __('Every 5 Minutes', LW_ALL_IN_ONE_PLUGIN_NAME),
+    );
+    return $schedules;
+  }
+
+  private function lw_all_in_one_schedule_cf7_sync() {
+    if ($this->check_plugin_options('lw_cf7_fields', 'save_cf7_subm') === 'on') {
+      add_filter('cron_schedules', array($this, 'lw_all_in_one_5_min_schedule'));
+      if (!wp_next_scheduled('lw_all_in_one_cf7_sync')) {
+          wp_schedule_event(time(), 'lw_all_in_one_every_5_min_schedule', 'lw_all_in_one_cf7_sync');
+      }
+      add_action('lw_all_in_one_cf7_sync', array( __CLASS__, 'lw_all_in_one_cf7_sync_run' ));
+    } else {
+      if (wp_next_scheduled('lw_all_in_one_cf7_sync')) {
+        wp_clear_scheduled_hook( 'lw_all_in_one_cf7_sync' );
+      }
+    }
+  }
+
+  public static function lw_all_in_one_cf7_sync_run() {
+    global $wpdb;
+    $cf7_table = $wpdb->prefix . LW_ALL_IN_ONE_CF7_TABLE;
+    $select_nn_inviato = $wpdb->get_row("SELECT * FROM " . $cf7_table . " WHERE sent !='Si'");
+    if ($select_nn_inviato !== null) {
+      $re_invia = array();
+      $re_invia['nome'] = sanitize_text_field($select_nn_inviato->name);
+      $re_invia['cognome'] = sanitize_text_field($select_nn_inviato->surname);
+      $re_invia['email'] = sanitize_email($select_nn_inviato->email);
+      $re_invia['telefono'] = sanitize_text_field($select_nn_inviato->phone);
+      $re_invia['soggetto'] = sanitize_text_field($select_nn_inviato->subject);
+      $re_invia['messaggio'] = sanitize_textarea_field($select_nn_inviato->message);
+      $re_invia['tipo_Contratto'] = sanitize_text_field($select_nn_inviato->tipo_Contratto);
+      $re_invia['id_Contratto'] = sanitize_text_field($select_nn_inviato->id_Contratto);
+      $re_invia['submited_page'] = esc_url_raw($select_nn_inviato->submited_page);
+
+      $json_re_invia = json_encode($re_invia);
+      $args = array(
+        'body' => $json_re_invia,
+        'timeout' => '5',
+        'redirection' => '5',
+        'httpversion' => '1.0',
+        'blocking' => true,
+        'headers' => array(),
+        'cookies' => array(),
+      );
+      $send = wp_remote_post('https://localwebapi.ids.al/contactFormWeb', $args);
+      $ret_body = wp_remote_retrieve_body($send);
+      $data = json_decode($ret_body);
+
+      if ($data->response == "OK") {
+        $inviato = "Si";
+        $id = $select_nn_inviato->id;
+        $wpdb->update(
+          $cf7_table,
+          array(
+            'sent' => $inviato,
+          ), array('id' => $id)
+        );
+      }
+    }
+  }
+
   public function check_plugin_options($parent_key = false, $key) {
     $options = get_option($this->plugin_name);
     if ($parent_key !== false) {

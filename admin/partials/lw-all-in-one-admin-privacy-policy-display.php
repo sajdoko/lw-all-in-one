@@ -29,19 +29,23 @@ $trattamento_dati_page_options = (isset($options['informativa-trattamento-dati']
   <div class="warning">
       <h3><?php esc_attr_e('WARNING!', LW_ALL_IN_ONE_PLUGIN_NAME);?></h3>
     <p>
-      <?php esc_attr_e('Use this section only if this website\'s domain is registered by LocalWeb Srl.', LW_ALL_IN_ONE_PLUGIN_NAME);?>
+      <?php _e('Use this section only if this website\'s domain is registered by <b>LocalWeb Srl</b>.', LW_ALL_IN_ONE_PLUGIN_NAME);?>
     </p>
     <p>
-      <?php esc_attr_e('Link at FOOTER section pages Informativa sul trattamento dei dati personali and Cookie Policy.', LW_ALL_IN_ONE_PLUGIN_NAME);?>
+      <?php esc_html_e('Link at FOOTER section pages "Informativa sul trattamento dei dati personali" and "Cookie Policy".', LW_ALL_IN_ONE_PLUGIN_NAME);?>
     </p>
     <p>
-      <?php esc_attr_e('Link Informativa Trattamento Dati in all contact forms of the website.', LW_ALL_IN_ONE_PLUGIN_NAME);?>
+      <?php esc_attr_e('Link "Informativa Trattamento Dati" in all contact forms of the website.', LW_ALL_IN_ONE_PLUGIN_NAME);?>
     </p>
-    <?php if ( !is_plugin_active( 'italy-cookie-choices/italy-cookie-choices.php' ) ) { $italy_cookie_choices_missing = true;?>
-      <p class="danger">
-        <?php printf(esc_attr__('%s plugin is not active, you must install and active it before creating pages!!!', LW_ALL_IN_ONE_PLUGIN_NAME), '<a href="plugin-install.php?s=Italy+Cookie+Choices+(for+EU+Cookie+Law)&tab=search&type=term">Italy Cookie Choices (for EU Cookie Law)</a>');?>
-      </p>
-    <?php }; ?>
+    <?php
+      if (!file_exists(WP_PLUGIN_DIR . '/italy-cookie-choices/italy-cookie-choices.php')) {
+        echo '<p class="danger">' . sprintf(__('Italy Cookie Choices plugin is not installed, you must install and active it before creating pages!!! <a href="%s" title="Italy Cookie Choices (for EU Cookie Law)">Install It Now!</a>', LW_ALL_IN_ONE_PLUGIN_NAME), wp_nonce_url(admin_url('update.php?action=install-plugin&plugin=italy-cookie-choices'), 'install-plugin_italy-cookie-choices')) . '</p>';
+        $italy_cookie_choices_missing = true;
+      } else if (!in_array('italy-cookie-choices/italy-cookie-choices.php', apply_filters('active_plugins', get_option('active_plugins')))) {
+        echo '<p class="danger">'. sprintf(__('Italy Cookie Choices plugin is not activated, you must active it before creating pages!!! <a href="%s" title="Italy Cookie Choices (for EU Cookie Law)">Activate It Now!</a>', LW_ALL_IN_ONE_PLUGIN_NAME), wp_nonce_url(admin_url('plugins.php?action=activate&plugin=italy-cookie-choices/italy-cookie-choices.php'), 'activate-plugin_italy-cookie-choices/italy-cookie-choices.php')) . '</p>';
+        $italy_cookie_choices_missing = true;
+      }
+    ?>
   </div>
   <hr>
 <?php if (!$italy_cookie_choices_missing) : ?>

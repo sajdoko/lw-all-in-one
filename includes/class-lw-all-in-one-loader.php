@@ -12,10 +12,6 @@
 /**
  * Register all actions and filters for the plugin.
  *
- * Maintain a list of all hooks that are registered throughout
- * the plugin, and register them with the WordPress API. Call the
- * run function to execute the list of actions and filters.
- *
  * @package    Lw_All_In_One
  * @subpackage Lw_All_In_One/includes
  * @author     sajdoko <sajmir.doko@localweb.it>

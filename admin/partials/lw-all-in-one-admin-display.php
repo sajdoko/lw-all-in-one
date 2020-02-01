@@ -48,6 +48,8 @@
       $lw_cf7_fields_id_contratto = (isset($options['lw_cf7_fields']['id_contratto'])) ? esc_attr($options['lw_cf7_fields']['id_contratto']) : '';
       $lw_hf_fields_insert_header = (isset($options['lw_hf_fields']['insert_header'])) ? $options['lw_hf_fields']['insert_header'] : '';
       $lw_hf_fields_insert_footer = (isset($options['lw_hf_fields']['insert_footer'])) ? $options['lw_hf_fields']['insert_footer'] : '';
+      $lw_aio_delete_data = (isset($options['lw_aio_fields']['delete_data'])) ? esc_attr($options['lw_aio_fields']['delete_data']) : '';
+      $lw_aio_data_retention = (isset($options['lw_aio_fields']['data_retention'])) ? esc_attr($options['lw_aio_fields']['data_retention']) : '';
 
       settings_fields($this->plugin_name);
       do_settings_sections($this->plugin_name);
@@ -61,7 +63,7 @@
       } else {
         $default_tab = 'tab_hf';
       }
-      $allowed_tabs = array('tab_ga_events', 'tab_wim', 'tab_cf7', 'tab_hf');
+      $allowed_tabs = array('tab_ga_events', 'tab_wim', 'tab_cf7', 'tab_hf', 'tab_aio_options');
       $get_tab = isset($_GET['tab']) ? esc_attr($_GET['tab']) : '';
       $active_tab = (in_array($get_tab, $allowed_tabs)) ? $get_tab : $default_tab;
     ?>
@@ -123,6 +125,7 @@
               <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_wim" class="nav-tab <?php echo $active_tab == 'tab_wim' ? 'nav-tab-active' : ''; ?><?php echo $wim_activate != 'on' ? ' d-none' : ''; ?>"><?php esc_attr_e('Web Instant Messenger', LW_ALL_IN_ONE_PLUGIN_NAME);?></a>
               <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_cf7" class="nav-tab <?php echo $active_tab == 'tab_cf7' ? 'nav-tab-active' : ''; ?><?php echo $cf7_activate != 'on' ? ' d-none' : ''; ?>"><?php esc_attr_e('LocalWeb Contact Form 7', LW_ALL_IN_ONE_PLUGIN_NAME);?></a>
               <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_hf" class="nav-tab <?php echo $active_tab == 'tab_hf' ? 'nav-tab-active' : ''; ?>"><?php esc_attr_e('Header/Footer Scripts', LW_ALL_IN_ONE_PLUGIN_NAME);?></a>
+              <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_aio_options" class="nav-tab <?php echo $active_tab == 'tab_aio_options' ? 'nav-tab-active' : ''; ?>"><?php esc_attr_e('Plugin Options', LW_ALL_IN_ONE_PLUGIN_NAME);?></a>
             </h2>
             <div id="tab_ga_events" class="tab-content<?php echo $active_tab != 'tab_ga_events' ? ' d-none' : ''; ?>">
               <table class="lw-aio-settings-options<?php echo $ga_activate != 'on' ? ' d-none' : ''; ?>">
@@ -312,7 +315,7 @@
                       <label for="tipo_contratto"><?php esc_attr_e('Packet Type', LW_ALL_IN_ONE_PLUGIN_NAME);?></label>
                     </td>
                     <td class="lw-aio-settings-field">
-                      <select id="tipo_contratto" name="<?php echo $this->plugin_name;?>[lw_cf7_fields][tipo_contratto]">
+                      <select id="tipo_contratto" name="<?php echo $this->plugin_name;?>[lw_cf7_fields][tipo_contratto]" <?php if (isset($_GET['fix_packet']) && $lw_cf7_fields_tipo_contratto == '') echo 'class="focus"' ;?>>
                         <option></option>
                         <option value="start" <?php selected( $lw_cf7_fields_tipo_contratto, 'start', TRUE ); ?>><?php _e('Go Start', LW_ALL_IN_ONE_PLUGIN_NAME);?></option>
                         <option value="start_standard" <?php selected( $lw_cf7_fields_tipo_contratto, 'start_standard', TRUE ); ?>><?php _e('Start Standard', LW_ALL_IN_ONE_PLUGIN_NAME);?></option>
@@ -325,7 +328,7 @@
                       <label for="id_contratto"><?php esc_attr_e('Packet Id', LW_ALL_IN_ONE_PLUGIN_NAME);?></label>
                     </td>
                     <td class="lw-aio-settings-field">
-                      <input type="number" id="id_contratto" name="<?php echo $this->plugin_name; ?>[lw_cf7_fields][id_contratto]" value="<?php echo ($lw_cf7_fields_id_contratto != '') ? $lw_cf7_fields_id_contratto : '';?>">
+                      <input type="number" id="id_contratto" name="<?php echo $this->plugin_name; ?>[lw_cf7_fields][id_contratto]" min="1" max="100000" value="<?php echo ($lw_cf7_fields_id_contratto != '') ? $lw_cf7_fields_id_contratto : '';?>"<?php if (isset($_GET['fix_packet']) && $lw_cf7_fields_id_contratto == '') echo 'class="focus"' ;?>>
                     </td>
                   </tr>
                 </tbody>
@@ -349,6 +352,39 @@
                       <h3 class="shfs-labels" for="insert_footer"><?php esc_attr_e( 'Scripts in footer:', LW_ALL_IN_ONE_PLUGIN_NAME); ?></h3>
                       <textarea rows="10" cols="100" id="insert_footer" name="<?php echo $this->plugin_name; ?>[lw_hf_fields][insert_footer]"><?php echo ($lw_hf_fields_insert_footer !== '') ? esc_textarea(base64_decode($lw_hf_fields_insert_footer)) : ''; ?></textarea>
                       <p> <?php _e('Above script will be inserted just before <code>&lt;/body&gt;</code> tag using <code>wp_footer</code> hook.', LW_ALL_IN_ONE_PLUGIN_NAME);?></p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div id="tab_aio_options" class="tab-content<?php echo $active_tab != 'tab_aio_options' ? ' d-none' : ''; ?>">
+              <table class="lw-aio-settings-options">
+                <tbody>
+                  <tr>
+                    <td colspan="2"><h2><?php esc_attr_e('General Options', LW_ALL_IN_ONE_PLUGIN_NAME);?></h2></td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="lw-aio-settings-title">
+                      <div class="button-secondary lw-aio-settings-custom-switch">
+                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[lw_aio_fields][delete_data]" class="lw-aio-settings-custom-switch-checkbox" id="delete_data" <?php echo ($lw_aio_delete_data === 'on') ? 'checked="checked"' : '';?>>
+                        <label class="lw-aio-settings-custom-switch-label" for="delete_data">
+                          <div class="lw-aio-settings-custom-switch-inner"></div>
+                          <div class="lw-aio-settings-custom-switch-switch"></div>
+                        </label>
+                      </div>
+                      <div class="switch-desc"> <?php _e('<b>Delete saved data on plugin uninstall?</b> ', LW_ALL_IN_ONE_PLUGIN_NAME);?> <span class="description"> <?php esc_attr_e('If selected, saved Google Analytics events, saved Contact Form 7 submissions and Plugin options will be permanently deleted! ', LW_ALL_IN_ONE_PLUGIN_NAME);?></span></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="lw-aio-settings-title">
+                      <div class="button-secondary lw-aio-settings-custom-switch">
+                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[lw_aio_fields][data_retention]" class="lw-aio-settings-custom-switch-checkbox" id="data_retention" <?php echo ($lw_aio_data_retention === 'on') ? 'checked="checked"' : '';?>>
+                        <label class="lw-aio-settings-custom-switch-label" for="data_retention">
+                          <div class="lw-aio-settings-custom-switch-inner"></div>
+                          <div class="lw-aio-settings-custom-switch-switch"></div>
+                        </label>
+                      </div>
+                      <div class="switch-desc"> <?php _e('<b>Enable a daily cron job to delete saved data on the database older than 14 days?</b> ', LW_ALL_IN_ONE_PLUGIN_NAME);?> <span class="description"> <?php esc_attr_e('Saved Contact Form 7 submissions older than 14 days will be permanently deleted!', LW_ALL_IN_ONE_PLUGIN_NAME);?></span></div>
                     </td>
                   </tr>
                 </tbody>

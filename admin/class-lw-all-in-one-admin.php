@@ -12,9 +12,6 @@
 /**
  * The admin-specific functionality of the plugin.
  *
- * Defines the plugin name, version, and two examples hooks for how to
- * enqueue the admin-specific stylesheet and JavaScript.
- *
  * @package    Lw_All_In_One
  * @subpackage Lw_All_In_One/admin
  * @author     sajdoko <sajmir.doko@localweb.it>
@@ -50,20 +47,12 @@ class Lw_All_In_One_Admin {
 
   }
 
-  /**
-   * Register the stylesheets for the admin area.
-   *
-   */
   public function enqueue_styles($hook) {
     if (preg_match('/page_lw_all_in_one/', $hook)) {
       wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/lw-all-in-one-admin.css', array(), $this->version, 'all');
     }
   }
 
-  /**
-   * Register the JavaScript for the admin area.
-   *
-   */
   public function enqueue_scripts($hook) {
     // echo $hook;
     // die();
@@ -81,27 +70,14 @@ class Lw_All_In_One_Admin {
   }
 
   public function lw_all_in_one_add_admin_menu() {
-    /*
-     * Add a settings page for this plugin to the Settings menu.
-     *
-     */
-    add_menu_page(__('LocalWeb All In One Options', LW_ALL_IN_ONE_PLUGIN_NAME), __('LW AIO Options', LW_ALL_IN_ONE_PLUGIN_NAME), 'manage_options', $this->plugin_name, array($this, 'display_plugin_setup_page'), plugin_dir_url(__FILE__) . '/img/icon.png', 81
+
+    add_menu_page(__('LocalWeb All In One Options', LW_ALL_IN_ONE_PLUGIN_NAME), __('LW AIO Options', LW_ALL_IN_ONE_PLUGIN_NAME), 'manage_options', $this->plugin_name, array($this, 'display_plugin_setup_page'), trailingslashit(plugin_dir_url(__FILE__)) . 'img/icon.png', 81
     );
   }
-
-  /**
-   * Render the settings page for this plugin.
-   *
-   */
 
   public function display_plugin_setup_page() {
     include_once 'partials/lw-all-in-one-admin-display.php';
   }
-
-  /**
-   * Add's action links to the plugins page.
-   *
-   */
 
   public function lw_all_in_one_add_action_links($links) {
     $settings_link = array(
@@ -110,10 +86,6 @@ class Lw_All_In_One_Admin {
     return array_merge($settings_link, $links);
   }
 
-  /**
-   * Sanitize plugin input options.
-   *
-   */
   public function validate_lw_all_in_one_settings($input) {
     $valid = array();
     $valid['ga_activate'] = (isset($input['ga_activate']) && $input['ga_activate'] === 'on') ? 'on' : '';
@@ -194,18 +166,30 @@ class Lw_All_In_One_Admin {
     $valid['lw_cf7_fields']['save_cf7_subm'] = (isset($input['lw_cf7_fields']['save_cf7_subm']) && $input['lw_cf7_fields']['save_cf7_subm'] === 'on') ? 'on' : '';
     $valid['lw_cf7_fields']['tipo_contratto'] = (isset($input['lw_cf7_fields']['tipo_contratto'])) ? sanitize_text_field($input['lw_cf7_fields']['tipo_contratto']) : '';
     $valid['lw_cf7_fields']['id_contratto'] = (isset($input['lw_cf7_fields']['id_contratto'])) ? sanitize_text_field($input['lw_cf7_fields']['id_contratto']) : '';
-    if ($valid['cf7_activate'] !== '' && !is_plugin_active('contact-form-7/wp-contact-form-7.php')) {
+    if ($valid['cf7_activate'] !== '' && !in_array('contact-form-7/wp-contact-form-7.php', apply_filters('active_plugins', get_option('active_plugins')))) {
       $valid['cf7_activate'] = '';
       $valid['lw_cf7_fields']['save_cf7_subm'] = '';
-      add_settings_error(
-        $this->plugin_name,
-        $this->plugin_name . '_lw_cf7_main_not_active',
-        __('Contact Form 7 plugin is not active!', LW_ALL_IN_ONE_PLUGIN_NAME),
-        'error'
-      );
+      if (!file_exists(WP_PLUGIN_DIR . '/contact-form-7/wp-contact-form-7.php')) {
+        add_settings_error(
+          $this->plugin_name,
+          $this->plugin_name . '_lw_cf7_main_not_installed',
+          sprintf(__('Contact Form 7 plugin is not installed! <a href="%s" title="Contact Form 7">Install It Now!</a>', LW_ALL_IN_ONE_PLUGIN_NAME), wp_nonce_url(admin_url('update.php?action=install-plugin&plugin=contact-form-7'), 'install-plugin_contact-form-7')),
+          'error'
+        );
+      } else if (!in_array('contact-form-7/wp-contact-form-7.php', apply_filters('active_plugins', get_option('active_plugins')))) {
+        add_settings_error(
+          $this->plugin_name,
+          $this->plugin_name . '_lw_cf7_main_not_installed',
+          sprintf(__('Contact Form 7 plugin is not activated! <a href="%s" title="Contact Form 7">Activate It Now!</a>', LW_ALL_IN_ONE_PLUGIN_NAME), wp_nonce_url(admin_url('plugins.php?action=activate&plugin=contact-form-7/wp-contact-form-7.php'), 'activate-plugin_contact-form-7/wp-contact-form-7.php')),
+          'error'
+        );
+      }
     }
     $valid['lw_hf_fields']['insert_header'] = (isset($input['lw_hf_fields']['insert_header'])) ? $this->sanitize_header_footer_scripts($input['lw_hf_fields']['insert_header']) : '';
     $valid['lw_hf_fields']['insert_footer'] = (isset($input['lw_hf_fields']['insert_footer'])) ? $this->sanitize_header_footer_scripts($input['lw_hf_fields']['insert_footer']) : '';
+
+    $valid['lw_aio_fields']['delete_data'] = (isset($input['lw_aio_fields']['delete_data']) && $input['lw_aio_fields']['delete_data'] === 'on') ? 'on' : '';
+    $valid['lw_aio_fields']['data_retention'] = (isset($input['lw_aio_fields']['data_retention']) && $input['lw_aio_fields']['data_retention'] === 'on') ? 'on' : '';
 
     $exiting_options = get_option($this->plugin_name);
     if ($exiting_options) {
@@ -215,18 +199,10 @@ class Lw_All_In_One_Admin {
     return $valid;
   }
 
-  /**
-   * Register plugin input options.
-   *
-   */
   public function lw_all_in_one_options_update() {
     register_setting($this->plugin_name, $this->plugin_name, array($this, 'validate_lw_all_in_one_settings'));
   }
 
-  /**
-   * Check if plugin option exists and returns it's vale, else return empty.
-   *
-   */
   public function get_plugin_options($parent_key = false, $key) {
     $options = get_option($this->plugin_name);
     if ($parent_key !== false) {
@@ -244,13 +220,6 @@ class Lw_All_In_One_Admin {
     }
   }
 
-  /**
-   * Regular Expression snippet to validate Google Analytics tracking code
-   * see http://code.google.com/apis/analytics/docs/concepts/gaConceptsAccounts.html#webProperty
-   *
-   * @param   $str     string to be validated
-   * @return  Boolean
-   */
   public function lw_all_in_one_validate_tracking_id($str) {
     return (bool) preg_match('/^ua-\d{4,9}-\d{1,4}$/i', strval($str));
   }

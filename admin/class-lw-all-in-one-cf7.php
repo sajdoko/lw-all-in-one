@@ -12,9 +12,6 @@
 /**
  * The Contact Form 7 integration functionality of the plugin.
  *
- * Defines the plugin name, version, and two examples hooks for how to
- * enqueue the admin-specific stylesheet and JavaScript.
- *
  * @package    Lw_All_In_One
  * @subpackage Lw_All_In_One/admin
  * @author     sajdoko <sajmir.doko@localweb.it>
@@ -52,7 +49,7 @@ class Lw_All_In_One_Cf7 {
   }
 
   public function lw_all_in_one_cf7_admin_submenu() {
-    add_submenu_page($this->plugin_name, __('Saved Contact Form Submissions', LW_ALL_IN_ONE_PLUGIN_NAME), __('Saved CF7', LW_ALL_IN_ONE_PLUGIN_NAME), 'manage_options', $this->plugin_name . '_cf7', array($this, 'lw_all_in_one_cf7_display_page'));
+   add_submenu_page($this->plugin_name, __('Saved Contact Form Submissions', LW_ALL_IN_ONE_PLUGIN_NAME), __('Saved CF7', LW_ALL_IN_ONE_PLUGIN_NAME), 'manage_options', $this->plugin_name . '_cf7', array($this, 'lw_all_in_one_cf7_display_page'));
   }
 
   public function lw_all_in_one_cf7_display_page() {
@@ -81,7 +78,7 @@ class Lw_All_In_One_Cf7 {
     $submission = WPCF7_Submission::get_instance();
     $posted_data = &$submission->get_posted_data();
 
-    if (isset($posted_data['nome']) && $cf7_activate == 'on') {
+    if (isset($posted_data['nome'])) {
       $mapped_field = array();
       $mapped_field['nome'] = sanitize_text_field($posted_data['nome']);
       $mapped_field['cognome'] = sanitize_text_field($posted_data['cognome']);
@@ -148,80 +145,14 @@ class Lw_All_In_One_Cf7 {
       }
     }
   }
-  public function lw_all_in_one_cf7_add_every_five_minutes($schedules) {
-    $schedules['lw_all_in_one_cf7_every_five_minutes'] = array(
-      'interval' => 300,
-      'display' => __('Every 5 Minutes', 'localweb'),
-    );
-    return $schedules;
-  }
 
-  public function lw_all_in_one_cf7_sent_activation() {
-    if (!wp_next_scheduled('lw_all_in_one_cf7_check_sent_data')) {
-      wp_schedule_event(time(), 'lw_all_in_one_cf7_every_five_minutes', 'lw_all_in_one_cf7_check_sent_data');
-    }
-  }
-
-  public function lw_all_in_one_cf7_sent_deactivation() {
-    wp_clear_scheduled_hook('lw_all_in_one_cf7_check_sent_data');
-  }
-
-  public function lw_all_in_one_cf7_every_5_minutes() {
-    global $wpdb;
-    $cf7_table = $wpdb->prefix . LW_ALL_IN_ONE_CF7_TABLE;
-    $select_nn_inviato = $wpdb->get_row("SELECT * FROM " . $cf7_table . " WHERE sent !='Si'");
-    if ($select_nn_inviato !== null) {
-      $re_invia = array();
-      $re_invia['nome'] = sanitize_text_field($select_nn_inviato->name);
-      $re_invia['cognome'] = sanitize_text_field($select_nn_inviato->surname);
-      $re_invia['email'] = sanitize_email($select_nn_inviato->email);
-      $re_invia['telefono'] = sanitize_text_field($select_nn_inviato->phone);
-      $re_invia['soggetto'] = sanitize_text_field($select_nn_inviato->subject);
-      $re_invia['messaggio'] = sanitize_textarea_field($select_nn_inviato->message);
-      $re_invia['tipo_Contratto'] = sanitize_text_field($select_nn_inviato->tipo_Contratto);
-      $re_invia['id_Contratto'] = sanitize_text_field($select_nn_inviato->id_Contratto);
-      $re_invia['submited_page'] = esc_url_raw($select_nn_inviato->submited_page);
-
-      $json_re_invia = json_encode($re_invia);
-      $args = array(
-        'body' => $json_re_invia,
-        'timeout' => '5',
-        'redirection' => '5',
-        'httpversion' => '1.0',
-        'blocking' => true,
-        'headers' => array(),
-        'cookies' => array(),
-      );
-      $send = wp_remote_post($this->lw_api_url, $args);
-      $ret_body = wp_remote_retrieve_body($send);
-      $data = json_decode($ret_body);
-
-      if ($data->response == "OK") {
-        $inviato = "Si";
-        $id = $select_nn_inviato->id;
-        $wpdb->update(
-          $cf7_table,
-          array(
-            'sent' => $inviato,
-          ), array('id' => $id)
-        );
-      }
-    }
-  }
-
-  /**
-   * Check if Packet Type and Packed Id are filled notice.
-   *
-   * @return string
-   */
   public function lw_all_in_one_cf7_packet_notice() {
     //Plugin options
     $options = get_option($this->plugin_name);
-    $cf7_activate = (isset($options['cf7_activate'])) ? esc_attr($options['cf7_activate']) : '';
     $lw_cf7_fields_saved_tipo_contratto = (isset($options['lw_cf7_fields']['tipo_contratto'])) ? sanitize_text_field($options['lw_cf7_fields']['tipo_contratto']) : '';
     $lw_cf7_fields_saved_id_contratto = (isset($options['lw_cf7_fields']['id_contratto'])) ? sanitize_text_field($options['lw_cf7_fields']['id_contratto']) : '';
-    if ($cf7_activate == 'on' && ($lw_cf7_fields_saved_tipo_contratto == '' || $lw_cf7_fields_saved_id_contratto == '') ) {
-      echo '<div class="error"><p><img src="' . plugin_dir_url(__FILE__) . '/img/icon.png' . '"/> ' . sprintf(__('You have activated Contact Form 7 Addon but Packet Type and/or Packet Id seems to be missing. <a href="%s" title="Fix it Now">Fix it Now.</a>', LW_ALL_IN_ONE_PLUGIN_NAME), admin_url('admin.php?page=lw_all_in_one&tab=tab_cf7')) . '</p></div>';
+    if ($lw_cf7_fields_saved_tipo_contratto == '' || $lw_cf7_fields_saved_id_contratto == '') {
+      echo '<div class="error"><p><img src="' . trailingslashit(plugin_dir_url(__FILE__)) . 'img/icon.png' . '"/> ' . sprintf(__('You have activated Contact Form 7 Addon but Packet Type and/or Packet Id seems to be missing. <a href="%s" title="Fix it Now">Fix it Now.</a>', LW_ALL_IN_ONE_PLUGIN_NAME), admin_url('admin.php?page=lw_all_in_one&tab=tab_cf7&fix_packet#tipo_contratto')) . '</p></div>';
     }
   }
 
@@ -232,4 +163,20 @@ class Lw_All_In_One_Cf7 {
       delete_plugins(array('lw-contact-form/localweb.php'));
     }
   }
+
+  public function lw_all_in_one_cf7_screen_options( $result, $option, $value ) {
+    return $value;
+  }
+
+  public function lw_all_in_one_cf7_set_screen_options() {
+		// $option = 'lw-aio-options_page_lw_all_in_one_cf7_per_page';
+		$option = 'per_page';
+		$args = [
+			'label'   => __('Records', LW_ALL_IN_ONE_PLUGIN_NAME),
+			'default' => 10,
+			'option'  => 'records_per_page'
+		];
+		add_screen_option( $option, $args );
+	}
+
 }

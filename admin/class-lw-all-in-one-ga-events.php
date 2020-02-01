@@ -12,9 +12,6 @@
 /**
  * The Google Analytics integration functionality of the plugin.
  *
- * Defines the plugin name, version, and two examples hooks for how to
- * enqueue the admin-specific stylesheet and JavaScript.
- *
  * @package    Lw_All_In_One
  * @subpackage Lw_All_In_One/admin
  * @author     sajdoko <sajmir.doko@localweb.it>
@@ -133,11 +130,26 @@ class Lw_All_In_One_Ga_Events {
     // Checks if WooCommerce is installed.
     if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
       if (!file_exists(WP_PLUGIN_DIR . '/woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php')) {
-        echo '<div class="error"><p><img src="' . plugin_dir_url(__FILE__) . '/img/icon.png' . '"/> ' . sprintf(__('You have Woocommerce active. Install <strong>WooCommerce Google Analytics Integration</strong> to better track your store events. <a href="%s" title="WooCommerce Google Analytics Integration">Install Now!</a>', LW_ALL_IN_ONE_PLUGIN_NAME), wp_nonce_url(admin_url('update.php?action=install-plugin&plugin=woocommerce-google-analytics-integration'), 'install-plugin_woocommerce-google-analytics-integration')) . '</p></div>';
+        echo '<div class="error"><p><img src="' . trailingslashit(plugin_dir_url(__FILE__)) . 'img/icon.png' . '"/> ' . sprintf(__('You have Woocommerce active. Install <strong>WooCommerce Google Analytics Integration</strong> to better track your store events. <a href="%s" title="WooCommerce Google Analytics Integration">Install Now!</a>', LW_ALL_IN_ONE_PLUGIN_NAME), wp_nonce_url(admin_url('update.php?action=install-plugin&plugin=woocommerce-google-analytics-integration'), 'install-plugin_woocommerce-google-analytics-integration')) . '</p></div>';
       } else if (!in_array('woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php', apply_filters('active_plugins', get_option('active_plugins')))) {
-        echo '<div class="error"><p><img src="' . plugin_dir_url(__FILE__) . '/img/icon.png' . '"/> ' . sprintf(__('You have Woocommerce active. Install <strong>WooCommerce Google Analytics Integration</strong> to better track your store events. <a href="%s" title="WooCommerce Google Analytics Integration">Activate Now!</a>', LW_ALL_IN_ONE_PLUGIN_NAME), wp_nonce_url(admin_url('plugins.php?action=activate&plugin=woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php'), 'activate-plugin_woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php')) . '</p></div>';
+        echo '<div class="error"><p><img src="' . trailingslashit(plugin_dir_url(__FILE__)) . 'img/icon.png' . '"/> ' . sprintf(__('You have Woocommerce active. Install <strong>WooCommerce Google Analytics Integration</strong> to better track your store events. <a href="%s" title="WooCommerce Google Analytics Integration">Activate Now!</a>', LW_ALL_IN_ONE_PLUGIN_NAME), wp_nonce_url(admin_url('plugins.php?action=activate&plugin=woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php'), 'activate-plugin_woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php')) . '</p></div>';
       }
     }
   }
+
+  public function lw_all_in_one_ga_events_screen_options( $result, $option, $value ) {
+    // wp_die($value);
+    return $value;
+  }
+
+  public function lw_all_in_one_ga_events_set_screen_options() {
+		$option = 'per_page';
+		$args = [
+			'label'   => __('Records', LW_ALL_IN_ONE_PLUGIN_NAME),
+			'default' => 10,
+			'option'  => 'records_per_page'
+		];
+		add_screen_option( $option, $args );
+	}
 
 }

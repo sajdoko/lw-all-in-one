@@ -12,8 +12,6 @@
 /**
  * Fired during plugin activation.
  *
- * This class defines all code necessary to run during the plugin's activation.
- *
  * @package    Lw_All_In_One
  * @subpackage Lw_All_In_One/includes
  * @author     sajdoko <sajmir.doko@localweb.it>
@@ -27,10 +25,10 @@ class Lw_All_In_One_Activator {
    *
    */
   public static function activate() {
-    // $version = get_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);
     if (!get_option('lw_all_in_one_version')) {
       add_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);
     }
+    $lw_all_in_one_version = get_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);
     // Check if Web Instant Messenger options exist
     $verification_status = $token = $wim_activate = $rag_soc = $auto_show_wim = $show_wim_after = $show_mobile = $lingua = $messaggio_0 = $messaggio_1 = $cf7_activate = $save_cf7_subm = $ga_activate = $tracking_id = $save_ga_events = $monitor_email_link = $monitor_tel_link = $monitor_form_submit = '';
     if ($wim_activation_status = get_option('wim_activation_status')) {
@@ -68,7 +66,7 @@ class Lw_All_In_One_Activator {
       $ga_activate = $save_ga_events = $monitor_email_link = $monitor_tel_link = $monitor_form_submit = 'on';
     }
     if (!get_option(LW_ALL_IN_ONE_PLUGIN_NAME)) {
-      $initial_empty_options = array(
+      $initial_attivation_options = array(
         'ga_activate' => $ga_activate,
         'ga_fields' => array(
           'tracking_id' => $tracking_id,
@@ -97,8 +95,25 @@ class Lw_All_In_One_Activator {
           'insert_header' => '',
           'insert_footer' => '',
         ),
+        'lw_aio_fields' => array(
+          'delete_data' => '',
+          'data_retention' => 'on',
+        ),
       );
-      add_option(LW_ALL_IN_ONE_PLUGIN_NAME, $initial_empty_options);
+      add_option(LW_ALL_IN_ONE_PLUGIN_NAME, $initial_attivation_options);
+    }
+    if (version_compare($lw_all_in_one_version, LW_ALL_IN_ONE_VERSION) < 0) {
+      $exiting_options = get_option(LW_ALL_IN_ONE_PLUGIN_NAME);
+      if ($exiting_options) {
+        $new_options = array(
+          'lw_aio_fields' => array(
+            'delete_data' => '',
+            'data_retention' => 'on',
+          ),
+        );
+        $new_options = array_merge($exiting_options, $new_options);
+        update_option( LW_ALL_IN_ONE_PLUGIN_NAME, $new_options );
+      }
     }
     global $wpdb;
     $charset_collate = $wpdb->get_charset_collate();

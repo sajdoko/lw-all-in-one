@@ -12,8 +12,6 @@
 /**
  * Fired during plugin deactivation.
  *
- * This class defines all code necessary to run during the plugin's deactivation.
- *
  * @package    Lw_All_In_One
  * @subpackage Lw_All_In_One/includes
  * @author     sajdoko <sajmir.doko@localweb.it>
@@ -27,6 +25,13 @@ class Lw_All_In_One_Deactivator {
    *
    */
   public static function deactivate() {
+
+    if (wp_next_scheduled('lw_all_in_one_data_retention')) {
+      wp_clear_scheduled_hook( 'lw_all_in_one_data_retention' );
+    }
+    if (wp_next_scheduled('lw_all_in_one_cf7_sync')) {
+      wp_clear_scheduled_hook( 'lw_all_in_one_cf7_sync' );
+    }
 
   }
 

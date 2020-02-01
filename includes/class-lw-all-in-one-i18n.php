@@ -15,9 +15,6 @@
 /**
  * Define the internationalization functionality.
  *
- * Loads and defines the internationalization files for this plugin
- * so that it is ready for translation.
- *
  * @package    Lw_All_In_One
  * @subpackage Lw_All_In_One/includes
  * @author     sajdoko <sajmir.doko@localweb.it>

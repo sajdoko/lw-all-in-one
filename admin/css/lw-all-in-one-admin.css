@@ -251,3 +251,9 @@ input.lw-aio-settings-custom-switch-checkbox {
 	font-size: 25px;
 	color: red;
 }
+.lw-aio-settings-field>.focus {
+	background-color: #c00518;
+	color: #fff !important;
+	border-color: transparent !important;
+	box-shadow: 0 0 0 0 transparent !important;
+}
