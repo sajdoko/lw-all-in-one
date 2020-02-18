@@ -30,6 +30,8 @@ A new options page "LW AIO Options" will appear on the left side menu.
 From there can be activated/deactivated the services
 
 == Changelog ==
+= 1.5.6 =
+* Updated privacy pages.
 = 1.5.5 =
 * Added option to add custom analytics tracking events.
 = 1.4.5 =

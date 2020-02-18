@@ -224,9 +224,9 @@ class Lw_All_In_One {
   private function lw_all_in_one_schedule_single_event() {
 
     $lw_all_in_one_version = get_option('lw_all_in_one_version', '1.0.0');
-    if (version_compare($lw_all_in_one_version, LW_ALL_IN_ONE_VERSION) < 0) {
+    if (version_compare($lw_all_in_one_version,  '1.5.6') < 0) {
       if (!wp_next_scheduled('lw_all_in_one_single_event')) {
-        wp_schedule_single_event( time() + 60, 'lw_all_in_one_single_event', array( $lw_all_in_one_version ) );
+        wp_schedule_single_event( time() + 60, 'lw_all_in_one_single_event' );
       }
       add_action('lw_all_in_one_single_event', array( __CLASS__, 'lw_all_in_one_single_event_run' ));
     } else {
@@ -237,11 +237,7 @@ class Lw_All_In_One {
 
   }
 
-  public static function lw_all_in_one_single_event_run($lw_all_in_one_version) {
-
-    if (version_compare($lw_all_in_one_version, LW_ALL_IN_ONE_VERSION) < 0) {
-      update_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);
-    }
+  public static function lw_all_in_one_single_event_run() {
 
     //Plugin options
     $options = get_option(LW_ALL_IN_ONE_PLUGIN_NAME);
@@ -255,6 +251,32 @@ class Lw_All_In_One {
       update_option( LW_ALL_IN_ONE_PLUGIN_NAME, $new_options_update );
     }
 
+    $page_contact = get_page_by_path('informativa-trattamento-dati');
+    if ($page_contact->ID != '') {
+      $contact_page_content = $page_contact->post_content;
+      $contact_page_content = preg_replace('/orjon\.nallbati\@localweb\.it/', 'orjon.nallbati@onlawoffice.com', $contact_page_content);
+      $contact_page_content = preg_replace('/\(Eventuale\)/', '', $contact_page_content);
+      $contact_page = array(
+        'ID' => $page_contact->ID,
+        'post_content' => $contact_page_content,
+        'post_status' => 'publish',
+      );
+      wp_update_post($contact_page, true);
+    }
+
+    $page_policy = get_page_by_path('informativa-sul-trattamento-dei-dati-personali');
+    if ($page_policy->ID != '') {
+      $policy_page_content = $page_policy->post_content;
+      $policy_page_content = preg_replace('/orjon\.nallbati\@localweb\.it/', 'orjon.nallbati@onlawoffice.com', $policy_page_content);
+      $contact_page = array(
+        'ID' => $page_policy->ID,
+        'post_content' => $policy_page_content,
+        'post_status' => 'publish',
+      );
+      wp_update_post($contact_page, true);
+    }
+
+    update_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);
   }
 
   private function lw_all_in_one_schedule_data_retention() {
