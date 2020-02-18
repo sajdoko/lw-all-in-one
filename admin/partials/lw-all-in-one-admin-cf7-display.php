@@ -43,7 +43,7 @@ class Lw_All_In_One_Cf7_List_Table {
         . '</span>', esc_html( $s ) );
     }
 
-    echo '<form method="POST" action="">';
+    echo '<form method="POST" action="" id="lw_aio_saved_cf7_records">';
     wp_nonce_field( 'bulk_delete_records_cf7', 'bulk_delete_nonce_cf7' );
     echo '<input type="hidden" name="page" value="' . esc_attr( $page ) . '" />';
 
@@ -92,14 +92,10 @@ class Lw_All_In_One_Cf7_List_Table_Class extends WP_List_Table {
   public function column_subject($item) {
     $delete_url = wp_nonce_url( '?page='.$_REQUEST['page'].'&action=delete-cf7&record_id='.$item['id'].'', 'delete' );
     $actions = array(
-      'delete' => sprintf('<a href="%s">Delete</a>', $delete_url),
+      'delete' => sprintf('<a href="%s" id="lw_aio_delete_record">Delete</a>', $delete_url),
     );
-
-    return sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
-      /*$1%s*/$item['name'],
-      /*$2%s*/$item['id'],
-      /*$3%s*/$this->row_actions($actions)
-    );
+    $subject = (strlen($item['subject']) > 10) ? substr($item['subject'], 0, 30) . ' ...' : $item['subject'];
+    return sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s', $subject, $item['id'], $this->row_actions($actions) );
   }
 
   public function column_cb($item) {

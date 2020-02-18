@@ -57,7 +57,8 @@ class Lw_All_In_One_Admin {
     // echo $hook;
     // die();
     if (preg_match('/page_lw_all_in_one/', $hook)) {
-      wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/lw-all-in-one-admin.js', array('jquery'), $this->version, false);
+      wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/lw-all-in-one-admin.js', array('jquery', 'wp-i18n'), $this->version, false);
+      wp_set_script_translations( $this->plugin_name, LW_ALL_IN_ONE_PLUGIN_NAME );
       wp_localize_script($this->plugin_name, 'lw_all_in_one_admin_ajax_object',
         array(
           'ajaxurl' => admin_url('admin-ajax.php'),
@@ -107,9 +108,16 @@ class Lw_All_In_One_Admin {
       $valid['ga_fields']['monitor_email_link'] = (isset($input['ga_fields']['monitor_email_link']) && $input['ga_fields']['monitor_email_link'] === 'on') ? 'on' : '';
       $valid['ga_fields']['monitor_tel_link'] = (isset($input['ga_fields']['monitor_tel_link']) && $input['ga_fields']['monitor_tel_link'] === 'on') ? 'on' : '';
       $valid['ga_fields']['monitor_form_submit'] = (isset($input['ga_fields']['monitor_form_submit']) && $input['ga_fields']['monitor_form_submit'] === 'on') ? 'on' : '';
+
+      if (isset($input['ga_fields']['ga_custom_event']) && is_array($input['ga_fields']['ga_custom_event'])) {
+        foreach ($input['ga_fields']['ga_custom_event'] as $key => $value) {
+          $valid['ga_fields']['ga_custom_event'][$key] = ($value === 'on') ? 'on' : '';
+        }
+      }
     }
 
     $valid['wim_activate'] = (isset($input['wim_activate']) && $input['wim_activate'] === 'on') ? 'on' : '';
+
     if (isset($input['wim_fields']['verification_status']) && isset($input['wim_fields']['save_wim_options']) && isset($input['wim_fields']['token']) && strlen($input['wim_fields']['token']) == 32) {
       $wim_settings_arr = array();
       $api_url = 'https://localweb.it/chat/api/cliente/aggiorna.php';
@@ -122,6 +130,7 @@ class Lw_All_In_One_Admin {
       $wim_settings_arr['wim_fields']['lingua'] = (isset($input['wim_fields']['lingua'])) ? sanitize_text_field($input['wim_fields']['lingua']) : "it";
       $wim_settings_arr['wim_fields']['messaggio_0'] = (isset($input['wim_fields']['messaggio_0'])) ? sanitize_textarea_field($input['wim_fields']['messaggio_0']) : "Salve! Come posso esserle utile?";
       $wim_settings_arr['wim_fields']['messaggio_1'] = (isset($input['wim_fields']['messaggio_1'])) ? sanitize_textarea_field($input['wim_fields']['messaggio_1']) : "Gentilmente, mi può lasciare un contatto telefonico o email in modo da poterla eventualmente ricontattare?";
+
       $response = wp_remote_post($api_url, array(
           'method' => 'POST',
           'timeout' => 45,
@@ -129,7 +138,7 @@ class Lw_All_In_One_Admin {
           'httpversion' => '1.0',
           'blocking' => true,
           'headers' => array(),
-          'body' => json_encode(array('plugin_token' => $wim_settings_arr['wim_fields']['token'], 'auto_show_wim' => $wim_settings_arr['wim_fields']['auto_show_wim'], 'show_wim_after' => $wim_settings_arr['wim_fields']['show_wim_after'], 'show_mobile' => $wim_settings_arr['wim_fields']['show_mobile'], 'lingua' => $wim_settings_arr['wim_fields']['lingua'], 'messaggio_0' => $wim_settings_arr['wim_fields']['messaggio_0'], 'messaggio_1' => $wim_settings_arr['wim_fields']['messaggio_1'])),
+          'body' => json_encode(array('stato_wim' => $valid['wim_activate'], 'plugin_token' => $wim_settings_arr['wim_fields']['token'], 'auto_show_wim' => $wim_settings_arr['wim_fields']['auto_show_wim'], 'show_wim_after' => $wim_settings_arr['wim_fields']['show_wim_after'], 'show_mobile' => $wim_settings_arr['wim_fields']['show_mobile'], 'lingua' => $wim_settings_arr['wim_fields']['lingua'], 'messaggio_0' => $wim_settings_arr['wim_fields']['messaggio_0'], 'messaggio_1' => $wim_settings_arr['wim_fields']['messaggio_1'])),
           'cookies' => array(),
       )
       );
@@ -143,9 +152,9 @@ class Lw_All_In_One_Admin {
               _e('Something went wrong: ' . $error_message, LW_ALL_IN_ONE_PLUGIN_NAME),
               'error'
           );
-      } elseif ($data->response == 'success') {
+      } elseif ((isset($data->response)) && $data->response == 'success') {
         $valid = array_merge($valid, $wim_settings_arr);
-      } elseif ($data->response == 'danger') {
+      } elseif ((isset($data->response)) && $data->response == 'danger') {
           add_settings_error(
               $this->plugin_name,
               $this->plugin_name . '_settings_not_updated_danger',
@@ -156,7 +165,8 @@ class Lw_All_In_One_Admin {
           add_settings_error(
               $this->plugin_name,
               $this->plugin_name . '_settings_not_updated_not_known',
-              $data->message,
+              // __('Invalid response from API server!', LW_ALL_IN_ONE_PLUGIN_NAME),
+              $data,
               'error'
           );
       }
@@ -195,7 +205,6 @@ class Lw_All_In_One_Admin {
     if ($exiting_options) {
       $valid = array_merge($exiting_options, $valid);
     }
-
     return $valid;
   }
 
@@ -249,5 +258,4 @@ class Lw_All_In_One_Admin {
     $scripts = preg_replace('/<\?php.+?\?>$/ms', '', $scripts);
     return base64_encode($scripts);
   }
-
 }

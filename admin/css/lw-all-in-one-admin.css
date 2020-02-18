@@ -68,6 +68,18 @@ td.lw-aio-settings-title label {
 	font-size: 1em;
 }
 
+#tab_ga_events #col-left {
+	float: left;
+	width: 49%;
+}
+
+#tab_ga_events #col-right {
+	float: right;
+	width: 49%;
+	border-left: 1px solid #ccc;
+	padding-left: 2em;
+}
+
 #poststuff.lw-aio h2 {
 	padding-bottom: 0;
 	font-size: 19.5px;
@@ -256,4 +268,10 @@ input.lw-aio-settings-custom-switch-checkbox {
 	color: #fff !important;
 	border-color: transparent !important;
 	box-shadow: 0 0 0 0 transparent !important;
+}
+.remove_custom_event {
+	color: #c00;
+	text-decoration: none;
+	vertical-align: sub;
+	margin-left: 1em;
 }

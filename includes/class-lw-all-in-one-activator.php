@@ -28,7 +28,7 @@ class Lw_All_In_One_Activator {
     if (!get_option('lw_all_in_one_version')) {
       add_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);
     }
-    $lw_all_in_one_version = get_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);
+    $lw_all_in_one_version = get_option('lw_all_in_one_version');
     // Check if Web Instant Messenger options exist
     $verification_status = $token = $wim_activate = $rag_soc = $auto_show_wim = $show_wim_after = $show_mobile = $lingua = $messaggio_0 = $messaggio_1 = $cf7_activate = $save_cf7_subm = $ga_activate = $tracking_id = $save_ga_events = $monitor_email_link = $monitor_tel_link = $monitor_form_submit = '';
     if ($wim_activation_status = get_option('wim_activation_status')) {
@@ -74,6 +74,7 @@ class Lw_All_In_One_Activator {
           'monitor_email_link' => $monitor_email_link,
           'monitor_tel_link' => $monitor_tel_link,
           'monitor_form_submit' => $monitor_form_submit,
+          'ga_custom_event' => array(),
         ),
         'wim_activate' => $wim_activate,
         'wim_fields' => array(
@@ -102,19 +103,19 @@ class Lw_All_In_One_Activator {
       );
       add_option(LW_ALL_IN_ONE_PLUGIN_NAME, $initial_attivation_options);
     }
-    if (version_compare($lw_all_in_one_version, LW_ALL_IN_ONE_VERSION) < 0) {
-      $exiting_options = get_option(LW_ALL_IN_ONE_PLUGIN_NAME);
-      if ($exiting_options) {
-        $new_options = array(
-          'lw_aio_fields' => array(
-            'delete_data' => '',
-            'data_retention' => 'on',
-          ),
-        );
-        $new_options = array_merge($exiting_options, $new_options);
-        update_option( LW_ALL_IN_ONE_PLUGIN_NAME, $new_options );
-      }
-    }
+    // if (version_compare($lw_all_in_one_version, '1.4.0') < 0) {
+    //   $exiting_options = get_option(LW_ALL_IN_ONE_PLUGIN_NAME);
+    //   if ($exiting_options) {
+    //     $new_options = array();
+    //     $new_options['lw_hf_fields']['insert_header'] = base64_decode($exiting_options['lw_hf_fields']['insert_header']);
+    //     $new_options['lw_hf_fields']['insert_footer'] = base64_decode($exiting_options['lw_hf_fields']['insert_footer']);
+    //     $new_options['lw_aio_fields']['delete_data'] = '';
+    //     $new_options['lw_aio_fields']['data_retention'] = 'on';
+    //     $new_options_update = array_merge($exiting_options, $new_options);
+    //     update_option( LW_ALL_IN_ONE_PLUGIN_NAME, $new_options_update );
+    //   }
+    // }
+    // update_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);
     global $wpdb;
     $charset_collate = $wpdb->get_charset_collate();
     $a_events_table = $wpdb->prefix . LW_ALL_IN_ONE_A_EVENTS_TABLE;
@@ -177,6 +178,9 @@ class Lw_All_In_One_Activator {
     if (is_plugin_active('lw-contact-form/localweb.php')) {
       deactivate_plugins('lw-contact-form/localweb.php');
     }
+    if (is_plugin_active('lw-cookie-privacy/lw-cookie-privacy.php')) {
+      deactivate_plugins('lw-cookie-privacy/lw-cookie-privacy.php');
+    }
     if (is_plugin_active('google-analytics-dashboard-for-wp/gadwp.php')) {
       deactivate_plugins('google-analytics-dashboard-for-wp/gadwp.php');
     }
@@ -185,20 +189,6 @@ class Lw_All_In_One_Activator {
         $GLOBALS['wp_fastest_cache']->deleteCache(true);
       }
     }
-
-    // if (version_compare($version, '1.0.1') < 0) {
-    //     $sql = "CREATE TABLE $table_name (
-    //     id mediumint(9) NOT NULL AUTO_INCREMENT,
-    //     time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-    //     views smallint(5) NOT NULL,
-    //     clicks smallint(5) NOT NULL,
-    //     blog_id smallint(5) NOT NULL,
-    //     UNIQUE KEY id (id)
-    //   ) $charset_collate;";
-    //     dbDelta($sql);
-
-    //     update_option('lw_all_in_one_version', '1.0.1');
-    // }
   }
 
 }

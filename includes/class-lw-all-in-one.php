@@ -70,6 +70,7 @@ class Lw_All_In_One {
     $this->load_dependencies();
     $this->set_locale();
     $this->lw_all_in_one_schedule_data_retention();
+    $this->lw_all_in_one_schedule_single_event();
     $this->define_admin_hooks();
     $this->define_public_hooks();
     if ($this->check_plugin_options(false, 'ga_activate') === 'on') {
@@ -157,6 +158,9 @@ class Lw_All_In_One {
 
     $this->loader->add_action('wp_head', $plugin_ga_events, 'lw_all_in_one_header_scripts');
 
+    $this->loader->add_action('wp_ajax_lw_all_in_one_add_ga_event', $plugin_ga_events, 'lw_all_in_one_add_ga_event');
+    $this->loader->add_action('wp_ajax_lw_all_in_one_remove_ga_event', $plugin_ga_events, 'lw_all_in_one_remove_ga_event');
+
     $this->loader->add_action('admin_notices', $plugin_ga_events, 'woocommerce_google_analytics_missing_notice');
 
     $this->loader->add_action('admin_init', $plugin_ga_events, 'lw_all_in_one_gadwp_is_active_deactivate');
@@ -197,6 +201,8 @@ class Lw_All_In_One {
 
     $this->loader->add_action('admin_menu', $plugin_privacy_policy, 'lw_all_in_one_privacy_policy_admin_menu', 99);
 
+    $this->loader->add_action('admin_init', $plugin_privacy_policy, 'lw_all_in_one_old_privacy_is_active_deactivate');
+
   }
 
   public function run() {
@@ -213,6 +219,42 @@ class Lw_All_In_One {
 
   public function get_version() {
     return $this->version;
+  }
+
+  private function lw_all_in_one_schedule_single_event() {
+
+    $lw_all_in_one_version = get_option('lw_all_in_one_version', '1.0.0');
+    if (version_compare($lw_all_in_one_version, LW_ALL_IN_ONE_VERSION) < 0) {
+      if (!wp_next_scheduled('lw_all_in_one_single_event')) {
+        wp_schedule_single_event( time() + 60, 'lw_all_in_one_single_event', array( $lw_all_in_one_version ) );
+      }
+      add_action('lw_all_in_one_single_event', array( __CLASS__, 'lw_all_in_one_single_event_run' ));
+    } else {
+      if (wp_next_scheduled('lw_all_in_one_single_event')) {
+        wp_clear_scheduled_hook( 'lw_all_in_one_single_event' );
+      }
+    }
+
+  }
+
+  public static function lw_all_in_one_single_event_run($lw_all_in_one_version) {
+
+    if (version_compare($lw_all_in_one_version, LW_ALL_IN_ONE_VERSION) < 0) {
+      update_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);
+    }
+
+    //Plugin options
+    $options = get_option(LW_ALL_IN_ONE_PLUGIN_NAME);
+    if (!isset($options['lw_aio_fields']['data_retention'])) {
+      $new_options = array();
+      $new_options['lw_hf_fields']['insert_header'] = base64_decode($options['lw_hf_fields']['insert_header']);
+      $new_options['lw_hf_fields']['insert_footer'] = base64_decode($options['lw_hf_fields']['insert_footer']);
+      $new_options['lw_aio_fields']['delete_data'] = '';
+      $new_options['lw_aio_fields']['data_retention'] = 'on';
+      $new_options_update = array_merge($options, $new_options);
+      update_option( LW_ALL_IN_ONE_PLUGIN_NAME, $new_options_update );
+    }
+
   }
 
   private function lw_all_in_one_schedule_data_retention() {

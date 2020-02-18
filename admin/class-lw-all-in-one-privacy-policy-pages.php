@@ -55,6 +55,14 @@ class Lw_All_In_One_Privacy_Policy_Pages {
     include_once 'partials/lw-all-in-one-admin-privacy-policy-display.php';
   }
 
+  public function lw_all_in_one_old_privacy_is_active_deactivate() {
+    if (is_plugin_active('lw-cookie-privacy/lw-cookie-privacy.php')) {
+      deactivate_plugins('lw-cookie-privacy/lw-cookie-privacy.php');
+    } elseif (is_plugin_inactive('lw-cookie-privacy/lw-cookie-privacy.php')) {
+      delete_plugins(array('lw-cookie-privacy/lw-cookie-privacy.php'));
+    }
+  }
+
   public function lw_all_in_one_create_privacy_pages() {
     if (!check_ajax_referer($this->plugin_name, 'security')) {
       wp_send_json_error(__('Security is not valid!', LW_ALL_IN_ONE_PLUGIN_NAME));

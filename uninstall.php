@@ -30,5 +30,11 @@ if (isset($options['lw_aio_fields']['delete_data']) && $options['lw_aio_fields']
     wp_clear_scheduled_hook( 'lw_all_in_one_cf7_sync' );
   }
 
+  if (is_plugin_active('wp-fastest-cache/wpFastestCache.php')) {
+    if(isset($GLOBALS['wp_fastest_cache']) && method_exists($GLOBALS['wp_fastest_cache'], 'deleteCache')){
+      $GLOBALS['wp_fastest_cache']->deleteCache(true);
+    }
+  }
+
   wp_cache_flush();
 }

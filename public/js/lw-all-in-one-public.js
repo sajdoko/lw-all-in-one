@@ -121,6 +121,17 @@
 					saveGaEvent(gaCategory, gaAction, gaLabel);
 				});
 			}
+			if (lwAioMonitorCustomEvents) {
+				$.each(lwAioCustomEvents, function( i, v ) {
+					$( v.ga_custom_event_selector).click(function () {
+						var gaCategory = v.ga_custom_event_cat || "custom_event_cat" + i;
+						var gaAction = v.ga_custom_event_act || "custom_event_act" + i;
+						var gaLabel = v.ga_custom_event_lab || "custom_event_lab" + i;
+						lwAioSendEvent(gaCategory, gaAction, gaLabel, true);
+						saveGaEvent(gaCategory, gaAction, gaLabel);
+					});
+				});
+			}
 		}
 	});
 	$( window ).load(function() {

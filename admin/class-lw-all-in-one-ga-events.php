@@ -88,6 +88,9 @@ class Lw_All_In_One_Ga_Events {
     $ga_fields_monitor_email_link = (isset($options['ga_fields']['monitor_email_link'])) ? sanitize_text_field($options['ga_fields']['monitor_email_link']) : '';
     $ga_fields_monitor_tel_link = (isset($options['ga_fields']['monitor_tel_link'])) ? sanitize_text_field($options['ga_fields']['monitor_tel_link']) : '';
     $ga_fields_monitor_form_submit = (isset($options['ga_fields']['monitor_form_submit'])) ? sanitize_text_field($options['ga_fields']['monitor_form_submit']) : '';
+    $ga_fields_ga_custom_event = (isset($options['ga_fields']['ga_custom_event'])) ? $options['ga_fields']['ga_custom_event'] : array();
+
+    $ga_custom_events_options = get_option($this->plugin_name.'_ga_custom_events', array());
 
     if ($ga_activate === 'on' && $ga_fields_tracking_id !== '') {
       echo '<script async src="https://www.googletagmanager.com/gtag/js?id=' . $ga_fields_tracking_id . '"></script>
@@ -117,7 +120,88 @@ class Lw_All_In_One_Ga_Events {
       } else {
         echo 'const lwAioMonitorFormSubmit = false;';
       }
+      if (!empty($ga_fields_ga_custom_event)) {
+        echo 'const lwAioMonitorCustomEvents = true;';
+        $ga_custom_events = array_intersect_key($ga_custom_events_options, $ga_fields_ga_custom_event);
+        foreach ($ga_custom_events as $key => $value) {
+          unset($ga_custom_events[$key]['ga_custom_event_name']);
+        }
+        echo 'const lwAioCustomEvents =' . json_encode($ga_custom_events) . ';';
+      } else {
+        echo 'const lwAioMonitorCustomEvents = false;';
+      }
       echo '</script>', "\n";
+    }
+  }
+
+  public function lw_all_in_one_add_ga_event() {
+    if (!check_ajax_referer($this->plugin_name, 'security')) {
+      wp_send_json_error(__('Security is not valid!', LW_ALL_IN_ONE_PLUGIN_NAME));
+      die();
+    }
+    if (isset($_POST['action']) && $_POST['action'] === "lw_all_in_one_add_ga_event") {
+      $selector_by = '';
+      $selector_value = '';
+      $event_selector = (isset($_POST['ga_custom_event_selector'])) ? sanitize_text_field(trim($_POST['ga_custom_event_selector'])) : '';
+      $event_category = (isset($_POST['ga_custom_event_cat'])) ? sanitize_text_field(trim($_POST['ga_custom_event_cat'])) : '';
+      $event_action = (isset($_POST['ga_custom_event_act'])) ? sanitize_text_field(trim($_POST['ga_custom_event_act'])) : '';
+      $event_label = (isset($_POST['ga_custom_event_lab'])) ? sanitize_text_field(trim($_POST['ga_custom_event_lab'])) : '';
+      if (preg_match('/^\./', $event_selector)) {
+        $selector_by = 'class';
+        $selector_value = '.' . sanitize_html_class($event_selector);
+      } else if (preg_match('/^\#/', $event_selector)) {
+        $selector_by = 'id';
+        $selector_value = '#' . sanitize_html_class($event_selector);
+      } else {
+        wp_send_json_error(array('invalid_field' => 'ga_custom_event_selector', 'message' => __('Invalid selector!', LW_ALL_IN_ONE_PLUGIN_NAME)));
+        die();
+      }
+      if ($event_category == ''){
+        wp_send_json_error(array('invalid_field' => 'ga_custom_event_cat', 'message' => __('Invalid category!', LW_ALL_IN_ONE_PLUGIN_NAME)));
+        die();
+      }
+      if ($event_action == ''){
+        wp_send_json_error(array('invalid_field' => 'ga_custom_event_act', 'message' => __('Invalid action!', LW_ALL_IN_ONE_PLUGIN_NAME)));
+        die();
+      }
+      $custom_event = array();
+      $custom_event['ga_custom_event_name'] = (isset($_POST['ga_custom_event_name'])) ? sanitize_text_field($_POST['ga_custom_event_name']) : '';
+      $custom_event['ga_custom_event_selector'] = $selector_value;
+      $custom_event['ga_custom_event_cat'] = $event_category;
+      $custom_event['ga_custom_event_act'] = $event_action;
+      $custom_event['ga_custom_event_lab'] = $event_label;
+
+      $exiting_options = get_option($this->plugin_name.'_ga_custom_events', array());
+      $exiting_options[] = $custom_event;
+      end($exiting_options);
+      $last_key = key($exiting_options);
+      if (update_option($this->plugin_name.'_ga_custom_events', $exiting_options)) {
+        wp_send_json_success(array('event_id' => $last_key,'message' => __('Event added successfully!', LW_ALL_IN_ONE_PLUGIN_NAME)));
+        die();
+      } else {
+        wp_send_json_error(array('invalid_field' => '', 'message' => __('Event couldn\'t be saved!', LW_ALL_IN_ONE_PLUGIN_NAME)));
+        die();
+      }
+    }
+  }
+
+  public function lw_all_in_one_remove_ga_event() {
+    if (!check_ajax_referer($this->plugin_name, 'security')) {
+      wp_send_json_error(__('Security is not valid!', LW_ALL_IN_ONE_PLUGIN_NAME));
+      die();
+    }
+    if (isset($_POST['action']) && $_POST['action'] === "lw_all_in_one_remove_ga_event") {
+      $ga_event_id = (isset($_POST['ga_event_id'])) ? sanitize_text_field($_POST['ga_event_id']) : '';
+
+      $exiting_options = get_option($this->plugin_name.'_ga_custom_events', array());
+      unset($exiting_options[$ga_event_id]);
+      if (update_option($this->plugin_name.'_ga_custom_events', $exiting_options)) {
+        wp_send_json_success(array('message' => __('Event removed successfully!', LW_ALL_IN_ONE_PLUGIN_NAME)));
+        die();
+      } else {
+        wp_send_json_error(array('post' => $exiting_options, 'message' => __('Event couldn\'t be removed!', LW_ALL_IN_ONE_PLUGIN_NAME)));
+        die();
+      }
     }
   }
 
@@ -145,7 +229,7 @@ class Lw_All_In_One_Ga_Events {
   public function lw_all_in_one_ga_events_set_screen_options() {
 		$option = 'per_page';
 		$args = [
-			'label'   => __('Records', LW_ALL_IN_ONE_PLUGIN_NAME),
+			'label'   => __('Number of records per page', LW_ALL_IN_ONE_PLUGIN_NAME),
 			'default' => 10,
 			'option'  => 'records_per_page'
 		];

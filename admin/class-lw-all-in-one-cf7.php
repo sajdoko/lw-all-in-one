@@ -172,7 +172,7 @@ class Lw_All_In_One_Cf7 {
 		// $option = 'lw-aio-options_page_lw_all_in_one_cf7_per_page';
 		$option = 'per_page';
 		$args = [
-			'label'   => __('Records', LW_ALL_IN_ONE_PLUGIN_NAME),
+			'label'   => __('Number of records per page:', LW_ALL_IN_ONE_PLUGIN_NAME),
 			'default' => 10,
 			'option'  => 'records_per_page'
 		];

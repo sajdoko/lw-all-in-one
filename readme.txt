@@ -30,6 +30,16 @@ A new options page "LW AIO Options" will appear on the left side menu.
 From there can be activated/deactivated the services
 
 == Changelog ==
+= 1.5.5 =
+* Added option to add custom analytics tracking events.
+= 1.4.5 =
+* Integrated WIM options to deactivate the service on lw server.
+* Other small tweaks.
+= 1.4.3 =
+* Added confirm box on saved record delete actions.
+* Added check function for data retention option.
+= 1.4.1 =
+* Fixed issue with options on plugin upgrade.
 = 1.4.0 =
 * Added new options TAB 'Plugin Options'.
 * Added options for data retention and to delete plugin data on uninstall.

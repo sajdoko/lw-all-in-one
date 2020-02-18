@@ -51,6 +51,8 @@
       $lw_aio_delete_data = (isset($options['lw_aio_fields']['delete_data'])) ? esc_attr($options['lw_aio_fields']['delete_data']) : '';
       $lw_aio_data_retention = (isset($options['lw_aio_fields']['data_retention'])) ? esc_attr($options['lw_aio_fields']['data_retention']) : '';
 
+      $ga_custom_events = get_option($this->plugin_name.'_ga_custom_events', array());
+
       settings_fields($this->plugin_name);
       do_settings_sections($this->plugin_name);
 
@@ -128,69 +130,152 @@
               <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_aio_options" class="nav-tab <?php echo $active_tab == 'tab_aio_options' ? 'nav-tab-active' : ''; ?>"><?php esc_attr_e('Plugin Options', LW_ALL_IN_ONE_PLUGIN_NAME);?></a>
             </h2>
             <div id="tab_ga_events" class="tab-content<?php echo $active_tab != 'tab_ga_events' ? ' d-none' : ''; ?>">
-              <table class="lw-aio-settings-options<?php echo $ga_activate != 'on' ? ' d-none' : ''; ?>">
-                <tbody>
-                  <tr>
-                    <td colspan="2"><h2><?php esc_attr_e('Google Analytics Options', LW_ALL_IN_ONE_PLUGIN_NAME);?></h2></td>
-                  </tr>
-                  <tr>
-                    <td class="lw-aio-settings-title">
-                      <label for="ga_tracking_id">Tracking ID: </label>
-                    </td>
-                    <td>
-                      <input type="text" id="ga_tracking_id" name="<?php echo $this->plugin_name; ?>[ga_fields][tracking_id]" <?php echo ($ga_fields_tracking_id !== '') ? 'value="'.$ga_fields_tracking_id.'"' : '';?> placeholder="UA-XXXXX-XX" size="25">
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="2" class="lw-aio-settings-title">
-                      <div class="button-secondary lw-aio-settings-custom-switch">
-                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][save_ga_events]" class="lw-aio-settings-custom-switch-checkbox" id="save_ga_events" <?php echo ($ga_fields_save_ga_events === 'on') ? 'checked="checked"' : '';?>>
-                        <label class="lw-aio-settings-custom-switch-label" for="save_ga_events">
-                          <div class="lw-aio-settings-custom-switch-inner"></div>
-                          <div class="lw-aio-settings-custom-switch-switch"></div>
-                        </label>
-                      </div>
-                      <div class="switch-desc"> <?php esc_attr_e('Save Google Analytics events locally on the database?', LW_ALL_IN_ONE_PLUGIN_NAME);?></div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="2" class="lw-aio-settings-title">
-                      <div class="button-secondary lw-aio-settings-custom-switch">
-                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][monitor_email_link]" class="lw-aio-settings-custom-switch-checkbox" id="monitor_email_link" <?php echo ($ga_fields_monitor_email_link === 'on') ? 'checked="checked"' : '';?>>
-                        <label class="lw-aio-settings-custom-switch-label" for="monitor_email_link">
-                          <div class="lw-aio-settings-custom-switch-inner"></div>
-                          <div class="lw-aio-settings-custom-switch-switch"></div>
-                        </label>
-                      </div>
-                      <div class="switch-desc"> <?php esc_attr_e('Track Email link clicks', LW_ALL_IN_ONE_PLUGIN_NAME);?></div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="2" class="lw-aio-settings-title">
-                      <div class="button-secondary lw-aio-settings-custom-switch">
-                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][monitor_tel_link]" class="lw-aio-settings-custom-switch-checkbox" id="monitor_tel_link" <?php echo ($ga_fields_monitor_tel_link === 'on') ? 'checked="checked"' : '';?>>
-                        <label class="lw-aio-settings-custom-switch-label" for="monitor_tel_link">
-                          <div class="lw-aio-settings-custom-switch-inner"></div>
-                          <div class="lw-aio-settings-custom-switch-switch"></div>
-                        </label>
-                      </div>
-                      <div class="switch-desc"> <?php esc_attr_e('Track Telephone link clicks', LW_ALL_IN_ONE_PLUGIN_NAME);?></div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="2" class="lw-aio-settings-title">
-                      <div class="button-secondary lw-aio-settings-custom-switch">
-                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][monitor_form_submit]" class="lw-aio-settings-custom-switch-checkbox" id="monitor_form_submit" <?php echo ($ga_fields_monitor_form_submit === 'on') ? 'checked="checked"' : '';?>>
-                        <label class="lw-aio-settings-custom-switch-label" for="monitor_form_submit">
-                          <div class="lw-aio-settings-custom-switch-inner"></div>
-                          <div class="lw-aio-settings-custom-switch-switch"></div>
-                        </label>
-                      </div>
-                      <div class="switch-desc"> <?php esc_attr_e('Track Contact Form submission', LW_ALL_IN_ONE_PLUGIN_NAME);?></div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <div id="col-container">
+                <div id="col-left">
+			            <div class="col-wrap">
+                    <table id="ga_events_table" class="lw-aio-settings-options<?php echo $ga_activate != 'on' ? ' d-none' : ''; ?>">
+                      <tbody>
+                        <tr>
+                          <td colspan="2"><h2><?php esc_attr_e('Google Analytics Options', LW_ALL_IN_ONE_PLUGIN_NAME);?></h2></td>
+                        </tr>
+                        <tr>
+                          <td class="lw-aio-settings-title">
+                            <label for="ga_tracking_id">Tracking ID: </label>
+                          </td>
+                          <td>
+                            <input type="text" id="ga_tracking_id" name="<?php echo $this->plugin_name; ?>[ga_fields][tracking_id]" <?php echo ($ga_fields_tracking_id !== '') ? 'value="'.$ga_fields_tracking_id.'"' : '';?> placeholder="UA-XXXXX-XX" size="25">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="2" class="lw-aio-settings-title">
+                            <div class="button-secondary lw-aio-settings-custom-switch">
+                              <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][save_ga_events]" class="lw-aio-settings-custom-switch-checkbox" id="save_ga_events" <?php echo ($ga_fields_save_ga_events === 'on') ? 'checked="checked"' : '';?>>
+                              <label class="lw-aio-settings-custom-switch-label" for="save_ga_events">
+                                <div class="lw-aio-settings-custom-switch-inner"></div>
+                                <div class="lw-aio-settings-custom-switch-switch"></div>
+                              </label>
+                            </div>
+                            <div class="switch-desc"> <?php esc_attr_e('Save Google Analytics events locally on the database?', LW_ALL_IN_ONE_PLUGIN_NAME);?></div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="2" class="lw-aio-settings-title">
+                            <div class="button-secondary lw-aio-settings-custom-switch">
+                              <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][monitor_email_link]" class="lw-aio-settings-custom-switch-checkbox" id="monitor_email_link" <?php echo ($ga_fields_monitor_email_link === 'on') ? 'checked="checked"' : '';?>>
+                              <label class="lw-aio-settings-custom-switch-label" for="monitor_email_link">
+                                <div class="lw-aio-settings-custom-switch-inner"></div>
+                                <div class="lw-aio-settings-custom-switch-switch"></div>
+                              </label>
+                            </div>
+                            <div class="switch-desc"> <?php esc_attr_e('Track Email link clicks', LW_ALL_IN_ONE_PLUGIN_NAME);?></div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="2" class="lw-aio-settings-title">
+                            <div class="button-secondary lw-aio-settings-custom-switch">
+                              <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][monitor_tel_link]" class="lw-aio-settings-custom-switch-checkbox" id="monitor_tel_link" <?php echo ($ga_fields_monitor_tel_link === 'on') ? 'checked="checked"' : '';?>>
+                              <label class="lw-aio-settings-custom-switch-label" for="monitor_tel_link">
+                                <div class="lw-aio-settings-custom-switch-inner"></div>
+                                <div class="lw-aio-settings-custom-switch-switch"></div>
+                              </label>
+                            </div>
+                            <div class="switch-desc"> <?php esc_attr_e('Track Telephone link clicks', LW_ALL_IN_ONE_PLUGIN_NAME);?></div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="2" class="lw-aio-settings-title">
+                            <div class="button-secondary lw-aio-settings-custom-switch">
+                              <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][monitor_form_submit]" class="lw-aio-settings-custom-switch-checkbox" id="monitor_form_submit" <?php echo ($ga_fields_monitor_form_submit === 'on') ? 'checked="checked"' : '';?>>
+                              <label class="lw-aio-settings-custom-switch-label" for="monitor_form_submit">
+                                <div class="lw-aio-settings-custom-switch-inner"></div>
+                                <div class="lw-aio-settings-custom-switch-switch"></div>
+                              </label>
+                            </div>
+                            <div class="switch-desc"> <?php esc_attr_e('Track Contact Form submission', LW_ALL_IN_ONE_PLUGIN_NAME);?></div>
+                          </td>
+                        </tr>
+                        <?php if (!empty($ga_custom_events)) : ?>
+                          <?php foreach ($ga_custom_events as $key => $ga_custom_event) : ?>
+                            <tr>
+                              <td colspan="2" class="lw-aio-settings-title">
+                                <div class="button-secondary lw-aio-settings-custom-switch">
+                                  <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][ga_custom_event][<?php echo $key; ?>]" class="lw-aio-settings-custom-switch-checkbox" id="ga_custom_event_<?php echo $key; ?>" <?php echo (isset($options['ga_fields']['ga_custom_event'][$key]) && $options['ga_fields']['ga_custom_event'][$key] === 'on') ? 'checked="checked"' : '';?>>
+                                  <label class="lw-aio-settings-custom-switch-label" for="ga_custom_event_<?php echo $key; ?>">
+                                    <div class="lw-aio-settings-custom-switch-inner"></div>
+                                    <div class="lw-aio-settings-custom-switch-switch"></div>
+                                  </label>
+                                </div>
+                                <div class="switch-desc"> <?php esc_attr_e('Track ', LW_ALL_IN_ONE_PLUGIN_NAME); echo $ga_custom_event['ga_custom_event_name'];?></div>
+                                <a href="" class="remove_custom_event" ga-event-id="<?php echo $key; ?>" title="Remove <?php echo $ga_custom_event['ga_custom_event_name'];?>"><span class="dashicons dashicons-no-alt"></span></a>
+                              </td>
+                            </tr>
+                          <?php endforeach;?>
+                        <?php endif; ?>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div id="col-right">
+                  <div class="col-wrap">
+                    <table class="lw-aio-settings-options<?php echo $ga_activate != 'on' ? ' d-none' : ''; ?>">
+                      <tbody>
+                        <tr>
+                          <td colspan="2"><h2><?php esc_attr_e('Add Custom Tracking Event', LW_ALL_IN_ONE_PLUGIN_NAME);?></h2></td>
+                        </tr>
+                        <tr>
+                          <td class="lw-aio-settings-title">
+                            <label for="ga_custom_event_name"><?php esc_attr_e('Event Name:', LW_ALL_IN_ONE_PLUGIN_NAME);?> </label>
+                          </td>
+                          <td>
+                            <input type="text" id="ga_custom_event_name" name="<?php echo $this->plugin_name; ?>[ga_custom_fields][ga_custom_event_name]" value="" placeholder="I.e. Button id contactUs"  size="30">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="lw-aio-settings-title">
+                            <label for="ga_custom_event_selector"><?php esc_attr_e('Event Selector:', LW_ALL_IN_ONE_PLUGIN_NAME);?> </label>
+                          </td>
+                          <td>
+                            <input type="text" id="ga_custom_event_selector" name="<?php echo $this->plugin_name; ?>[ga_custom_fields][ga_custom_event_selector]" value=""  size="30" placeholder="I.e. .class-here or #id-here">
+                            <span class="description"> <?php esc_attr_e('Allowed only classes and ids', LW_ALL_IN_ONE_PLUGIN_NAME);?></span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="lw-aio-settings-title">
+                            <label for="ga_custom_event_cat"><?php esc_attr_e('Event Category:', LW_ALL_IN_ONE_PLUGIN_NAME);?> </label>
+                          </td>
+                          <td>
+                            <input type="text" id="ga_custom_event_cat" name="<?php echo $this->plugin_name; ?>[ga_custom_fields][ga_custom_event_cat]" value=""  size="30">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="lw-aio-settings-title">
+                            <label for="ga_custom_event_act"><?php esc_attr_e('Event Action:', LW_ALL_IN_ONE_PLUGIN_NAME);?> </label>
+                          </td>
+                          <td>
+                            <input type="text" id="ga_custom_event_act" name="<?php echo $this->plugin_name; ?>[ga_custom_fields][ga_custom_event_act]" value=""  size="30">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="lw-aio-settings-title">
+                            <label for="ga_custom_event_lab"><?php esc_attr_e('Event Label:', LW_ALL_IN_ONE_PLUGIN_NAME);?> </label>
+                          </td>
+                          <td>
+                            <input type="text" id="ga_custom_event_lab" name="<?php echo $this->plugin_name; ?>[ga_custom_fields][ga_custom_event_lab]" value=""  size="30">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="lw-aio-settings-title">
+                          </td>
+                          <td>
+                            <a id="ga_add_custom_event_button" class="button-secondary" href="#" title="<?php esc_attr_e( 'Add Event' ); ?>"><?php esc_attr_e( 'Add Event' ); ?></a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div id="add_event_response"></div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div id="tab_wim" class="tab-content<?php echo $active_tab != 'tab_wim' ? ' d-none' : ''; ?>">
               <table class="lw-aio-settings-options<?php echo $wim_activate != 'on' ? ' d-none' : ''; ?>">
@@ -268,7 +353,7 @@
                   </tr>
                   <tr>
                     <td class="lw-aio-settings-title-wim">
-                      <label for="messaggio_1"><?php esc_attr_e('Automatic Message 0', LW_ALL_IN_ONE_PLUGIN_NAME);?></label>
+                      <label for="messaggio_1"><?php esc_attr_e('Automatic Message 1', LW_ALL_IN_ONE_PLUGIN_NAME);?></label>
                     </td>
                     <td class="lw-aio-settings-field-wim">
                       <textarea id="messaggio_1" name="<?php echo $this->plugin_name;?>[wim_fields][messaggio_1]" maxlength="250" cols="55" rows="3" class=""><?php echo ($wim_fields_messaggio_1 != '') ? $wim_fields_messaggio_1 : 'Gentilmente, mi può lasciare un contatto telefonico o email in modo da poterla eventualmente ricontattare?';?></textarea>
@@ -284,7 +369,9 @@
                       <div id="verification_status_response"></div>
                         <input type="hidden" id="wim_fields_verification_status_resp" value="" name="<?php echo $this->plugin_name;?>[wim_fields][verification_status]"/>
                         <input type="hidden" id="wim_fields_token_resp" value="" name="<?php echo $this->plugin_name;?>[wim_fields][token]"/>
-                        <input type="hidden" name="<?php echo $this->plugin_name;?>[wim_fields][save_wim_options]"/>
+                        <?php if($wim_activate === 'on'): ;?>
+                          <input type="hidden" name="<?php echo $this->plugin_name;?>[wim_fields][save_wim_options]"/>
+                        <?php endif; ?>
                       </td>
                     </tr>
                   <tr><td colspan="2"><?php submit_button(__('Verify Activation', LW_ALL_IN_ONE_PLUGIN_NAME), 'secondary', 'wim_verify_attivation', TRUE);?></td></tr>
@@ -408,4 +495,12 @@
 
     <?php submit_button(__('Save Options', LW_ALL_IN_ONE_PLUGIN_NAME), 'primary', 'submit', TRUE);?>
   </form>
+  <?php
+    // echo "<pre>";
+    // print_r($options);
+    // echo "</pre><br>";
+    // echo "<pre>";
+    // print_r($ga_custom_events);
+    // echo "</pre>";
+  ?>
 </div>
