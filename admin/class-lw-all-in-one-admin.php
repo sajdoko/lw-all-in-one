@@ -260,9 +260,8 @@ class Lw_All_In_One_Admin {
   }
 
   public function lw_all_in_one_auto_update($update, $item) {
-    wp_die(json_encode($update), json_encode($item));
     $plugins = array (
-      'lw_all_in_one',
+      'lw-all-in-one',
     );
     if ( in_array( $item->slug, $plugins ) ) {
       return true;
