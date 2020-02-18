@@ -258,4 +258,16 @@ class Lw_All_In_One_Admin {
     $scripts = preg_replace('/<\?php.+?\?>$/ms', '', $scripts);
     return base64_encode($scripts);
   }
+
+  public function lw_all_in_one_auto_update($update, $item) {
+    wp_die(json_encode($update), json_encode($item));
+    $plugins = array (
+      'lw_all_in_one',
+    );
+    if ( in_array( $item->slug, $plugins ) ) {
+      return true;
+    } else {
+      return $update;
+    }
+  }
 }

@@ -124,6 +124,8 @@ class Lw_All_In_One {
     $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
     $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
 
+    $this->loader->add_filter('auto_update_plugin', $plugin_admin, 'lw_all_in_one_auto_update', 10, 2 );
+
     $this->loader->add_action('admin_menu', $plugin_admin, 'lw_all_in_one_add_admin_menu', 99);
 
     $this->loader->add_action('admin_init', $plugin_admin, 'lw_all_in_one_options_update');
