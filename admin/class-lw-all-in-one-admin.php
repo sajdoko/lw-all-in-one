@@ -239,7 +239,7 @@ class Lw_All_In_One_Admin {
     $lw_hf_fields_insert_header = (isset($options['lw_hf_fields']['insert_header'])) ? $options['lw_hf_fields']['insert_header'] : '';
 
     if ($lw_hf_fields_insert_header !== '') {
-      echo (base64_decode($lw_hf_fields_insert_header)), "\n";
+      echo ($this->lw_all_in_one_is_base64($lw_hf_fields_insert_header)) ? (base64_decode($lw_hf_fields_insert_header)) : $lw_hf_fields_insert_header, "\n";
     }
   }
 
@@ -249,7 +249,7 @@ class Lw_All_In_One_Admin {
     $lw_hf_fields_insert_footer = (isset($options['lw_hf_fields']['insert_footer'])) ? $options['lw_hf_fields']['insert_footer'] : '';
 
     if ($lw_hf_fields_insert_footer !== '') {
-      echo (base64_decode($lw_hf_fields_insert_footer)), "\n";
+      echo ($this->lw_all_in_one_is_base64($lw_hf_fields_insert_footer)) ? (base64_decode($lw_hf_fields_insert_footer)) : $lw_hf_fields_insert_footer, "\n";
     }
   }
 
@@ -268,5 +268,9 @@ class Lw_All_In_One_Admin {
     } else {
       return $update;
     }
+  }
+
+  public function lw_all_in_one_is_base64($string){
+    return (bool) preg_match('/^[a-zA-Z0-9\/\r\n+]*={0,2}$/', $string);
   }
 }

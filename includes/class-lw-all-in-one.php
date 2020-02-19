@@ -242,12 +242,13 @@ class Lw_All_In_One {
   public static function lw_all_in_one_single_event_run($lw_all_in_one_version) {
 
     if (version_compare($lw_all_in_one_version, '1.4.5' ) < 0) {
+
       //Plugin options
       $options = get_option(LW_ALL_IN_ONE_PLUGIN_NAME);
       if (!isset($options['lw_aio_fields']['data_retention'])) {
         $new_options = array();
-        $new_options['lw_hf_fields']['insert_header'] = base64_decode($options['lw_hf_fields']['insert_header']);
-        $new_options['lw_hf_fields']['insert_footer'] = base64_decode($options['lw_hf_fields']['insert_footer']);
+        // $new_options['lw_hf_fields']['insert_header'] = base64_decode($options['lw_hf_fields']['insert_header']);
+        // $new_options['lw_hf_fields']['insert_footer'] = base64_decode($options['lw_hf_fields']['insert_footer']);
         $new_options['lw_aio_fields']['delete_data'] = '';
         $new_options['lw_aio_fields']['data_retention'] = 'on';
         $new_options_update = array_merge($options, $new_options);
