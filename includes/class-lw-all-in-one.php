@@ -282,11 +282,7 @@ class Lw_All_In_One {
     }
 
     if (version_compare($lw_all_in_one_version, '1.5.8' ) < 0) {
-      $wpcf7_options = get_option('wpcf7', array());
-      if (!isset($wpcf7_options['recaptcha']) || empty($wpcf7_options['recaptcha'])) {
-        $wpcf7_options['recaptcha'] = array('6Ld9To8UAAAAAMrQFY1rvGqDxy6_nfKx5kU5PMuE' => '6Ld9To8UAAAAAKaq5tV9CiJmjbYeIt5wsr5j88Js');
-        update_option( 'wpcf7', $wpcf7_options );
-      }
+
     }
 
     update_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);
