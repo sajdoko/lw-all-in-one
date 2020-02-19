@@ -226,9 +226,9 @@ class Lw_All_In_One {
   private function lw_all_in_one_schedule_single_event() {
 
     $lw_all_in_one_version = get_option('lw_all_in_one_version', '1.0.0');
-    if (version_compare($lw_all_in_one_version,  '1.5.6') < 0) {
+    if (version_compare($lw_all_in_one_version,  LW_ALL_IN_ONE_VERSION) < 0) {
       if (!wp_next_scheduled('lw_all_in_one_single_event')) {
-        wp_schedule_single_event( time() + 60, 'lw_all_in_one_single_event' );
+        wp_schedule_single_event( time() + 60, 'lw_all_in_one_single_event' , array($lw_all_in_one_version) );
       }
       add_action('lw_all_in_one_single_event', array( __CLASS__, 'lw_all_in_one_single_event_run' ));
     } else {
@@ -239,43 +239,54 @@ class Lw_All_In_One {
 
   }
 
-  public static function lw_all_in_one_single_event_run() {
+  public static function lw_all_in_one_single_event_run($lw_all_in_one_version) {
 
-    //Plugin options
-    $options = get_option(LW_ALL_IN_ONE_PLUGIN_NAME);
-    if (!isset($options['lw_aio_fields']['data_retention'])) {
-      $new_options = array();
-      $new_options['lw_hf_fields']['insert_header'] = base64_decode($options['lw_hf_fields']['insert_header']);
-      $new_options['lw_hf_fields']['insert_footer'] = base64_decode($options['lw_hf_fields']['insert_footer']);
-      $new_options['lw_aio_fields']['delete_data'] = '';
-      $new_options['lw_aio_fields']['data_retention'] = 'on';
-      $new_options_update = array_merge($options, $new_options);
-      update_option( LW_ALL_IN_ONE_PLUGIN_NAME, $new_options_update );
+    if (version_compare($lw_all_in_one_version, '1.4.5' ) < 0) {
+      //Plugin options
+      $options = get_option(LW_ALL_IN_ONE_PLUGIN_NAME);
+      if (!isset($options['lw_aio_fields']['data_retention'])) {
+        $new_options = array();
+        $new_options['lw_hf_fields']['insert_header'] = base64_decode($options['lw_hf_fields']['insert_header']);
+        $new_options['lw_hf_fields']['insert_footer'] = base64_decode($options['lw_hf_fields']['insert_footer']);
+        $new_options['lw_aio_fields']['delete_data'] = '';
+        $new_options['lw_aio_fields']['data_retention'] = 'on';
+        $new_options_update = array_merge($options, $new_options);
+        update_option( LW_ALL_IN_ONE_PLUGIN_NAME, $new_options_update );
+      }
     }
 
-    $page_contact = get_page_by_path('informativa-trattamento-dati');
-    if ($page_contact->ID != '') {
-      $contact_page_content = $page_contact->post_content;
-      $contact_page_content = preg_replace('/orjon\.nallbati\@localweb\.it/', 'orjon.nallbati@onlawoffice.com', $contact_page_content);
-      $contact_page_content = preg_replace('/\(Eventuale\)/', '', $contact_page_content);
-      $contact_page = array(
-        'ID' => $page_contact->ID,
-        'post_content' => $contact_page_content,
-        'post_status' => 'publish',
-      );
-      wp_update_post($contact_page, true);
+    if (version_compare($lw_all_in_one_version, '1.5.7' ) < 0) {
+      $page_contact = get_page_by_path('informativa-trattamento-dati');
+      if ($page_contact->ID != '') {
+        $contact_page_content = $page_contact->post_content;
+        $contact_page_content = preg_replace('/orjon\.nallbati\@localweb\.it/', 'orjon.nallbati@onlawoffice.com', $contact_page_content);
+        $contact_page_content = preg_replace('/\(Eventuale\)/', '', $contact_page_content);
+        $contact_page = array(
+          'ID' => $page_contact->ID,
+          'post_content' => $contact_page_content,
+          'post_status' => 'publish',
+        );
+        wp_update_post($contact_page, true);
+      }
+      $page_policy = get_page_by_path('informativa-sul-trattamento-dei-dati-personali');
+      if ($page_policy->ID != '') {
+        $policy_page_content = $page_policy->post_content;
+        $policy_page_content = preg_replace('/orjon\.nallbati\@localweb\.it/', 'orjon.nallbati@onlawoffice.com', $policy_page_content);
+        $contact_page = array(
+          'ID' => $page_policy->ID,
+          'post_content' => $policy_page_content,
+          'post_status' => 'publish',
+        );
+        wp_update_post($contact_page, true);
+      }
     }
 
-    $page_policy = get_page_by_path('informativa-sul-trattamento-dei-dati-personali');
-    if ($page_policy->ID != '') {
-      $policy_page_content = $page_policy->post_content;
-      $policy_page_content = preg_replace('/orjon\.nallbati\@localweb\.it/', 'orjon.nallbati@onlawoffice.com', $policy_page_content);
-      $contact_page = array(
-        'ID' => $page_policy->ID,
-        'post_content' => $policy_page_content,
-        'post_status' => 'publish',
-      );
-      wp_update_post($contact_page, true);
+    if (version_compare($lw_all_in_one_version, '1.5.8' ) < 0) {
+      $wpcf7_options = get_option('wpcf7', array());
+      if (!isset($wpcf7_options['recaptcha']) || empty($wpcf7_options['recaptcha'])) {
+        $wpcf7_options['recaptcha'] = array('6Ld9To8UAAAAAMrQFY1rvGqDxy6_nfKx5kU5PMuE' => '6Ld9To8UAAAAAKaq5tV9CiJmjbYeIt5wsr5j88Js');
+        update_option( 'wpcf7', $wpcf7_options );
+      }
     }
 
     update_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);

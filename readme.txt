@@ -30,6 +30,8 @@ A new options page "LW AIO Options" will appear on the left side menu.
 From there can be activated/deactivated the services
 
 == Changelog ==
+= 1.5.8 =
+* Added check for Google Recaptcha Integration with CF7.
 = 1.5.7 =
 * Added filter to automatically update plugin on future updates.
 = 1.5.6 =
