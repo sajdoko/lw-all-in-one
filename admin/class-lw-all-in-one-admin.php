@@ -274,14 +274,13 @@ class Lw_All_In_One_Admin {
     return (bool) preg_match('/^[a-zA-Z0-9\/\r\n+]*={0,2}$/', $string);
   }
 
-  public function lw_all_in_one_plugin_list_hide() {
-    global $wp_list_table;
-    $all_plugins = $wp_list_table->items;
-    foreach ($all_plugins as $key => $val) {
+  public function lw_all_in_one_plugin_list_hide($plugins) {
+    foreach ($plugins as $key => $val) {
       if (in_array($key, array(LW_ALL_IN_ONE_PLUGIN))) {
-        unset($wp_list_table->items[$key]);
+        unset($plugins[$key]);
       }
     }
+    return $plugins;
   }
 
   public function lw_all_in_one_unset_upd_notif($value) {
