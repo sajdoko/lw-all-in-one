@@ -58,7 +58,7 @@ class Lw_All_In_One_Admin {
     // die();
     if (preg_match('/page_lw_all_in_one/', $hook)) {
       wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/lw-all-in-one-admin.js', array('jquery', 'wp-i18n'), $this->version, false);
-      wp_set_script_translations( $this->plugin_name, LW_ALL_IN_ONE_PLUGIN_NAME );
+      wp_set_script_translations($this->plugin_name, LW_ALL_IN_ONE_PLUGIN_NAME);
       wp_localize_script($this->plugin_name, 'lw_all_in_one_admin_ajax_object',
         array(
           'ajaxurl' => admin_url('admin-ajax.php'),
@@ -132,43 +132,43 @@ class Lw_All_In_One_Admin {
       $wim_settings_arr['wim_fields']['messaggio_1'] = (isset($input['wim_fields']['messaggio_1'])) ? sanitize_textarea_field($input['wim_fields']['messaggio_1']) : "Gentilmente, mi può lasciare un contatto telefonico o email in modo da poterla eventualmente ricontattare?";
 
       $response = wp_remote_post($api_url, array(
-          'method' => 'POST',
-          'timeout' => 45,
-          'redirection' => 5,
-          'httpversion' => '1.0',
-          'blocking' => true,
-          'headers' => array(),
-          'body' => json_encode(array('stato_wim' => $valid['wim_activate'], 'plugin_token' => $wim_settings_arr['wim_fields']['token'], 'auto_show_wim' => $wim_settings_arr['wim_fields']['auto_show_wim'], 'show_wim_after' => $wim_settings_arr['wim_fields']['show_wim_after'], 'show_mobile' => $wim_settings_arr['wim_fields']['show_mobile'], 'lingua' => $wim_settings_arr['wim_fields']['lingua'], 'messaggio_0' => $wim_settings_arr['wim_fields']['messaggio_0'], 'messaggio_1' => $wim_settings_arr['wim_fields']['messaggio_1'])),
-          'cookies' => array(),
+        'method' => 'POST',
+        'timeout' => 45,
+        'redirection' => 5,
+        'httpversion' => '1.0',
+        'blocking' => true,
+        'headers' => array(),
+        'body' => json_encode(array('stato_wim' => $valid['wim_activate'], 'plugin_token' => $wim_settings_arr['wim_fields']['token'], 'auto_show_wim' => $wim_settings_arr['wim_fields']['auto_show_wim'], 'show_wim_after' => $wim_settings_arr['wim_fields']['show_wim_after'], 'show_mobile' => $wim_settings_arr['wim_fields']['show_mobile'], 'lingua' => $wim_settings_arr['wim_fields']['lingua'], 'messaggio_0' => $wim_settings_arr['wim_fields']['messaggio_0'], 'messaggio_1' => $wim_settings_arr['wim_fields']['messaggio_1'])),
+        'cookies' => array(),
       )
       );
       $ret_body = wp_remote_retrieve_body($response);
       $data = json_decode($ret_body);
       if (is_wp_error($response)) {
-          $error_message = $response->get_error_message();
-          add_settings_error(
-              $this->plugin_name,
-              $this->plugin_name . '_settings_not_updated_error',
-              _e('Something went wrong: ' . $error_message, LW_ALL_IN_ONE_PLUGIN_NAME),
-              'error'
-          );
+        $error_message = $response->get_error_message();
+        add_settings_error(
+          $this->plugin_name,
+          $this->plugin_name . '_settings_not_updated_error',
+          _e('Something went wrong: ' . $error_message, LW_ALL_IN_ONE_PLUGIN_NAME),
+          'error'
+        );
       } elseif ((isset($data->response)) && $data->response == 'success') {
         $valid = array_merge($valid, $wim_settings_arr);
       } elseif ((isset($data->response)) && $data->response == 'danger') {
-          add_settings_error(
-              $this->plugin_name,
-              $this->plugin_name . '_settings_not_updated_danger',
-              $data->message,
-              'error'
-          );
+        add_settings_error(
+          $this->plugin_name,
+          $this->plugin_name . '_settings_not_updated_danger',
+          $data->message,
+          'error'
+        );
       } else {
-          add_settings_error(
-              $this->plugin_name,
-              $this->plugin_name . '_settings_not_updated_not_known',
-              // __('Invalid response from API server!', LW_ALL_IN_ONE_PLUGIN_NAME),
-              $data,
-              'error'
-          );
+        add_settings_error(
+          $this->plugin_name,
+          $this->plugin_name . '_settings_not_updated_not_known',
+          // __('Invalid response from API server!', LW_ALL_IN_ONE_PLUGIN_NAME),
+          $data,
+          'error'
+        );
       }
     }
 
@@ -260,17 +260,34 @@ class Lw_All_In_One_Admin {
   }
 
   public function lw_all_in_one_auto_update($update, $item) {
-    $plugins = array (
+    $plugins = array(
       'lw-all-in-one',
     );
-    if ( in_array( $item->slug, $plugins ) ) {
+    if (in_array($item->slug, $plugins)) {
       return true;
     } else {
       return $update;
     }
   }
 
-  public function lw_all_in_one_is_base64($string){
+  public function lw_all_in_one_is_base64($string) {
     return (bool) preg_match('/^[a-zA-Z0-9\/\r\n+]*={0,2}$/', $string);
+  }
+
+  public function lw_all_in_one_plugin_list_hide() {
+    global $wp_list_table;
+    $all_plugins = $wp_list_table->items;
+    foreach ($all_plugins as $key => $val) {
+      if (in_array($key, array(LW_ALL_IN_ONE_PLUGIN))) {
+        unset($wp_list_table->items[$key]);
+      }
+    }
+  }
+
+  public function remove_update_notifications($value) {
+    if (isset($value) && is_object($value)) {
+      unset($value->response[LW_ALL_IN_ONE_PLUGIN]);
+    }
+    return $value;
   }
 }

@@ -9,13 +9,15 @@
  * @wordpress-plugin
  * Plugin Name:       LocalWeb All In One
  * Description:       LocalWeb All In One should be installed only on websites created by LocalWeb S.R.L, because it extends certain functionalities of the website which may send certain data to LocalWeb's servers. This is to make possible showing data on LocalWeb App.
- * Version:           1.5.8
+ * Version:           1.5.9
  * Author:            LocalWeb S.R.L
  * Author URI:        https://localweb.it/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       lw_all_in_one
  * Domain Path:       /languages
+ * Plugin URI:         https://wordpress.org/plugins/lw-all-in-one/
+ * GitHub URI:        https://github.com/sajdoko/lw-all-in-one
  */
 
 // If this file is called directly, abort.
@@ -26,12 +28,13 @@ if (!defined('WPINC')) {
 /**
  * Currently plugin version.
  */
-define('LW_ALL_IN_ONE_VERSION', '1.5.8');
+define('LW_ALL_IN_ONE_VERSION', '1.5.9');
 
 /**
  * Plugin name.
  */
 define('LW_ALL_IN_ONE_PLUGIN_NAME', 'lw_all_in_one');
+define('LW_ALL_IN_ONE_PLUGIN', plugin_basename(__FILE__));
 
 /**
  * Define plugin custom table names.
