@@ -47,14 +47,16 @@ class Lw_All_In_One_Admin {
 
   }
 
-  public function enqueue_styles() {
-    if ($this->is_plugin_page()) {
+  public function enqueue_styles($hook) {
+    if (preg_match('/page_lw_all_in_one/', $hook)) {
       wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/lw-all-in-one-admin.css', array(), $this->version, 'all');
     }
   }
 
-  public function enqueue_scripts() {
-    if ($this->is_plugin_page()) {
+  public function enqueue_scripts($hook) {
+    // echo $hook;
+    // die();
+    if (preg_match('/page_lw_all_in_one/', $hook)) {
       wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/lw-all-in-one-admin.js', array('jquery', 'wp-i18n'), $this->version, false);
       wp_set_script_translations($this->plugin_name, LW_ALL_IN_ONE_PLUGIN_NAME);
       wp_localize_script($this->plugin_name, 'lw_all_in_one_admin_ajax_object',
@@ -290,21 +292,13 @@ class Lw_All_In_One_Admin {
   }
 
   public function lw_all_in_one_admin_footer_text($text) {
-    if ($this->is_plugin_page()) {
+    $current_screen = get_current_screen();
+    if ($current_screen->parent_base == 'lw_all_in_one') {
       $lw_aio_plugin_data = get_plugin_data( LW_ALL_IN_ONE_PLUGIN_MAIN_FILE );
       $plugin_name = $lw_aio_plugin_data['Name'];
       return $plugin_name . ' | Version ' . LW_ALL_IN_ONE_VERSION;
     } else {
       return $text;
-    }
-  }
-
-  public function is_plugin_page() {
-    $current_screen = get_current_screen();
-    if ($current_screen->base == 'toplevel_page_' .LW_ALL_IN_ONE_PLUGIN_NAME) {
-      return true;
-    } else {
-      return false;
     }
   }
 }
