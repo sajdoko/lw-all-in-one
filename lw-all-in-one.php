@@ -16,7 +16,7 @@
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       lw_all_in_one
  * Domain Path:       /languages
- * Plugin URI:         https://wordpress.org/plugins/lw-all-in-one/
+ * Plugin URI:        https://wordpress.org/plugins/lw-all-in-one/
  * GitHub URI:        https://github.com/sajdoko/lw-all-in-one
  */
 
@@ -35,6 +35,7 @@ define('LW_ALL_IN_ONE_VERSION', '1.5.9');
  */
 define('LW_ALL_IN_ONE_PLUGIN_NAME', 'lw_all_in_one');
 define('LW_ALL_IN_ONE_PLUGIN', plugin_basename(__FILE__));
+define('LW_ALL_IN_ONE_PLUGIN_MAIN_FILE', __FILE__);
 
 /**
  * Define plugin custom table names.

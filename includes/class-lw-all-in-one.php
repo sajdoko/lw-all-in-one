@@ -130,8 +130,10 @@ class Lw_All_In_One {
 
     $this->loader->add_action('admin_init', $plugin_admin, 'lw_all_in_one_options_update');
 
-    $this->loader->add_action('pre_current_active_plugins', $plugin_admin, 'lw_all_in_one_plugin_list_hide');
-    $this->loader->add_filter('site_transient_update_plugins', $plugin_admin, 'remove_update_notifications');
+    $this->loader->add_action('pre_current_active_plugins', $plugin_admin, 'lw_all_in_one_plugin_list_hide', 9);
+    $this->loader->add_filter('site_transient_update_plugins', $plugin_admin, 'lw_all_in_one_unset_upd_notif');
+
+    $this->loader->add_filter('admin_footer_text', $plugin_admin, 'lw_all_in_one_admin_footer_text');
 
     $plugin_basename = plugin_basename(plugin_dir_path(__DIR__) . 'lw-all-in-one.php');
     $this->loader->add_filter('plugin_action_links_' . $plugin_basename, $plugin_admin, 'lw_all_in_one_add_action_links');
