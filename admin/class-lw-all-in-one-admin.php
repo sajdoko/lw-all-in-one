@@ -295,7 +295,7 @@ class Lw_All_In_One_Admin {
     if ($current_screen->parent_base == 'lw_all_in_one') {
       $lw_aio_plugin_data = get_plugin_data( LW_ALL_IN_ONE_PLUGIN_MAIN_FILE );
       $plugin_name = $lw_aio_plugin_data['Name'];
-      return $plugin_name . ' | Version ' . LW_ALL_IN_ONE_VERSION;
+      return $plugin_name . sprintf(__(' | Version %s', LW_ALL_IN_ONE_PLUGIN_NAME), LW_ALL_IN_ONE_VERSION);
     } else {
       return $text;
     }
