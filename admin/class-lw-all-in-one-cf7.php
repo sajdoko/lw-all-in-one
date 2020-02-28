@@ -147,6 +147,9 @@ class Lw_All_In_One_Cf7 {
   }
 
   public function lw_all_in_one_cf7_packet_notice() {
+    if (!current_user_can('manage_options')) {
+      return;
+    }
     //Plugin options
     $options = get_option($this->plugin_name);
     $lw_cf7_fields_saved_tipo_contratto = (isset($options['lw_cf7_fields']['tipo_contratto'])) ? sanitize_text_field($options['lw_cf7_fields']['tipo_contratto']) : '';

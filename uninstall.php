@@ -22,6 +22,9 @@ if (isset($options['lw_aio_fields']['delete_data']) && $options['lw_aio_fields']
   $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}lw_aio_cf7");
 
   delete_option('lw_all_in_one');
+  delete_option('lw_all_in_one_version');
+  delete_option('lw_all_in_one_privacy_pages');
+  delete_option('lw_all_in_one_ga_custom_events');
 
   if (wp_next_scheduled('lw_all_in_one_data_retention')) {
     wp_clear_scheduled_hook( 'lw_all_in_one_data_retention' );

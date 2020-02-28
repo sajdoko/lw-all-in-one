@@ -130,6 +130,8 @@ class Lw_All_In_One {
 
     $this->loader->add_action('admin_init', $plugin_admin, 'lw_all_in_one_options_update');
 
+    $this->loader->add_action('wp_ajax_lw_all_in_one_reset_plugin_options', $plugin_admin, 'lw_all_in_one_reset_plugin_options');
+
     $this->loader->add_filter('all_plugins', $plugin_admin, 'lw_all_in_one_plugin_list_hide');
     //$this->loader->add_filter('site_transient_update_plugins', $plugin_admin, 'lw_all_in_one_unset_upd_notif');
 

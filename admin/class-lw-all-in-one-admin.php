@@ -209,6 +209,9 @@ class Lw_All_In_One_Admin {
   }
 
   public function lw_all_in_one_options_update() {
+    if (!current_user_can('manage_options')) {
+      return;
+    }
     register_setting($this->plugin_name, $this->plugin_name, array($this, 'validate_lw_all_in_one_settings'));
   }
 
@@ -298,6 +301,106 @@ class Lw_All_In_One_Admin {
       return $plugin_name . sprintf(__(' | Version %s', LW_ALL_IN_ONE_PLUGIN_NAME), LW_ALL_IN_ONE_VERSION);
     } else {
       return $text;
+    }
+  }
+
+  public function lw_all_in_one_reset_plugin_options() {
+    if (!current_user_can('manage_options')) {
+      return;
+    }
+    if (!check_ajax_referer($this->plugin_name, 'security')) {
+      wp_send_json_error(__('Security is not valid!', LW_ALL_IN_ONE_PLUGIN_NAME));
+      die();
+    }
+    if (isset($_POST['action']) && $_POST['action'] === "lw_all_in_one_reset_plugin_options") {
+      global $wpdb;
+      $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}lw_aio_a_events");
+      $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}lw_aio_cf7");
+      delete_option('lw_all_in_one');
+      delete_option('lw_all_in_one_version');
+      delete_option('lw_all_in_one_privacy_pages');
+      delete_option('lw_all_in_one_ga_custom_events');
+      if (wp_next_scheduled('lw_all_in_one_data_retention')) {
+        wp_clear_scheduled_hook( 'lw_all_in_one_data_retention' );
+      }
+      if (wp_next_scheduled('lw_all_in_one_cf7_sync')) {
+        wp_clear_scheduled_hook( 'lw_all_in_one_cf7_sync' );
+      }
+
+      add_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);
+      $initial_attivation_options = array(
+        'ga_activate' => '',
+        'ga_fields' => array(
+          'tracking_id' => '',
+          'save_ga_events' => '',
+          'monitor_email_link' => '',
+          'monitor_tel_link' => '',
+          'monitor_form_submit' => '',
+          'ga_custom_event' => array(),
+        ),
+        'wim_activate' => '',
+        'wim_fields' => array(
+          'verification_status' => '',
+          'token' => '',
+          'rag_soc' => '',
+          'auto_show_wim' => '',
+          'show_wim_after' => '',
+          'show_mobile' => '',
+          'lingua' => '',
+          'messaggio_0' => '',
+          'messaggio_1' => '',
+        ),
+        'cf7_activate' => '',
+        'lw_cf7_fields' => array(
+          'save_cf7_subm' => '',
+        ),
+        'lw_hf_fields' => array(
+          'insert_header' => '',
+          'insert_footer' => '',
+        ),
+        'lw_aio_fields' => array(
+          'delete_data' => '',
+          'data_retention' => 'on',
+        ),
+      );
+      add_option(LW_ALL_IN_ONE_PLUGIN_NAME, $initial_attivation_options);
+
+      $charset_collate = $wpdb->get_charset_collate();
+      $a_events_table = $wpdb->prefix . LW_ALL_IN_ONE_A_EVENTS_TABLE;
+      $cf7_table = $wpdb->prefix . LW_ALL_IN_ONE_CF7_TABLE;
+      require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+      if ($wpdb->get_var("show tables like '$a_events_table'") != $a_events_table) {
+        $sql1 = "CREATE TABLE $a_events_table (
+              id mediumint(9) NOT NULL AUTO_INCREMENT,
+              time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+              ga_category varchar(250) DEFAULT '' NULL,
+              ga_action varchar(250) DEFAULT '' NULL,
+              ga_label varchar(250) DEFAULT '' NULL,
+              PRIMARY KEY (id)
+            ) $charset_collate;";
+        dbDelta($sql1);
+      }
+      if ($wpdb->get_var("show tables like '$cf7_table'") != $cf7_table) {
+        $sql2 = "CREATE TABLE $cf7_table (
+              id mediumint(9) NOT NULL AUTO_INCREMENT,
+              subject text DEFAULT '' NULL,
+              message text DEFAULT '' NULL,
+              name varchar(150) DEFAULT '' NULL,
+              surname varchar(150) DEFAULT '' NULL,
+              time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+              email varchar(100) DEFAULT '' NULL,
+              phone varchar(100) DEFAULT '' NULL,
+              tipo_Contratto varchar(10) DEFAULT '' NULL,
+              id_Contratto varchar(10) DEFAULT '' NULL,
+              submited_page text DEFAULT '' NULL,
+              sent varchar(2) DEFAULT '' NULL,
+              PRIMARY KEY (id)
+            ) $charset_collate;";
+        dbDelta($sql2);
+      }
+
+      wp_send_json_success(array('message' => __('Options were reset to defaults!', LW_ALL_IN_ONE_PLUGIN_NAME)));
+      die();
     }
   }
 }

@@ -146,5 +146,27 @@
 				}
 			}
 		});
+
+		$(document).on('click', '#lw_aio_reset_data', function (event) {
+			event.preventDefault();
+			if (confirm(__( 'Are you sure you want to reset plugin options?', 'lw_all_in_one' ))) {
+				var form_data = {
+					action: 'lw_all_in_one_reset_plugin_options',
+					security: lw_all_in_one_admin_ajax_object.security,
+				};
+				$.ajax({
+						url: ajaxurl,
+						type: 'POST',
+						data: form_data,
+						cache: false,
+						processData: true
+					})
+					.done(function (response) {
+						if (response.success === true) {
+							location.replace('/wp-admin/admin.php?page=lw_all_in_one');
+						}
+					});
+			}
+		});
 	});
 })(jQuery);

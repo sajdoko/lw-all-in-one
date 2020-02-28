@@ -275,3 +275,8 @@ input.lw-aio-settings-custom-switch-checkbox {
 	vertical-align: sub;
 	margin-left: 1em;
 }
+.reset-button {
+	background: #DC3232 !important;
+	color: #fff !important;
+	border: none !important;
+}

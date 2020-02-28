@@ -49,6 +49,9 @@ class Lw_All_In_One_Wim {
   }
 
   public function lw_all_in_one_verify_wim_attivation() {
+    if (!current_user_can('manage_options')) {
+      return;
+    }
     if (!check_ajax_referer($this->plugin_name, 'security')) {
       wp_send_json_error(__('Security is not valid!', LW_ALL_IN_ONE_PLUGIN_NAME));
       die();

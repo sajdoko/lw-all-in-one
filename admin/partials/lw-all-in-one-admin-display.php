@@ -453,6 +453,14 @@
                   <tr>
                     <td colspan="2" class="lw-aio-settings-title">
                       <div class="button-secondary lw-aio-settings-custom-switch">
+                        <a class="button-secondary reset-button" id="lw_aio_reset_data" href="#" title="<?php esc_attr_e( 'Reset Plugin Options' ); ?>"><?php esc_attr_e( 'Reset' ); ?></a>
+                      </div>
+                      <div class="switch-desc"> <?php _e('<b>Reset Plugin Options!</b> ', LW_ALL_IN_ONE_PLUGIN_NAME);?> <span class="description"> <?php esc_attr_e('Revert to default plugin options.', LW_ALL_IN_ONE_PLUGIN_NAME);?></span></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="lw-aio-settings-title">
+                      <div class="button-secondary lw-aio-settings-custom-switch">
                         <input type="checkbox" name="<?php echo $this->plugin_name; ?>[lw_aio_fields][delete_data]" class="lw-aio-settings-custom-switch-checkbox" id="delete_data" <?php echo ($lw_aio_delete_data === 'on') ? 'checked="checked"' : '';?>>
                         <label class="lw-aio-settings-custom-switch-label" for="delete_data">
                           <div class="lw-aio-settings-custom-switch-inner"></div>

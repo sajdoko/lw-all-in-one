@@ -211,6 +211,9 @@ class Lw_All_In_One_Ga_Events {
    * @return string
    */
   public function woocommerce_google_analytics_missing_notice() {
+    if (!current_user_can('manage_options')) {
+      return;
+    }
     // Checks if WooCommerce is installed.
     if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
       if (!file_exists(WP_PLUGIN_DIR . '/woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php')) {

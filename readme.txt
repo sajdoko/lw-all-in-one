@@ -30,6 +30,8 @@ A new options page "LW AIO Options" will appear on the left side menu.
 From there can be activated/deactivated the services
 
 == Changelog ==
+= 1.5.9 =
+* Added option to reset plugin options to default.
 = 1.5.8 =
 * Fixed error with header/footer scripts.
 = 1.5.7 =
