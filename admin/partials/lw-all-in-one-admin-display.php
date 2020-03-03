@@ -369,6 +369,13 @@
                       <div id="verification_status_response"></div>
                         <input type="hidden" id="wim_fields_verification_status_resp" value="" name="<?php echo $this->plugin_name;?>[wim_fields][verification_status]"/>
                         <input type="hidden" id="wim_fields_token_resp" value="" name="<?php echo $this->plugin_name;?>[wim_fields][token]"/>
+                        <input type="hidden" value="<?php echo substr(get_option('blogname'), 0, 16) . '...'; ?>" name="<?php echo $this->plugin_name;?>[wim_fields][rag_soc]"/>
+                        <input type="hidden" id="wim_fields_auto_show_wim" value="" name="<?php echo $this->plugin_name;?>[wim_fields][auto_show_wim]"/>
+                        <input type="hidden" id="wim_fields_show_wim_after" value="" name="<?php echo $this->plugin_name;?>[wim_fields][show_wim_after]"/>
+                        <input type="hidden" id="wim_fields_show_mobile" value="" name="<?php echo $this->plugin_name;?>[wim_fields][show_mobile]"/>
+                        <input type="hidden" id="wim_fields_lingua" value="" name="<?php echo $this->plugin_name;?>[wim_fields][lingua]"/>
+                        <input type="hidden" id="wim_fields_messaggio_0" value="" name="<?php echo $this->plugin_name;?>[wim_fields][messaggio_0]"/>
+                        <input type="hidden" id="wim_fields_messaggio_1" value="" name="<?php echo $this->plugin_name;?>[wim_fields][messaggio_1]"/>
                         <?php if($wim_activate === 'on'): ;?>
                           <input type="hidden" name="<?php echo $this->plugin_name;?>[wim_fields][save_wim_options]"/>
                         <?php endif; ?>

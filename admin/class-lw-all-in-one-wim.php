@@ -65,7 +65,7 @@ class Lw_All_In_One_Wim {
         'httpversion' => '1.0',
         'blocking' => true,
         'headers' => array(),
-        'body' => array('domain' => urlencode($domain)),
+        'body' => array('domain' => urlencode($domain), 'action' => 'get_options'),
         'cookies' => array(),
       )
       );
@@ -80,17 +80,17 @@ class Lw_All_In_One_Wim {
           wp_send_json_error(__('WIM authorized but token returned was empty!', LW_ALL_IN_ONE_PLUGIN_NAME));
           die();
         } else if (strlen($data->token) == 32) {
-          wp_send_json_success(array('token' => sanitize_text_field($data->token), 'message' => __('Web Instant Messenger authorized!', LW_ALL_IN_ONE_PLUGIN_NAME)));
+          wp_send_json_success(array('fields' => $data, 'message' => __('Web Instant Messenger authorized!', LW_ALL_IN_ONE_PLUGIN_NAME)));
           die();
         } else {
           wp_send_json_error(__('There was an unknown error!', LW_ALL_IN_ONE_PLUGIN_NAME));
           die();
         }
       } elseif ($data->response == 'unverified') {
-        wp_send_json_error(__('Web Instant Messenger unauthorized!', LW_ALL_IN_ONE_PLUGIN_NAME));
+        wp_send_json_error($data->message);
         die();
       } else {
-        wp_send_json_error(__('Not a valid domain!', LW_ALL_IN_ONE_PLUGIN_NAME));
+        wp_send_json_error(__('Not a valid response!', LW_ALL_IN_ONE_PLUGIN_NAME));
         die();
       }
     } else {

@@ -30,6 +30,8 @@ A new options page "LW AIO Options" will appear on the left side menu.
 From there can be activated/deactivated the services
 
 == Changelog ==
+= 1.6.0 =
+* Better WIM API.
 = 1.5.9 =
 * Added option to reset plugin options to default.
 = 1.5.8 =

@@ -119,6 +119,7 @@ class Lw_All_In_One_Admin {
     $valid['wim_activate'] = (isset($input['wim_activate']) && $input['wim_activate'] === 'on') ? 'on' : '';
 
     if (isset($input['wim_fields']['verification_status']) && isset($input['wim_fields']['save_wim_options']) && isset($input['wim_fields']['token']) && strlen($input['wim_fields']['token']) == 32) {
+      $domain = $this->clean_domain(get_option('siteurl', $_SERVER['HTTP_HOST']));
       $wim_settings_arr = array();
       $api_url = 'https://localweb.it/chat/api/cliente/aggiorna.php';
       $wim_settings_arr['wim_fields']['verification_status'] = (isset($input['wim_fields']['verification_status'])) ? sanitize_text_field($input['wim_fields']['verification_status']) : "";
@@ -138,13 +139,14 @@ class Lw_All_In_One_Admin {
         'httpversion' => '1.0',
         'blocking' => true,
         'headers' => array(),
-        'body' => json_encode(array('stato_wim' => $valid['wim_activate'], 'plugin_token' => $wim_settings_arr['wim_fields']['token'], 'auto_show_wim' => $wim_settings_arr['wim_fields']['auto_show_wim'], 'show_wim_after' => $wim_settings_arr['wim_fields']['show_wim_after'], 'show_mobile' => $wim_settings_arr['wim_fields']['show_mobile'], 'lingua' => $wim_settings_arr['wim_fields']['lingua'], 'messaggio_0' => $wim_settings_arr['wim_fields']['messaggio_0'], 'messaggio_1' => $wim_settings_arr['wim_fields']['messaggio_1'])),
+        'body' => json_encode(array('stato_wim' => $valid['wim_activate'], 'domain' => $domain,'plugin_token' => $wim_settings_arr['wim_fields']['token'], 'auto_show_wim' => $wim_settings_arr['wim_fields']['auto_show_wim'], 'show_wim_after' => $wim_settings_arr['wim_fields']['show_wim_after'], 'show_mobile' => $wim_settings_arr['wim_fields']['show_mobile'], 'lingua' => $wim_settings_arr['wim_fields']['lingua'], 'messaggio_0' => $wim_settings_arr['wim_fields']['messaggio_0'], 'messaggio_1' => $wim_settings_arr['wim_fields']['messaggio_1'])),
         'cookies' => array(),
       )
       );
       $ret_body = wp_remote_retrieve_body($response);
       $data = json_decode($ret_body);
       if (is_wp_error($response)) {
+        $valid['wim_fields']['verification_status'] = '';
         $error_message = $response->get_error_message();
         add_settings_error(
           $this->plugin_name,
@@ -155,18 +157,19 @@ class Lw_All_In_One_Admin {
       } elseif ((isset($data->response)) && $data->response == 'success') {
         $valid = array_merge($valid, $wim_settings_arr);
       } elseif ((isset($data->response)) && $data->response == 'danger') {
+        $valid['wim_fields']['verification_status'] = '';
         add_settings_error(
           $this->plugin_name,
           $this->plugin_name . '_settings_not_updated_danger',
-          $data->message,
+          ($data != 'null') ? $data->message : __('Invalid response from API server!', LW_ALL_IN_ONE_PLUGIN_NAME),
           'error'
         );
       } else {
+        $valid['wim_fields']['verification_status'] = '';
         add_settings_error(
           $this->plugin_name,
           $this->plugin_name . '_settings_not_updated_not_known',
-          // __('Invalid response from API server!', LW_ALL_IN_ONE_PLUGIN_NAME),
-          $data,
+          ($data != 'null') ? $data->message : __('Invalid response from API server!', LW_ALL_IN_ONE_PLUGIN_NAME),
           'error'
         );
       }
@@ -254,6 +257,7 @@ class Lw_All_In_One_Admin {
     if ($lw_hf_fields_insert_footer !== '') {
       echo ($this->lw_all_in_one_is_base64($lw_hf_fields_insert_footer)) ? (base64_decode($lw_hf_fields_insert_footer)) : $lw_hf_fields_insert_footer, "\n";
     }
+    echo '<style>.grecaptcha-badge{visibility: hidden !important}</style>', "\n";
   }
 
   public function sanitize_header_footer_scripts($scripts) {
@@ -303,6 +307,21 @@ class Lw_All_In_One_Admin {
       return $text;
     }
   }
+
+  public function clean_domain($domain) {
+    $clean = preg_replace('#^http(s)?://#', '', $domain);
+    $clean = preg_replace('/^www\./', '', $clean);
+    $clean_arr = explode("/", $clean);
+    $clean = $clean_arr[0];
+    $strip = array("~", "`", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "=", "+", "[", "{", "]",
+      "}", "\\", "|", ";", ":", "\"", "'", "&#8216;", "&#8217;", "&#8220;", "&#8221;", "&#8211;", "&#8212;",
+      "â€”", "â€“", ",", "<", ">", "/", "?", " ");
+    $clean = str_replace($strip, "", strip_tags($clean));
+    $clean = (function_exists('mb_strtolower')) ? mb_strtolower($clean, 'UTF-8') : strtolower(utf8_encode($clean));
+    $clean = strtolower($clean);
+    return $clean;
+  }
+
 
   public function lw_all_in_one_reset_plugin_options() {
     if (!current_user_can('manage_options')) {
