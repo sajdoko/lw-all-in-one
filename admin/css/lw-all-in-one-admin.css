@@ -30,7 +30,7 @@ table.lw-aio-settings-options {
 }
 
 td.lw-aio-settings-title, td.info {
-	width: 100px;
+	width: 150px;
 	padding-left: 20px;
 }
 td.lw-aio-settings-title-wim {
@@ -278,5 +278,13 @@ input.lw-aio-settings-custom-switch-checkbox {
 .reset-button {
 	background: #DC3232 !important;
 	color: #fff !important;
+	border: none !important;
+	float: left;
+	padding: 0;
+	border: none;
+}
+.reset-button-div {
+	float: left !important;
+	padding: 0 !important;
 	border: none !important;
 }

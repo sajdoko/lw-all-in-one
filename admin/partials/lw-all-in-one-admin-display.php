@@ -459,7 +459,7 @@
                   </tr>
                   <tr>
                     <td colspan="2" class="lw-aio-settings-title">
-                      <div class="button-secondary lw-aio-settings-custom-switch">
+                      <div class="button-secondary reset-button-div">
                         <a class="button-secondary reset-button" id="lw_aio_reset_data" href="#" title="<?php esc_attr_e( 'Reset Plugin Options' ); ?>"><?php esc_attr_e( 'Reset' ); ?></a>
                       </div>
                       <div class="switch-desc"> <?php _e('<b>Reset Plugin Options!</b> ', LW_ALL_IN_ONE_PLUGIN_NAME);?> <span class="description"> <?php esc_attr_e('Revert to default plugin options.', LW_ALL_IN_ONE_PLUGIN_NAME);?></span></div>
