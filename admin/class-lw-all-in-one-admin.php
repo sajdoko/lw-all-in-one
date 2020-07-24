@@ -139,7 +139,7 @@ class Lw_All_In_One_Admin {
         'httpversion' => '1.0',
         'blocking' => true,
         'headers' => array(),
-        'body' => json_encode(array('stato_wim' => $valid['wim_activate'], 'domain' => $domain,'plugin_token' => $wim_settings_arr['wim_fields']['token'], 'auto_show_wim' => $wim_settings_arr['wim_fields']['auto_show_wim'], 'show_wim_after' => $wim_settings_arr['wim_fields']['show_wim_after'], 'show_mobile' => $wim_settings_arr['wim_fields']['show_mobile'], 'lingua' => $wim_settings_arr['wim_fields']['lingua'], 'messaggio_0' => $wim_settings_arr['wim_fields']['messaggio_0'], 'messaggio_1' => $wim_settings_arr['wim_fields']['messaggio_1'])),
+        'body' => json_encode(array('stato_wim' => $valid['wim_activate'], 'domain' => $domain, 'plugin_token' => $wim_settings_arr['wim_fields']['token'], 'auto_show_wim' => $wim_settings_arr['wim_fields']['auto_show_wim'], 'show_wim_after' => $wim_settings_arr['wim_fields']['show_wim_after'], 'show_mobile' => $wim_settings_arr['wim_fields']['show_mobile'], 'lingua' => $wim_settings_arr['wim_fields']['lingua'], 'messaggio_0' => $wim_settings_arr['wim_fields']['messaggio_0'], 'messaggio_1' => $wim_settings_arr['wim_fields']['messaggio_1'])),
         'cookies' => array(),
       )
       );
@@ -177,6 +177,7 @@ class Lw_All_In_One_Admin {
 
     $valid['cf7_activate'] = (isset($input['cf7_activate']) && $input['cf7_activate'] === 'on') ? 'on' : '';
     $valid['lw_cf7_fields']['save_cf7_subm'] = (isset($input['lw_cf7_fields']['save_cf7_subm']) && $input['lw_cf7_fields']['save_cf7_subm'] === 'on') ? 'on' : '';
+    $valid['lw_cf7_fields']['opt_scr_deliv'] = (isset($input['lw_cf7_fields']['opt_scr_deliv']) && $input['lw_cf7_fields']['opt_scr_deliv'] === 'on') ? 'on' : '';
     $valid['lw_cf7_fields']['tipo_contratto'] = (isset($input['lw_cf7_fields']['tipo_contratto'])) ? sanitize_text_field($input['lw_cf7_fields']['tipo_contratto']) : '';
     $valid['lw_cf7_fields']['id_contratto'] = (isset($input['lw_cf7_fields']['id_contratto'])) ? sanitize_text_field($input['lw_cf7_fields']['id_contratto']) : '';
     if ($valid['cf7_activate'] !== '' && !in_array('contact-form-7/wp-contact-form-7.php', apply_filters('active_plugins', get_option('active_plugins')))) {
@@ -300,7 +301,7 @@ class Lw_All_In_One_Admin {
   public function lw_all_in_one_admin_footer_text($text) {
     $current_screen = get_current_screen();
     if ($current_screen->parent_base == 'lw_all_in_one') {
-      $lw_aio_plugin_data = get_plugin_data( LW_ALL_IN_ONE_PLUGIN_MAIN_FILE );
+      $lw_aio_plugin_data = get_plugin_data(LW_ALL_IN_ONE_PLUGIN_MAIN_FILE);
       $plugin_name = $lw_aio_plugin_data['Name'];
       return $plugin_name . sprintf(__(' | Version %s', LW_ALL_IN_ONE_PLUGIN_NAME), LW_ALL_IN_ONE_VERSION);
     } else {
@@ -322,7 +323,6 @@ class Lw_All_In_One_Admin {
     return $clean;
   }
 
-
   public function lw_all_in_one_reset_plugin_options() {
     if (!current_user_can('manage_options')) {
       return;
@@ -340,10 +340,10 @@ class Lw_All_In_One_Admin {
       delete_option('lw_all_in_one_privacy_pages');
       delete_option('lw_all_in_one_ga_custom_events');
       if (wp_next_scheduled('lw_all_in_one_data_retention')) {
-        wp_clear_scheduled_hook( 'lw_all_in_one_data_retention' );
+        wp_clear_scheduled_hook('lw_all_in_one_data_retention');
       }
       if (wp_next_scheduled('lw_all_in_one_cf7_sync')) {
-        wp_clear_scheduled_hook( 'lw_all_in_one_cf7_sync' );
+        wp_clear_scheduled_hook('lw_all_in_one_cf7_sync');
       }
 
       add_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);
@@ -372,6 +372,7 @@ class Lw_All_In_One_Admin {
         'cf7_activate' => '',
         'lw_cf7_fields' => array(
           'save_cf7_subm' => '',
+          'opt_scr_deliv' => '',
         ),
         'lw_hf_fields' => array(
           'insert_header' => '',
@@ -420,6 +421,154 @@ class Lw_All_In_One_Admin {
 
       wp_send_json_success(array('message' => __('Options were reset to defaults!', LW_ALL_IN_ONE_PLUGIN_NAME)));
       die();
+    }
+  }
+
+  public function lw_all_in_one_purify_css() {
+    if (!current_user_can('manage_options')) {
+      return;
+    }
+    if (!check_ajax_referer($this->plugin_name, 'security')) {
+      wp_send_json_error(__('Security is not valid!', LW_ALL_IN_ONE_PLUGIN_NAME));
+      die();
+    }
+    if (isset($_POST['action']) && $_POST['action'] === "lw_all_in_one_purify_css") {
+      if ( ! WP_Filesystem() ) {
+        wp_send_json_error("Couldn't copy files!");
+        die();
+      }
+      global $wp_filesystem;
+
+      deactivate_plugins(['wp-fastest-cache/wpFastestCache.php', 'wp-fastest-cache-premium/wpFastestCachePremium.php']);
+
+      $wp_filesystem->delete($wp_filesystem->abspath() . 'wp-content/cache', true, 'd');
+
+      $site_links = array();
+      $posts = new WP_Query('post_type=any&posts_per_page=20&post_status=publish');
+      $posts = $posts->posts;
+      $count_pages = $count_posts = $count_attachments = $count_others = 0;
+      foreach($posts as $post) {
+        if ($post->post_type == 'page' && $count_pages <= 10) {
+          $permalink = get_page_link($post->ID);
+          $count_pages++;
+        } else if ($post->post_type == 'post' && $count_posts <= 10) {
+          $permalink = get_permalink($post->ID);
+          $count_posts++;
+        } else if ($post->post_type == 'attachment' && $count_attachments <= 2) {
+          $permalink = get_attachment_link($post->ID);
+          $count_attachments++;
+        } else {
+          continue;
+        }
+        $site_links[] = $permalink;
+      }
+
+      $response = wp_remote_post('https://purifycss.online/api/purify', array(
+        'method' => 'POST',
+        'headers' => array(
+          'Content-Type' => 'application/x-www-form-urlencoded',
+          'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101 Firefox/78.0',
+        ),
+        'timeout'     => 60,
+        'redirection' => 5,
+        'blocking'    => true,
+        'httpversion' => '1.0',
+        'sslverify'   => false,
+        'data_format' => 'body',
+        'body' => array(
+          'htmlCode' => '',
+          'options[minify]' => 1,
+          'options[crawl]' => false,
+          'url[]' => array_reverse($site_links),
+        ),
+        'cookies' => array(),
+      )
+      );
+
+      if (is_wp_error($response)) {
+        $error_message = $response->get_error_message();
+        wp_send_json_error("Something went wrong: $error_message");
+        die();
+      } else {
+        $return = array();
+        $save_paths = array();
+        $host_site = wp_parse_url( site_url() )['host'];
+
+        $response = json_decode($response['body']);
+        foreach ($response->css as $key => $css) {
+
+          $beforeBytes = intval($response->css[$key]->stats->beforeBytes);
+          $percentageUnused = intval($response->css[$key]->stats->percentageUnused);
+          $css_site_arr = wp_parse_url($response->css[$key]->url);
+
+          if ($beforeBytes > 30000 && $percentageUnused > 20 && $host_site == $css_site_arr['host'] && preg_match('/wp-content/' , $css_site_arr['path'])) {
+            $return['css_minified'][$key]['url'] = $response->css[$key]->url;
+            $return['css_minified'][$key]['stats'] = $response->css[$key]->stats;
+
+            $backup_file = $wp_filesystem->abspath() . ltrim(dirname($css_site_arr['path']), '/') . '/' . basename($css_site_arr['path'], ".css") . '-lw-aio-backup.css';
+            $css_file = $wp_filesystem->abspath() . ltrim($css_site_arr['path'], '/');
+
+            if($wp_filesystem->copy($css_file, $backup_file)) {
+
+              $save_paths[sanitize_html_class($css_site_arr['path'])]['original'] = $backup_file;
+              $save_paths[sanitize_html_class($css_site_arr['path'])]['newfile'] = $css_file;
+
+              $wp_filesystem->put_contents($css_file, $response->css[$key]->purified->content,FS_CHMOD_FILE);
+            }
+          }
+
+        }
+
+        $exiting_option = get_option($this->plugin_name . '_purified_css');
+        if ($exiting_option) {
+          $save_paths = array_merge($exiting_option, $save_paths);
+        }
+        update_option($this->plugin_name . '_purified_css', $save_paths);
+
+        $return['pages_scaned'] = $response->html;
+        activate_plugins(['wp-fastest-cache/wpFastestCache.php', 'wp-fastest-cache-premium/wpFastestCachePremium.php']);
+        wp_send_json_success($return);
+        die();
+
+      }
+
+    }
+  }
+
+  public function lw_all_in_one_restore_purified() {
+    if (!current_user_can('manage_options')) {
+      return;
+    }
+    if (!check_ajax_referer($this->plugin_name, 'security')) {
+      wp_send_json_error(__('Security is not valid!', LW_ALL_IN_ONE_PLUGIN_NAME));
+      die();
+    }
+    if (isset($_POST['action']) && $_POST['action'] === "lw_all_in_one_restore_purified" && isset($_POST['file_id'])) {
+      $file_id = sanitize_text_field($_POST['file_id']);
+      $save_paths_purified_css = get_option($this->plugin_name.'_purified_css', array());
+
+      if (isset($save_paths_purified_css[$file_id])) {
+        if ( ! WP_Filesystem() ) {
+          wp_send_json_error("Couldn't copy files!");
+          die();
+        }
+        global $wp_filesystem;
+        if($wp_filesystem->copy($save_paths_purified_css[$file_id]['original'], $save_paths_purified_css[$file_id]['newfile'], true)) {
+          $wp_filesystem->delete($save_paths_purified_css[$file_id]['original'], true, 'f');
+          unset($save_paths_purified_css[$file_id]);
+          update_option($this->plugin_name . '_purified_css', $save_paths_purified_css);
+          $wp_filesystem->delete($wp_filesystem->abspath() . 'wp-content/cache', true, 'd');
+          wp_send_json_success('Ok');
+          die();
+        } else {
+          wp_send_json_error(__("Couldn't copy backup file!", LW_ALL_IN_ONE_PLUGIN_NAME));
+          die();
+        }
+
+      } else {
+        wp_send_json_error(__('Backup file not found!', LW_ALL_IN_ONE_PLUGIN_NAME));
+        die();
+      }
     }
   }
 }

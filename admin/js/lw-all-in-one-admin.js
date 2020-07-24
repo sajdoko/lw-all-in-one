@@ -1,10 +1,17 @@
 (function ($) {
 	"use strict";
-	const { __, _x, _n, _nx } = wp.i18n;
+	const {
+		__,
+		_x,
+		_n,
+		_nx
+	} = wp.i18n;
 	$(document).ready(function () {
 		function addEventDisplayMessage(type, message) {
 			$('#add_event_response').html(`<p class="notice notice-${type}">${message}</p>`);
-			setTimeout(function(){ $('#add_event_response').html('') }, 3000);
+			setTimeout(function () {
+				$('#add_event_response').html('')
+			}, 3000);
 		}
 		$("#lw_all_in_one_privacy_policy_pages").submit(function (event) {
 			event.preventDefault();
@@ -139,7 +146,7 @@
 		});
 
 		$(document).on('click', '#lw_aio_delete_record', function (event) {
-			if (!confirm(__( 'Are you sure you want to delete this record?', 'lw_all_in_one' ))) {
+			if (!confirm(__('Are you sure you want to delete this record?', 'lw_all_in_one'))) {
 				event.preventDefault();
 			}
 		});
@@ -147,7 +154,7 @@
 			var actionTop = $("select[name=action]").val();
 			var actionBottom = $("select[name=action2]").val();
 			if ((actionTop == 'bulk-delete-cf7' || actionTop == 'bulk-delete-ga') || (actionBottom == 'bulk-delete-cf7' || actionBottom == 'bulk-delete-ga')) {
-				if (!confirm(__( 'Are you sure you want to delete this record?', 'lw_all_in_one' ))) {
+				if (!confirm(__('Are you sure you want to delete this record?', 'lw_all_in_one'))) {
 					event.preventDefault();
 				}
 			}
@@ -155,7 +162,7 @@
 
 		$(document).on('click', '#lw_aio_reset_data', function (event) {
 			event.preventDefault();
-			if (confirm(__( 'Are you sure you want to reset plugin options?', 'lw_all_in_one' ))) {
+			if (confirm(__('Are you sure you want to reset plugin options?', 'lw_all_in_one'))) {
 				var form_data = {
 					action: 'lw_all_in_one_reset_plugin_options',
 					security: lw_all_in_one_admin_ajax_object.security,
@@ -174,5 +181,91 @@
 					});
 			}
 		});
+
+		$(document).on('click', '#lw_aio_purify_css', function (event) {
+			event.preventDefault();
+			$('#lw_aio_spinner').addClass('is-active');
+			$('#lw_aio_purify_css').prop('disabled', true);
+			var form_data = {
+				action: 'lw_all_in_one_purify_css',
+				security: lw_all_in_one_admin_ajax_object.security,
+			};
+			$.ajax({
+					url: ajaxurl,
+					type: 'POST',
+					data: form_data,
+					cache: false,
+					processData: true
+				})
+				.done(function (response) {
+					$('#lw_aio_spinner').removeClass('is-active');
+					$('#lw_aio_purify_css').prop('disabled', false);
+					if (response.success === true) {
+						showPurifyResults(response.data);
+					}
+				});
+		});
+
+		function showPurifyResults(data) {
+			var html = "";
+			var totalBeforeBytes = 0;
+			var totalAfterBytes = 0;
+			var css_minified = data.css_minified;
+
+			if (typeof css_minified === 'object' && css_minified !== null) {
+				$.each(css_minified, function (index, item) {
+					totalBeforeBytes += item.stats.beforeBytes;
+					totalAfterBytes += item.stats.afterBytes;
+					html += "<div class='css-item'>" +
+						"<a href='" + item.url + "' target='_blank'>" + item.url + "</a><br/>" +
+						"<div class='stats'><div class='tab'>" + __("before", 'lw_all_in_one') + ": <span class='before'>" + item.stats.before + "</span></div>" +
+						"<div class='tab'>" + __("after", 'lw_all_in_one') + ": <span class='before'>" + item.stats.after + "</span></div>" +
+						// "<div class='tab'>used: <span class='before'>" + item.stats.percentageUsed + "</span></div>" +
+						// "<div class='tab'>unused: <span class='before'>" + item.stats.percentageUnused + "</span></div>" +
+						"</div></div>";
+				});
+				var percentageUnused = Math.round((1 - totalAfterBytes / totalBeforeBytes) * 10000) / 100 + "%";
+				$('.total').append(formatBytes(totalBeforeBytes - totalAfterBytes) + " (" + percentageUnused + ") " + __("of your CSS was not used.", 'lw_all_in_one'));
+				$('.css-items').append(html);
+			} else {
+				$('.total').append(__("No stylesheets purified!", 'lw_all_in_one'));
+			}
+
+			$('.results').show();
+
+		}
+
+		function formatBytes(bytes) {
+			var sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+			if (bytes === 0) return '0 Byte';
+			var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+			return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
+		};
+
+		$(document).on('click', '.restore-purified', function (event) {
+			event.preventDefault();
+			var element = $(this);
+			$(element).prop('disabled', true);
+			var form_data = {
+				action: 'lw_all_in_one_restore_purified',
+				security: lw_all_in_one_admin_ajax_object.security,
+				file_id: $(this).attr("file-id"),
+			};
+			$.ajax({
+					url: ajaxurl,
+					type: 'POST',
+					data: form_data,
+					cache: false,
+					processData: true
+				})
+				.done(function (response) {
+					if (response.success === true) {
+						$(element).parent().html(__("Restored!", 'lw_all_in_one'));
+					} else {
+						$(element).prop('disabled', false);
+					}
+				});
+		});
+
 	});
 })(jQuery);

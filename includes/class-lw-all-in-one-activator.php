@@ -30,7 +30,7 @@ class Lw_All_In_One_Activator {
     }
     $lw_all_in_one_version = get_option('lw_all_in_one_version');
     // Check if Web Instant Messenger options exist
-    $verification_status = $token = $wim_activate = $rag_soc = $auto_show_wim = $show_wim_after = $show_mobile = $lingua = $messaggio_0 = $messaggio_1 = $cf7_activate = $save_cf7_subm = $ga_activate = $tracking_id = $save_ga_events = $monitor_email_link = $monitor_tel_link = $monitor_form_submit = '';
+    $verification_status = $token = $wim_activate = $rag_soc = $auto_show_wim = $show_wim_after = $show_mobile = $lingua = $messaggio_0 = $messaggio_1 = $cf7_activate = $save_cf7_subm = $opt_scr_deliv = $ga_activate = $tracking_id = $save_ga_events = $monitor_email_link = $monitor_tel_link = $monitor_form_submit = '';
     if ($wim_activation_status = get_option('wim_activation_status')) {
       $verification_status = ($wim_activation_status['activation_status'] == 1) ? 'verified' : '';
       $token = $wim_activation_status['token'];
@@ -47,7 +47,7 @@ class Lw_All_In_One_Activator {
     }
     // Check if LW Contact Form 7 Addon plugin is activated
     if (is_plugin_active('lw-contact-form/localweb.php')) {
-      $cf7_activate = $save_cf7_subm = 'on';
+      $cf7_activate = $save_cf7_subm = $opt_scr_deliv = 'on';
     }
     //
     if (get_option('gadwp_options')) {
@@ -91,6 +91,7 @@ class Lw_All_In_One_Activator {
         'cf7_activate' => $cf7_activate,
         'lw_cf7_fields' => array(
           'save_cf7_subm' => $save_cf7_subm,
+          'opt_scr_deliv' => $opt_scr_deliv,
         ),
         'lw_hf_fields' => array(
           'insert_header' => '',

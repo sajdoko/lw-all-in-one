@@ -2,8 +2,8 @@
 Contributors: sajdoko
 Tags: localweb, local web, chat, wim, web instant messenger, aio
 Requires at least: 4.8.5
-Tested up to: 5.3.2
-Stable tag: 5.3
+Tested up to: 5.4.2
+Stable tag: 5.4
 Requires PHP: 5.6
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
@@ -30,6 +30,10 @@ A new options page "LW AIO Options" will appear on the left side menu.
 From there can be activated/deactivated the services
 
 == Changelog ==
+= 1.6.2 =
+* Added option to purify CSS.
+= 1.6.1 =
+* Added option to dequeue CF7 scripts/styles if shortcode is not set.
 = 1.6.0 =
 * Better WIM API.
 = 1.5.9 =

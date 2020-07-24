@@ -44,6 +44,7 @@
       $wim_fields_messaggio_1 = (isset($options['wim_fields']['messaggio_1'])) ? esc_attr($options['wim_fields']['messaggio_1']) : '';
       $cf7_activate = (isset($options['cf7_activate'])) ? esc_attr($options['cf7_activate']) : '';
       $lw_cf7_fields_save_cf7_subm = (isset($options['lw_cf7_fields']['save_cf7_subm'])) ? esc_attr($options['lw_cf7_fields']['save_cf7_subm']) : '';
+      $lw_cf7_fields_opt_scr_deliv = (isset($options['lw_cf7_fields']['opt_scr_deliv'])) ? esc_attr($options['lw_cf7_fields']['opt_scr_deliv']) : '';
       $lw_cf7_fields_tipo_contratto = (isset($options['lw_cf7_fields']['tipo_contratto'])) ? esc_attr($options['lw_cf7_fields']['tipo_contratto']) : '';
       $lw_cf7_fields_id_contratto = (isset($options['lw_cf7_fields']['id_contratto'])) ? esc_attr($options['lw_cf7_fields']['id_contratto']) : '';
       $lw_hf_fields_insert_header = (isset($options['lw_hf_fields']['insert_header'])) ? $options['lw_hf_fields']['insert_header'] : '';
@@ -52,6 +53,7 @@
       $lw_aio_data_retention = (isset($options['lw_aio_fields']['data_retention'])) ? esc_attr($options['lw_aio_fields']['data_retention']) : '';
 
       $ga_custom_events = get_option($this->plugin_name.'_ga_custom_events', array());
+      $save_paths_purified_css = get_option($this->plugin_name.'_purified_css', array());
 
       settings_fields($this->plugin_name);
       do_settings_sections($this->plugin_name);
@@ -65,7 +67,7 @@
       } else {
         $default_tab = 'tab_hf';
       }
-      $allowed_tabs = array('tab_ga_events', 'tab_wim', 'tab_cf7', 'tab_hf', 'tab_aio_options');
+      $allowed_tabs = array('tab_ga_events', 'tab_wim', 'tab_cf7', 'tab_hf', 'tab_aio_options', 'tab_site_speed');
       $get_tab = isset($_GET['tab']) ? esc_attr($_GET['tab']) : '';
       $active_tab = (in_array($get_tab, $allowed_tabs)) ? $get_tab : $default_tab;
     ?>
@@ -128,6 +130,7 @@
               <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_cf7" class="nav-tab <?php echo $active_tab == 'tab_cf7' ? 'nav-tab-active' : ''; ?><?php echo $cf7_activate != 'on' ? ' d-none' : ''; ?>"><?php esc_attr_e('LocalWeb Contact Form 7', LW_ALL_IN_ONE_PLUGIN_NAME);?></a>
               <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_hf" class="nav-tab <?php echo $active_tab == 'tab_hf' ? 'nav-tab-active' : ''; ?>"><?php esc_attr_e('Header/Footer Scripts', LW_ALL_IN_ONE_PLUGIN_NAME);?></a>
               <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_aio_options" class="nav-tab <?php echo $active_tab == 'tab_aio_options' ? 'nav-tab-active' : ''; ?>"><?php esc_attr_e('Plugin Options', LW_ALL_IN_ONE_PLUGIN_NAME);?></a>
+              <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_site_speed" class="nav-tab <?php echo $active_tab == 'tab_site_speed' ? 'nav-tab-active' : ''; ?>"><?php esc_attr_e('Site Speed', LW_ALL_IN_ONE_PLUGIN_NAME);?></a>
             </h2>
             <div id="tab_ga_events" class="tab-content<?php echo $active_tab != 'tab_ga_events' ? ' d-none' : ''; ?>">
               <div id="col-container">
@@ -395,6 +398,19 @@
                   <tr>
                     <td colspan="2" class="lw-aio-settings-title">
                       <div class="button-secondary lw-aio-settings-custom-switch">
+                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[lw_cf7_fields][opt_scr_deliv]" class="lw-aio-settings-custom-switch-checkbox" id="opt_scr_deliv" <?php echo ($lw_cf7_fields_opt_scr_deliv === 'on') ? 'checked="checked"' : '';?>>
+                        <label class="lw-aio-settings-custom-switch-label" for="opt_scr_deliv">
+                          <div class="lw-aio-settings-custom-switch-inner"></div>
+                          <div class="lw-aio-settings-custom-switch-switch"></div>
+                        </label>
+                      </div>
+                      <div class="switch-desc"> <?php esc_attr_e('Optimize Contact Form 7 scripts/styles delivery?', LW_ALL_IN_ONE_PLUGIN_NAME);?></div>
+                    </td>
+                  </tr>
+                  <tr><td colspan="2"><hr></td></tr>
+                  <tr>
+                    <td colspan="2" class="lw-aio-settings-title">
+                      <div class="button-secondary lw-aio-settings-custom-switch">
                         <input type="checkbox" name="<?php echo $this->plugin_name; ?>[lw_cf7_fields][save_cf7_subm]" class="lw-aio-settings-custom-switch-checkbox" id="save_cf7_subm" <?php echo ($lw_cf7_fields_save_cf7_subm === 'on') ? 'checked="checked"' : '';?>>
                         <label class="lw-aio-settings-custom-switch-label" for="save_cf7_subm">
                           <div class="lw-aio-settings-custom-switch-inner"></div>
@@ -492,6 +508,40 @@
                 </tbody>
               </table>
             </div>
+            <div id="tab_site_speed" class="tab-content<?php echo $active_tab != 'tab_site_speed' ? ' d-none' : ''; ?>">
+              <table class="lw-aio-settings-options">
+                <tbody>
+                  <tr>
+                    <td colspan="2"><h2><?php esc_attr_e('Purify CSS', LW_ALL_IN_ONE_PLUGIN_NAME);?></h2></td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="lw-aio-settings-title">
+                      <div class="button-secondary reset-button-div">
+                        <span role="button" class="button-secondary" id="lw_aio_purify_css" title="<?php esc_attr_e( 'Purify CSS' ); ?>"><?php esc_attr_e( 'Purify CSS' ); ?></span>
+                      </div>
+                      <div id="lw_aio_spinner" class="spinner" style="float:none;width:auto;height:auto;padding:10px 0 10px 50px;background-position:20px 0;">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="results" style="display:none">
+                          <h3><?php esc_attr_e('Results:', LW_ALL_IN_ONE_PLUGIN_NAME);?> <span class="total"></span></h3>
+                          <div class="css-items"></div>
+                      </div>
+                    </td>
+                  </tr>
+                  <?php if (!empty($save_paths_purified_css)) : ?>
+                    <tr><td>
+                    <h3><?php esc_attr_e('Purified CSS files:', LW_ALL_IN_ONE_PLUGIN_NAME);?></h3>
+                    <ul>
+                      <?php foreach ($save_paths_purified_css as $key => $purified_css) : ?>
+                        <li class="purified-css-file"><?php echo $purified_css['newfile'] ?> --- <span role="button" class="button button-small restore-purified" file-id="<?php echo $key ?>"><?php esc_attr_e( 'Restore' ); ?></span></li>
+                      <?php endforeach; ?>
+                    </ul></td></tr>
+                  <?php endif; ?>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
         <!-- sidebar -->
@@ -506,6 +556,7 @@
             </div> -->
       </div>
       <br class="clear">
+      <hr>
     </div>
 
     <?php submit_button(__('Save Options', LW_ALL_IN_ONE_PLUGIN_NAME), 'primary', 'submit', TRUE);?>

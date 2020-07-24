@@ -82,6 +82,7 @@ class Lw_All_In_One_Public {
     }
 
   }
+
   public function lw_all_in_one_save_ga_event() {
     if (!check_ajax_referer($this->plugin_name, 'security')) {
       wp_send_json_error(__('Security is not valid!', LW_ALL_IN_ONE_PLUGIN_NAME));
@@ -107,6 +108,38 @@ class Lw_All_In_One_Public {
     } else {
       wp_send_json_error(__('Action is not valid!', LW_ALL_IN_ONE_PLUGIN_NAME));
       die();
+    }
+  }
+
+  public function lw_all_in_one_dequeue() {
+    //Plugin options
+    $options = get_option($this->plugin_name);
+    $opt_scr_deliv = (isset($options['lw_cf7_fields']['opt_scr_deliv'])) ? $options['lw_cf7_fields']['opt_scr_deliv'] : '';
+
+    if ($opt_scr_deliv === 'on') {
+      global $post;
+      if ( !has_shortcode( $post->post_content, 'contact-form-7') ) {
+        add_action('wp_print_styles', 'lw_all_in_one_dequeue_styles');
+        add_action('wp_print_scripts', 'lw_all_in_one_dequeue_scripts');
+      }
+    }
+
+    function lw_all_in_one_dequeue_styles() {
+      global $wp_styles;
+      foreach( $wp_styles->queue as $style ) {
+        if ( $style == 'contact-form-7' ) {
+          wp_dequeue_style($wp_styles->registered[$style]->handle);
+        }
+      }
+    }
+
+    function lw_all_in_one_dequeue_scripts() {
+      global $wp_scripts;
+      foreach( $wp_scripts->queue as $style ) {
+        if ( in_array($style, ['wpcf7-recaptcha', 'google-recaptcha', 'contact-form-7']) ) {
+          wp_dequeue_script($wp_scripts->registered[$style]->handle);
+        }
+      }
     }
   }
 
