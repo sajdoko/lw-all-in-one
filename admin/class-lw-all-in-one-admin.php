@@ -463,6 +463,11 @@ class Lw_All_In_One_Admin {
         $site_links[] = $permalink;
       }
 
+      $htmlCode = '';
+      if (is_plugin_active('revslider/revslider.php')) {
+        $htmlCode = '<rs-fullwidth-wrap><rs-module-wrap data-alias="" data-source=""><rs-module data-version="" data-idcheck="" class="revslider-initialised rev_redraw_on_blurfocus" data-slideactive=""><rs-slides><rs-slide data-key="" data-title="" data-anim="" data-originalindex="" data-origindex="" data-description="" data-sba="" data-scroll-based="" data-owidth="" data-oheight="" data-rspausetimeronce="" data-ntrid="" data-isactiveslide=""><rs-sbg-px><rs-sbg-wrap data-owidth="" data-oheight=""><rs-sbg></rs-sbg></rs-sbg-wrap></rs-sbg-px><rs-layer-wrap class="rs-parallax-wrap"><rs-loop-wrap><rs-mask-wrap><rs-layer data-type="" data-color="" data-rsp_ch="" data-xy="" data-text="" data-vbility="" data-frame_0="" data-frame_1="" data-frame_999="" class="rs-layer" data-idcheck="" data-stylerecorder="" data-initialised=""></rs-layer></rs-mask-wrap></rs-loop-wrap></rs-layer-wrap></rs-slide></rs-slides><rs-progress><rs-progress-bar></rs-progress-bar></rs-progress></rs-module></rs-module-wrap><rs-fw-forcer></rs-fw-forcer></rs-fullwidth-wrap>';
+      }
+
       $response = wp_remote_post('https://purifycss.online/api/purify', array(
         'method' => 'POST',
         'headers' => array(
@@ -476,7 +481,7 @@ class Lw_All_In_One_Admin {
         'sslverify'   => false,
         'data_format' => 'body',
         'body' => array(
-          'htmlCode' => '',
+          'htmlCode' => $htmlCode,
           'options[minify]' => 1,
           'options[crawl]' => false,
           'url[]' => array_reverse($site_links),

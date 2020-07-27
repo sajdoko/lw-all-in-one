@@ -185,7 +185,8 @@
 		$(document).on('click', '#lw_aio_purify_css', function (event) {
 			event.preventDefault();
 			$('#lw_aio_spinner').addClass('is-active');
-			$('#lw_aio_purify_css').prop('disabled', true);
+			$('#lw_aio_purify_css').attr('disabled', 'disabled');
+			$('#lw_aio_purify_css').click(false);
 			var form_data = {
 				action: 'lw_all_in_one_purify_css',
 				security: lw_all_in_one_admin_ajax_object.security,
@@ -199,7 +200,8 @@
 				})
 				.done(function (response) {
 					$('#lw_aio_spinner').removeClass('is-active');
-					$('#lw_aio_purify_css').prop('disabled', false);
+					$('#lw_aio_purify_css').attr('disabled', '');
+					$('#lw_aio_purify_css').click(true);
 					if (response.success === true) {
 						showPurifyResults(response.data);
 					}
@@ -245,7 +247,9 @@
 		$(document).on('click', '.restore-purified', function (event) {
 			event.preventDefault();
 			var element = $(this);
-			$(element).prop('disabled', true);
+			$(element).click(false);
+			$(element).attr('disabled', 'disabled');
+			$(element).parent().append('<div id="lw_aio_spinner_restore" class="spinner is-active" style="float:none;width:auto;height:auto;padding:10px 0 10px 50px;background-position:20px 0;">');
 			var form_data = {
 				action: 'lw_all_in_one_restore_purified',
 				security: lw_all_in_one_admin_ajax_object.security,
@@ -262,7 +266,9 @@
 					if (response.success === true) {
 						$(element).parent().html(__("Restored!", 'lw_all_in_one'));
 					} else {
-						$(element).prop('disabled', false);
+						$(element).click(true);
+						$(element).attr('disabled', '');
+						$('#lw_aio_spinner_restore').remove();
 					}
 				});
 		});
