@@ -84,6 +84,7 @@ class Lw_All_In_One {
       $this->lw_all_in_one_schedule_cf7_sync();
     }
     $this->define_privacy_policy_hooks();
+    $this->define_setup_wizard_hooks();
 
   }
 
@@ -104,6 +105,8 @@ class Lw_All_In_One {
     require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-lw-all-in-one-cf7.php';
 
     require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-lw-all-in-one-privacy-policy-pages.php';
+
+    require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-lw-all-in-one-setup-wizard.php';
 
     $this->loader = new Lw_All_In_One_Loader();
 
@@ -216,6 +219,14 @@ class Lw_All_In_One {
     $this->loader->add_action('admin_menu', $plugin_privacy_policy, 'lw_all_in_one_privacy_policy_admin_menu', 99);
 
     $this->loader->add_action('admin_init', $plugin_privacy_policy, 'lw_all_in_one_old_privacy_is_active_deactivate');
+
+  }
+
+  private function define_setup_wizard_hooks() {
+
+    $plugin_setup_wizard = new Lw_All_In_One_Setup_Wizard($this->get_plugin_name(), $this->get_version());
+    $this->loader->add_action('admin_menu', $plugin_setup_wizard, 'lw_all_in_one_setup_wizard_menu_page');
+    $this->loader->add_action('admin_init', $plugin_setup_wizard, 'lw_all_in_one_setup_wizard_init');
 
   }
 
