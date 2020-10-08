@@ -57,7 +57,7 @@ class Lw_All_In_One_Wim {
       die();
     }
     if (isset($_POST['action']) && $_POST['action'] === "lw_all_in_one_verify_wim_attivation") {
-      $domain = $this->clean_domain(get_option('siteurl', $_SERVER['HTTP_HOST']));
+      $domain = clean_domain(get_option('siteurl', $_SERVER['HTTP_HOST']));
       $response = wp_remote_get($this->wim_veify_api_url, array(
         'method' => 'GET',
         'timeout' => 45,
@@ -138,19 +138,6 @@ class Lw_All_In_One_Wim {
             console.log("' . esc_attr__('WIM installed!', LW_ALL_IN_ONE_PLUGIN_NAME) . '");
             </script>';
     }
-  }
-  public function clean_domain($domain) {
-    $clean = preg_replace('#^http(s)?://#', '', $domain);
-    $clean = preg_replace('/^www\./', '', $clean);
-    $clean_arr = explode("/", $clean);
-    $clean = $clean_arr[0];
-    $strip = array("~", "`", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "=", "+", "[", "{", "]",
-      "}", "\\", "|", ";", ":", "\"", "'", "&#8216;", "&#8217;", "&#8220;", "&#8221;", "&#8211;", "&#8212;",
-      "â€”", "â€“", ",", "<", ">", "/", "?", " ");
-    $clean = str_replace($strip, "", strip_tags($clean));
-    $clean = (function_exists('mb_strtolower')) ? mb_strtolower($clean, 'UTF-8') : strtolower(utf8_encode($clean));
-    $clean = strtolower($clean);
-    return $clean;
   }
 
   public function lw_all_in_one_old_wim_is_active_deactivate() {

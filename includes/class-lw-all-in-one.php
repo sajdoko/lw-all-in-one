@@ -94,6 +94,8 @@ class Lw_All_In_One {
 
     require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-lw-all-in-one-i18n.php';
 
+    require_once plugin_dir_path(dirname(__FILE__)) . 'includes/lw-all-in-one-helper-functions.php';
+
     require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-lw-all-in-one-admin.php';
 
     require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-lw-all-in-one-public.php';
@@ -225,8 +227,10 @@ class Lw_All_In_One {
   private function define_setup_wizard_hooks() {
 
     $plugin_setup_wizard = new Lw_All_In_One_Setup_Wizard($this->get_plugin_name(), $this->get_version());
+    $this->loader->add_action('admin_init', $plugin_setup_wizard, 'lw_all_in_one_setup_wizard_redirect');
     $this->loader->add_action('admin_menu', $plugin_setup_wizard, 'lw_all_in_one_setup_wizard_menu_page');
     $this->loader->add_action('admin_init', $plugin_setup_wizard, 'lw_all_in_one_setup_wizard_init');
+    $this->loader->add_action('wp_ajax_setup_wizard_wim_verify_attivation', $plugin_setup_wizard, 'setup_wizard_wim_verify_attivation');
 
   }
 

@@ -67,6 +67,20 @@ class Lw_All_In_One_Setup_Wizard {
   }
 
   /**
+   * If first time, redirect to wizard.
+   */
+  public function lw_all_in_one_setup_wizard_redirect() {
+
+    if (current_user_can('manage_options')) {
+      if (!get_option($this->plugin_name . '_setup_wizard_ran', false)) {
+        update_option($this->plugin_name . '_setup_wizard_ran', '1');
+        wp_safe_redirect( admin_url( 'index.php?page=' . $this->plugin_name . '_setup_wizard' ) );
+        exit;
+      }
+    }
+  }
+
+  /**
    * Add admin menus/screens.
    */
   public function lw_all_in_one_setup_wizard_menu_page() {
@@ -80,10 +94,6 @@ class Lw_All_In_One_Setup_Wizard {
     // die($_GET['page']);
     if (!isset($_REQUEST['_wpnonce']) || !wp_verify_nonce(sanitize_key($_REQUEST['_wpnonce']), $this->plugin_name . '_setup_wizard')) {
       // return;
-    }
-
-    if (current_user_can('manage_options')) {
-      update_option($this->plugin_name . '_setup_wizard_ran', '1');
     }
 
     if (empty($_GET['page']) || $this->plugin_name . '_setup_wizard' !== $_GET['page']) {
@@ -135,6 +145,14 @@ class Lw_All_In_One_Setup_Wizard {
     wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/lw-all-in-one-admin.css', array(), $this->version, 'all');
 
     wp_register_script($this->plugin_name . '_setup_wizard', plugin_dir_url(__FILE__) . "js/lw-all-in-one-setup.js", array('jquery', 'wp-i18n'), $this->version, true);
+    wp_localize_script($this->plugin_name . '_setup_wizard', 'lwaio_setup_wizard_ajax_object',
+    array(
+      'ajaxurl' => admin_url('admin-ajax.php'),
+      'security' => wp_create_nonce($this->plugin_name),
+      // 'data_var_1' => 'value 1',
+      // 'data_var_2' => 'value 2',
+    )
+  );
 
     if (!empty($_POST['save_step']) && isset($this->steps[$this->step]['handler'])) {
       call_user_func($this->steps[$this->step]['handler']);
@@ -289,16 +307,15 @@ class Lw_All_In_One_Setup_Wizard {
       }
 
       $valid = array();
-      $valid['ga_activate'] = (isset($_REQUEST['lw_all_in_one']['ga_activate']) && $_REQUEST['lw_all_in_one']['ga_activate'] === 'on') ? 'on' : '';
-      $valid['wim_activate'] = (isset($_REQUEST['lw_all_in_one']['wim_activate']) && $_REQUEST['lw_all_in_one']['wim_activate'] === 'on') ? 'on' : '';
-      $valid['cf7_activate'] = (isset($_REQUEST['lw_all_in_one']['cf7_activate']) && $_REQUEST['lw_all_in_one']['cf7_activate'] === 'on') ? 'on' : '';
+      $valid['ga_activate'] = (isset($_REQUEST[$this->plugin_name]['ga_activate']) && $_REQUEST[$this->plugin_name]['ga_activate'] === 'on') ? 'on' : '';
+      $valid['wim_activate'] = (isset($_REQUEST[$this->plugin_name]['wim_activate']) && $_REQUEST[$this->plugin_name]['wim_activate'] === 'on') ? 'on' : '';
+      $valid['cf7_activate'] = (isset($_REQUEST[$this->plugin_name]['cf7_activate']) && $_REQUEST[$this->plugin_name]['cf7_activate'] === 'on') ? 'on' : '';
 
       $exiting_options = $this->get_initial_plugin_options;
       if ($exiting_options) {
         $valid = array_merge($exiting_options, $valid);
+        update_option($this->plugin_name, $valid );
       }
-
-      update_option($this->plugin_name, $valid );
 
       if ( $valid['ga_activate'] != 'on' ) {
         unset( $this->steps['google_analytics'] );
@@ -392,22 +409,25 @@ class Lw_All_In_One_Setup_Wizard {
       }
 
       $valid = array();
-      $valid['ga_fields']['tracking_id'] = (isset($_REQUEST['lw_all_in_one']['ga_fields']['tracking_id'])) ? sanitize_text_field($_REQUEST['lw_all_in_one']['ga_fields']['tracking_id']) : '';
-      $valid['ga_fields']['save_ga_events'] = (isset($_REQUEST['lw_all_in_one']['ga_fields']['save_ga_events']) && $_REQUEST['lw_all_in_one']['ga_fields']['save_ga_events'] === 'on') ? 'on' : '';
-      $valid['ga_fields']['monitor_email_link'] = (isset($_REQUEST['lw_all_in_one']['ga_fields']['monitor_email_link']) && $_REQUEST['lw_all_in_one']['ga_fields']['monitor_email_link'] === 'on') ? 'on' : '';
-      $valid['ga_fields']['monitor_tel_link'] = (isset($_REQUEST['lw_all_in_one']['ga_fields']['monitor_tel_link']) && $_REQUEST['lw_all_in_one']['ga_fields']['monitor_tel_link'] === 'on') ? 'on' : '';
-      $valid['ga_fields']['monitor_form_submit'] = (isset($_REQUEST['lw_all_in_one']['ga_fields']['monitor_form_submit']) && $_REQUEST['lw_all_in_one']['ga_fields']['monitor_form_submit'] === 'on') ? 'on' : '';
+      $valid['ga_fields']['tracking_id'] = (isset($_REQUEST[$this->plugin_name]['ga_fields']['tracking_id'])) ? sanitize_text_field($_REQUEST[$this->plugin_name]['ga_fields']['tracking_id']) : '';
+      $valid['ga_fields']['save_ga_events'] = (isset($_REQUEST[$this->plugin_name]['ga_fields']['save_ga_events']) && $_REQUEST[$this->plugin_name]['ga_fields']['save_ga_events'] === 'on') ? 'on' : '';
+      $valid['ga_fields']['monitor_email_link'] = (isset($_REQUEST[$this->plugin_name]['ga_fields']['monitor_email_link']) && $_REQUEST[$this->plugin_name]['ga_fields']['monitor_email_link'] === 'on') ? 'on' : '';
+      $valid['ga_fields']['monitor_tel_link'] = (isset($_REQUEST[$this->plugin_name]['ga_fields']['monitor_tel_link']) && $_REQUEST[$this->plugin_name]['ga_fields']['monitor_tel_link'] === 'on') ? 'on' : '';
+      $valid['ga_fields']['monitor_form_submit'] = (isset($_REQUEST[$this->plugin_name]['ga_fields']['monitor_form_submit']) && $_REQUEST[$this->plugin_name]['ga_fields']['monitor_form_submit'] === 'on') ? 'on' : '';
 
       $exiting_options = $this->get_initial_plugin_options;
       if ($exiting_options) {
         $valid = array_merge($exiting_options, $valid);
+        if (!lw_all_in_one_validate_tracking_id($valid['ga_fields']['tracking_id'])) {
+          wp_redirect( $_REQUEST['_wp_http_referer'] );
+          exit;
+        } else {
+          update_option($this->plugin_name, $valid );
+          wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+          exit;
+        }
       }
-      if (!$this->lw_all_in_one_validate_tracking_id($valid['ga_fields']['tracking_id'])) {
-        wp_redirect( $_REQUEST['_wp_http_referer'] );
-      } else {
-        update_option($this->plugin_name, $valid );
-        wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
-      }
+      wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
       exit;
   }
 
@@ -419,7 +439,7 @@ class Lw_All_In_One_Setup_Wizard {
             <tr>
               <td colspan="2"><h2><?php esc_attr_e('Web Instant Messenger Options', LW_ALL_IN_ONE_PLUGIN_NAME);?></h2></td>
             </tr>
-            <?php if($this->get_initial_plugin_options['wim_fields']['verification_status'] == 'verified' && strlen($this->get_initial_plugin_options['wim_fields']['token']) == 32) : ?>
+            <?php if(isset($this->get_initial_plugin_options['wim_fields']['verification_status']) && $this->get_initial_plugin_options['wim_fields']['verification_status'] == 'verified' && strlen($this->get_initial_plugin_options['wim_fields']['token']) == 32) : ?>
             <tr>
               <td class="lw-aio-settings-title-wim">
                 <label for="rag_soc"><?php esc_attr_e('Business Name', LW_ALL_IN_ONE_PLUGIN_NAME);?></label>
@@ -512,7 +532,6 @@ class Lw_All_In_One_Setup_Wizard {
                   <input type="hidden" id="wim_fields_lingua" value="" name="<?php echo $this->plugin_name;?>[wim_fields][lingua]"/>
                   <input type="hidden" id="wim_fields_messaggio_0" value="" name="<?php echo $this->plugin_name;?>[wim_fields][messaggio_0]"/>
                   <input type="hidden" id="wim_fields_messaggio_1" value="" name="<?php echo $this->plugin_name;?>[wim_fields][messaggio_1]"/>
-                  <input type="hidden" name="<?php echo $this->plugin_name;?>[wim_fields][save_wim_options]"/>
                 </td>
               </tr>
             <tr><td colspan="2"><?php submit_button(__('Verify Activation', LW_ALL_IN_ONE_PLUGIN_NAME), 'secondary', 'wim_verify_attivation', TRUE);?></td></tr>
@@ -524,13 +543,77 @@ class Lw_All_In_One_Setup_Wizard {
     <?php
   }
 
-  public function setup_step_web_instant_messenger_save() {
-      check_admin_referer( $this->plugin_name . '_setup_wizard' );
-      if (!current_user_can('manage_options')) {
-        return;
+  public function setup_wizard_wim_verify_attivation() {
+
+    $wim = new Lw_All_In_One_Wim($this->plugin_name, $this->version);
+
+    $domain = clean_domain(get_option('siteurl', $_SERVER['HTTP_HOST']));
+    $response = wp_remote_get($wim->wim_veify_api_url, array(
+      'method' => 'GET',
+      'timeout' => 45,
+      'redirection' => 5,
+      'httpversion' => '1.0',
+      'blocking' => true,
+      'headers' => array(),
+      'body' => array('domain' => urlencode($domain), 'action' => 'get_options'),
+      'cookies' => array(),
+    )
+    );
+    $ret_body = wp_remote_retrieve_body($response);
+    $data = json_decode($ret_body);
+    if (is_wp_error($response)) {
+      $error_message = $response->get_error_message();
+      wp_send_json_error(__('Something went wrong!', LW_ALL_IN_ONE_PLUGIN_NAME));
+      exit();
+    } elseif ($data->response == 'verified') {
+      if ($data->token == '') {
+        wp_send_json_error(__('WIM authorized but token returned was empty!', LW_ALL_IN_ONE_PLUGIN_NAME));
+        exit();
+      } else if (strlen($data->token) == 32) {
+        wp_send_json_success(array('fields' => $data, 'message' => __('Web Instant Messenger authorized!', LW_ALL_IN_ONE_PLUGIN_NAME)));
+        exit();
+      } else {
+        wp_send_json_error(__('There was an unknown error!', LW_ALL_IN_ONE_PLUGIN_NAME));
+        exit;
       }
-      wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
-      exit;
+    } elseif ($data->response == 'unverified') {
+      wp_send_json_error($data->message);
+      exit();
+    } else {
+      wp_send_json_error(__('Not a valid response!', LW_ALL_IN_ONE_PLUGIN_NAME));
+      exit();
+    }
+
+  }
+
+  public function setup_step_web_instant_messenger_save() {
+    check_admin_referer( $this->plugin_name . '_setup_wizard' );
+    if (!current_user_can('manage_options')) {
+      return;
+    }
+
+    $valid = array();
+    if (isset($_REQUEST[$this->plugin_name]['wim_fields']['verification_status']) && isset($_REQUEST[$this->plugin_name]['wim_fields']['token']) && strlen($_REQUEST[$this->plugin_name]['wim_fields']['token']) == 32) {
+
+      $valid['wim_fields']['verification_status'] = (isset($_REQUEST[$this->plugin_name]['wim_fields']['verification_status'])) ? sanitize_text_field($_REQUEST[$this->plugin_name]['wim_fields']['verification_status']) : "";
+      $valid['wim_fields']['token'] = (isset($_REQUEST[$this->plugin_name]['wim_fields']['token'])) ? sanitize_text_field($_REQUEST[$this->plugin_name]['wim_fields']['token']) : "";
+      $valid['wim_fields']['rag_soc'] = (isset($_REQUEST[$this->plugin_name]['wim_fields']['rag_soc'])) ? sanitize_text_field($_REQUEST[$this->plugin_name]['wim_fields']['rag_soc']) : "";
+      $valid['wim_fields']['auto_show_wim'] = (isset($_REQUEST[$this->plugin_name]['wim_fields']['auto_show_wim'])) ? sanitize_text_field($_REQUEST[$this->plugin_name]['wim_fields']['auto_show_wim']) : "SI";
+      $valid['wim_fields']['show_wim_after'] = (isset($_REQUEST[$this->plugin_name]['wim_fields']['show_wim_after'])) ? sanitize_text_field($_REQUEST[$this->plugin_name]['wim_fields']['show_wim_after']) : "5";
+      $valid['wim_fields']['show_mobile'] = (isset($_REQUEST[$this->plugin_name]['wim_fields']['show_mobile'])) ? sanitize_text_field($_REQUEST[$this->plugin_name]['wim_fields']['show_mobile']) : "SI";
+      $valid['wim_fields']['lingua'] = (isset($_REQUEST[$this->plugin_name]['wim_fields']['lingua'])) ? sanitize_text_field($_REQUEST[$this->plugin_name]['wim_fields']['lingua']) : "it";
+      $valid['wim_fields']['messaggio_0'] = (isset($_REQUEST[$this->plugin_name]['wim_fields']['messaggio_0'])) ? sanitize_textarea_field($_REQUEST[$this->plugin_name]['wim_fields']['messaggio_0']) : "Salve! Come posso esserle utile?";
+      $valid['wim_fields']['messaggio_1'] = (isset($_REQUEST[$this->plugin_name]['wim_fields']['messaggio_1'])) ? sanitize_textarea_field($_REQUEST[$this->plugin_name]['wim_fields']['messaggio_1']) : "Gentilmente, mi può lasciare un contatto telefonico o email in modo da poterla eventualmente ricontattare?";
+    }
+
+    $exiting_options = $this->get_initial_plugin_options;
+    if ($exiting_options) {
+      $valid = array_merge($exiting_options, $valid);
+      update_option($this->plugin_name, $valid );
+    }
+
+    wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+    exit;
   }
 
   public function setup_step_localweb_contact_form_7() {
@@ -578,10 +661,6 @@ class Lw_All_In_One_Setup_Wizard {
         <h1><?php esc_html_e( 'Your Site is Ready!', LW_ALL_IN_ONE_PLUGIN_NAME ); ?></h1>
     </div>
     <?php
-  }
-
-  public function lw_all_in_one_validate_tracking_id($str) {
-    return (bool) preg_match('/^ua-\d{4,9}-\d{1,4}$/i', strval($str));
   }
 
 }

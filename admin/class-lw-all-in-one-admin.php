@@ -91,7 +91,7 @@ class Lw_All_In_One_Admin {
     $valid = array();
     $valid['ga_activate'] = (isset($input['ga_activate']) && $input['ga_activate'] === 'on') ? 'on' : '';
     $valid['ga_fields']['tracking_id'] = (isset($input['ga_fields']['tracking_id'])) ? sanitize_text_field($input['ga_fields']['tracking_id']) : '';
-    if ($valid['ga_fields']['tracking_id'] !== '' && !$this->lw_all_in_one_validate_tracking_id($valid['ga_fields']['tracking_id'])) {
+    if ($valid['ga_fields']['tracking_id'] !== '' && !lw_all_in_one_validate_tracking_id($valid['ga_fields']['tracking_id'])) {
       $valid['ga_fields']['tracking_id'] = $this->get_plugin_options('ga_fields', 'tracking_id');
       $valid['ga_fields']['save_ga_events'] = $this->get_plugin_options('ga_fields', 'save_ga_events');
       $valid['ga_fields']['monitor_email_link'] = $this->get_plugin_options('ga_fields', 'monitor_email_link');
@@ -119,7 +119,7 @@ class Lw_All_In_One_Admin {
     $valid['wim_activate'] = (isset($input['wim_activate']) && $input['wim_activate'] === 'on') ? 'on' : '';
 
     if (isset($input['wim_fields']['verification_status']) && isset($input['wim_fields']['save_wim_options']) && isset($input['wim_fields']['token']) && strlen($input['wim_fields']['token']) == 32) {
-      $domain = $this->clean_domain(get_option('siteurl', $_SERVER['HTTP_HOST']));
+      $domain = clean_domain(get_option('siteurl', $_SERVER['HTTP_HOST']));
       $wim_settings_arr = array();
       $api_url = 'https://localweb.it/chat/api/cliente/aggiorna.php';
       $wim_settings_arr['wim_fields']['verification_status'] = (isset($input['wim_fields']['verification_status'])) ? sanitize_text_field($input['wim_fields']['verification_status']) : "";
@@ -236,10 +236,6 @@ class Lw_All_In_One_Admin {
     }
   }
 
-  public function lw_all_in_one_validate_tracking_id($str) {
-    return (bool) preg_match('/^ua-\d{4,9}-\d{1,4}$/i', strval($str));
-  }
-
   public function lw_all_in_one_header_scripts_from_tab() {
     //Plugin options
     $options = get_option($this->plugin_name);
@@ -307,20 +303,6 @@ class Lw_All_In_One_Admin {
     } else {
       return $text;
     }
-  }
-
-  public function clean_domain($domain) {
-    $clean = preg_replace('#^http(s)?://#', '', $domain);
-    $clean = preg_replace('/^www\./', '', $clean);
-    $clean_arr = explode("/", $clean);
-    $clean = $clean_arr[0];
-    $strip = array("~", "`", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "=", "+", "[", "{", "]",
-      "}", "\\", "|", ";", ":", "\"", "'", "&#8216;", "&#8217;", "&#8220;", "&#8221;", "&#8211;", "&#8212;",
-      "â€”", "â€“", ",", "<", ">", "/", "?", " ");
-    $clean = str_replace($strip, "", strip_tags($clean));
-    $clean = (function_exists('mb_strtolower')) ? mb_strtolower($clean, 'UTF-8') : strtolower(utf8_encode($clean));
-    $clean = strtolower($clean);
-    return $clean;
   }
 
   public function lw_all_in_one_reset_plugin_options() {
