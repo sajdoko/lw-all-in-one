@@ -42,7 +42,7 @@ class Lw_All_In_One {
    * @access   protected
    * @var      string    $plugin_name    The string used to uniquely identify this plugin.
    */
-  protected $plugin_name;
+  protected string $plugin_name;
 
   /**
    * The current version of the plugin.
@@ -50,7 +50,7 @@ class Lw_All_In_One {
    * @access   protected
    * @var      string    $version    The current version of the plugin.
    */
-  protected $version;
+  protected string $version;
 
   /**
    * Define the core functionality of the plugin.
@@ -348,20 +348,12 @@ class Lw_All_In_One {
     }
   }
 
-  public function check_plugin_options($parent_key = false, $key) {
+  public function check_plugin_options($parent_key = false, $key = false) {
     $options = get_option($this->plugin_name);
     if ($parent_key !== false) {
-      if (isset($options[$parent_key][$key])) {
-        return $options[$parent_key][$key];
-      } else {
-        return false;
-      }
+	    return $options[ $parent_key ][ $key ] ?? false;
     } else {
-      if (isset($options[$key])) {
-        return $options[$key];
-      } else {
-        return false;
-      }
+	    return $options[ $key ] ?? false;
     }
   }
 

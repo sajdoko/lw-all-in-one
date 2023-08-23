@@ -27,7 +27,7 @@ class Lw_All_In_One_Public {
    * @access   private
    * @var      string    $plugin_name    The ID of this plugin.
    */
-  private $plugin_name;
+  private string $plugin_name;
 
   /**
    * The version of this plugin.
@@ -35,15 +35,15 @@ class Lw_All_In_One_Public {
    * @access   private
    * @var      string    $version    The current version of this plugin.
    */
-  private $version;
+  private string $version;
 
   /**
    * Initialize the class and set its properties.
    *
-   * @param      string    $plugin_name       The name of the plugin.
-   * @param      string    $version    The version of this plugin.
+   * @param  string  $plugin_name       The name of the plugin.
+   * @param  string  $version    The version of this plugin.
    */
-  public function __construct($plugin_name, $version) {
+  public function __construct( string $plugin_name, string $version) {
 
     $this->plugin_name = $plugin_name;
     $this->version = $version;
@@ -65,7 +65,7 @@ class Lw_All_In_One_Public {
    * Register the JavaScript for the public-facing side of the site.
    *
    */
-  public function enqueue_scripts() {
+  public function enqueue_scripts(): void {
     //Plugin options
     $options = get_option($this->plugin_name);
     $ga_activate = (isset($options['ga_activate'])) ? $options['ga_activate'] : '';
@@ -102,18 +102,16 @@ class Lw_All_In_One_Public {
       $format = array('%s', '%s', '%s', '%s');
       if ($wpdb->insert($table, $data, $format)) {
         wp_send_json_success(__('Event Saved!', LW_ALL_IN_ONE_PLUGIN_NAME));
-        die();
       } else {
         wp_send_json_error(__('Event was not Saved!', LW_ALL_IN_ONE_PLUGIN_NAME));
-        die();
       }
     } else {
       wp_send_json_error(__('Action is not valid!', LW_ALL_IN_ONE_PLUGIN_NAME));
-      die();
     }
+	die();
   }
 
-  public function lw_all_in_one_dequeue() {
+  public function lw_all_in_one_dequeue(): void {
     //Plugin options
     $options = get_option($this->plugin_name);
     $opt_scr_deliv = (isset($options['lw_cf7_fields']['opt_scr_deliv'])) ? $options['lw_cf7_fields']['opt_scr_deliv'] : '';
@@ -126,7 +124,7 @@ class Lw_All_In_One_Public {
       }
     }
 
-    function lw_all_in_one_dequeue_styles() {
+    function lw_all_in_one_dequeue_styles(): void {
       global $wp_styles;
       foreach( $wp_styles->queue as $style ) {
         if ( $style == 'contact-form-7' ) {
@@ -135,7 +133,7 @@ class Lw_All_In_One_Public {
       }
     }
 
-    function lw_all_in_one_dequeue_scripts() {
+    function lw_all_in_one_dequeue_scripts(): void {
       global $wp_scripts;
       foreach( $wp_scripts->queue as $style ) {
         if ( in_array($style, ['wpcf7-recaptcha', 'google-recaptcha', 'contact-form-7']) ) {

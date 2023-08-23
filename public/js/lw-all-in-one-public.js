@@ -6,7 +6,7 @@
 			return;
 		}
 
-		var data = {
+		const data = {
 			action: 'lw_all_in_one_save_ga_event',
 			security: lw_all_in_one_save_ga_event_object.security,
 			event_category: gaCategory,

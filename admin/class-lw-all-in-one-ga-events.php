@@ -24,7 +24,7 @@ class Lw_All_In_One_Ga_Events {
    * @access   private
    * @var      string    $plugin_name    The ID of this plugin.
    */
-  private $plugin_name;
+  private string $plugin_name;
 
   /**
    * The version of this plugin.
@@ -37,10 +37,10 @@ class Lw_All_In_One_Ga_Events {
   /**
    * Initialize the class and set its properties.
    *
-   * @param      string    $plugin_name       The name of this plugin.
-   * @param      string    $version    The version of this plugin.
+   * @param  string  $plugin_name       The name of this plugin.
+   * @param  string  $version    The version of this plugin.
    */
-  public function __construct($plugin_name, $version) {
+  public function __construct( string $plugin_name, string $version) {
 
     $this->plugin_name = $plugin_name;
     $this->version = $version;

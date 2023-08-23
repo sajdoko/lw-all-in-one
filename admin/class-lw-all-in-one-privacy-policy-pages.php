@@ -24,7 +24,7 @@ class Lw_All_In_One_Privacy_Policy_Pages {
    * @access   private
    * @var      string    $plugin_name    The ID of this plugin.
    */
-  private $plugin_name;
+  private string $plugin_name;
 
   /**
    * The version of this plugin.
@@ -70,9 +70,9 @@ class Lw_All_In_One_Privacy_Policy_Pages {
     }
     if (isset($_POST['action']) && $_POST['action'] === "lw_all_in_one_create_privacy_pages") {
 
-      $create_cookie_page = (isset($_POST[$this->plugin_name . '_cookie_page']) && $_POST[$this->plugin_name . '_cookie_page'] == 'on') ? true : false;
-      $create_privacy_page = (isset($_POST[$this->plugin_name . '_privacy_page']) && $_POST[$this->plugin_name . '_privacy_page'] == 'on') ? true : false;
-      $create_info_dati_page = (isset($_POST[$this->plugin_name . '_trattamento_dati_page']) && $_POST[$this->plugin_name . '_trattamento_dati_page'] == 'on') ? true : false;
+      $create_cookie_page = isset($_POST[ $this->plugin_name . '_cookie_page']) && $_POST[ $this->plugin_name . '_cookie_page'] == 'on';
+      $create_privacy_page = isset($_POST[ $this->plugin_name . '_privacy_page']) && $_POST[ $this->plugin_name . '_privacy_page'] == 'on';
+      $create_info_dati_page = isset($_POST[ $this->plugin_name . '_trattamento_dati_page']) && $_POST[ $this->plugin_name . '_trattamento_dati_page'] == 'on';
 
       $date = date('d-m-Y', time());
       $domain = get_option('siteurl', $_SERVER['HTTP_HOST']);
@@ -112,11 +112,10 @@ class Lw_All_In_One_Privacy_Policy_Pages {
       }
       update_option($this->plugin_name . '_privacy_pages', $created_pages_save_option);
       wp_send_json_success($create_pages_resposes);
-      die();
     } else {
       wp_send_json_error(__('Action is not valid!', LW_ALL_IN_ONE_PLUGIN_NAME));
-      die();
     }
+	  die();
   }
 
 }

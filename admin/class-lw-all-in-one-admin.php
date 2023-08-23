@@ -24,7 +24,7 @@ class Lw_All_In_One_Admin {
    * @access   private
    * @var      string    $plugin_name    The ID of this plugin.
    */
-  private $plugin_name;
+  private string $plugin_name;
 
   /**
    * The version of this plugin.
@@ -32,32 +32,32 @@ class Lw_All_In_One_Admin {
    * @access   private
    * @var      string    $version    The current version of this plugin.
    */
-  private $version;
+  private string $version;
 
   /**
    * Initialize the class and set its properties.
    *
-   * @param      string    $plugin_name       The name of this plugin.
-   * @param      string    $version    The version of this plugin.
+   * @param  string  $plugin_name       The name of this plugin.
+   * @param  string  $version    The version of this plugin.
    */
-  public function __construct($plugin_name, $version) {
+  public function __construct( string $plugin_name, string $version) {
 
     $this->plugin_name = $plugin_name;
     $this->version = $version;
 
   }
 
-  public function enqueue_styles($hook) {
-    if (preg_match('/page_lw_all_in_one/', $hook)) {
+  public function enqueue_styles($hook): void {
+    if ( str_contains( $hook, 'page_lw_all_in_one' ) ) {
       $min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
       wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/lw-all-in-one-admin'.$min.'.css', array(), $this->version, 'all');
     }
   }
 
-  public function enqueue_scripts($hook) {
+  public function enqueue_scripts($hook): void {
     // echo $hook;
     // die();
-    if (preg_match('/page_lw_all_in_one/', $hook)) {
+    if ( str_contains( $hook, 'page_lw_all_in_one' ) ) {
       $min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
       wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/lw-all-in-one-admin'.$min.'.js', array('jquery', 'wp-i18n'), $this->version, false);
       wp_set_script_translations($this->plugin_name, LW_ALL_IN_ONE_PLUGIN_NAME);
@@ -117,8 +117,8 @@ class Lw_All_In_One_Admin {
     if (isset($input['wim_fields']['verification_status']) && isset($input['wim_fields']['save_wim_options']) && isset($input['wim_fields']['token']) && strlen($input['wim_fields']['token']) == 32) {
       $domain = clean_domain(get_option('siteurl', $_SERVER['HTTP_HOST']));
       $wim_settings_arr = array();
-      $wim_settings_arr['wim_fields']['verification_status'] = (isset($input['wim_fields']['verification_status'])) ? sanitize_text_field($input['wim_fields']['verification_status']) : "";
-      $wim_settings_arr['wim_fields']['token'] = (isset($input['wim_fields']['token'])) ? sanitize_text_field($input['wim_fields']['token']) : "";
+      $wim_settings_arr['wim_fields']['verification_status'] = sanitize_text_field($input['wim_fields']['verification_status']);
+      $wim_settings_arr['wim_fields']['token'] = sanitize_text_field($input['wim_fields']['token']);
       $wim_settings_arr['wim_fields']['rag_soc'] = (isset($input['wim_fields']['rag_soc'])) ? sanitize_text_field($input['wim_fields']['rag_soc']) : "";
       $wim_settings_arr['wim_fields']['auto_show_wim'] = (isset($input['wim_fields']['auto_show_wim'])) ? sanitize_text_field($input['wim_fields']['auto_show_wim']) : "SI";
       $wim_settings_arr['wim_fields']['show_wim_after'] = (isset($input['wim_fields']['show_wim_after'])) ? sanitize_text_field($input['wim_fields']['show_wim_after']) : "5";
@@ -217,20 +217,12 @@ class Lw_All_In_One_Admin {
     register_setting($this->plugin_name, $this->plugin_name, array($this, 'validate_lw_all_in_one_settings'));
   }
 
-  public function get_plugin_options($parent_key = false, $key) {
+  public function get_plugin_options($parent_key = false, $key = false) {
     $options = get_option($this->plugin_name);
     if ($parent_key !== false) {
-      if (isset($options[$parent_key][$key])) {
-        return $options[$parent_key][$key];
-      } else {
-        return '';
-      }
+	    return $options[ $parent_key ][ $key ] ?? '';
     } else {
-      if (isset($options[$key])) {
-        return $options[$key];
-      } else {
-        return '';
-      }
+	    return $options[ $key ] ?? '';
     }
   }
 
@@ -272,7 +264,7 @@ class Lw_All_In_One_Admin {
     }
   }
 
-  public function lw_all_in_one_is_base64($string) {
+  public function lw_all_in_one_is_base64($string): bool {
     return (bool) preg_match('/^[a-zA-Z0-9\/\r\n+]*={0,2}$/', $string);
   }
 

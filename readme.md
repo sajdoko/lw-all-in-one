@@ -1,25 +1,29 @@
-=== LocalWeb All In One ===
-Contributors: sajdoko
-Tags: localweb, local web, chat, wim, web instant messenger, aio
-Requires at least: 4.8.5
-Tested up to: 6.3
-Stable tag: 1.7.0
-Requires PHP: 7.4
-License: GPLv2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+# LocalWeb All In One WordPress Plugin
 
-== Description ==
-**LocalWeb All In One** is a WordPress plugin exclusively designed for Local Web S.R.L clients, seamlessly integrating Web Instant Messenger, Google Analytics, and Contact Form 7 functionalities to enhance your website's engagement and performance.
-LocalWeb All In One provides the following integrations:
+**Contributors:** sajdoko  
+**Tags:** localweb, local web, chat, wim, web instant messenger, aio  
+**Requires at least:** 4.8.5  
+**Tested up to:** 6.3  
+**Stable tag:** trunk  
+**Requires PHP:** 7.4  
+**License:** GPL-2.0+  
+**License URI:** [http://www.gnu.org/licenses/gpl-2.0.txt](http://www.gnu.org/licenses/gpl-2.0.txt)
 
-**Web Instant Messenger Integration:** This plugin embeds the script from [Web Instant Messenger](https://www.webinstantmessenger.it/) into the `wp_footer` section of your website. This script activates the Web Instant Messenger on your site. The external script is fetched from LocalWeb at `www.localweb.it/chat/widget/ultimate_chat_widget.js`, which constructs the chat window in the bottom right corner of your website. All chat interactions and information entered into the chat window are transmitted to [LocalWeb].
-**Google Analytics Integration:** The plugin facilitates integration with Google Analytics, including support for the latest Google Analytics 4 (GA4) and Google Tag Manager (GTM).
-**Contact Form 7 Integration:** Integration with Contact Form 7 is supported. The plugin provides options to customize the behavior of Contact Form 7 scripts and styles based on your needs.
+**LocalWeb All In One** is a WordPress plugin designed to enhance the functionality of websites created by Local Web S.R.L. It extends certain features of the website that may involve transmitting specific data to LocalWeb's servers. This facilitates the display of data on the LocalWeb App.
 
 > :warning: **Note:** This plugin utilizes services provided by [LocalWeb](https://localweb.it/ "Web Marketing Agency") and is exclusively intended for Local Web S.R.L clients.
 
+## Description
 
-For more information, updates, and support, please visit [LocalWeb's official website](https://localweb.it/).
+LocalWeb All In One provides the following integrations:
+
+- **Web Instant Messenger Integration:** This plugin embeds the script from [Web Instant Messenger](https://www.webinstantmessenger.it/) into the `wp_footer` section of your website. This script activates the Web Instant Messenger on your site. The external script is fetched from LocalWeb at `www.localweb.it/chat/widget/ultimate_chat_widget.js`, which constructs the chat window at the bottom right corner of your website. All chat interactions and information entered into the chat window are transmitted to [LocalWeb].
+
+- **Google Analytics Integration:** The plugin facilitates integration with Google Analytics, including support for the latest Google Analytics 4 (GA4) and Google Tag Manager (GTM).
+
+- **Contact Form 7 Integration:** Integration with Contact Form 7 is supported. The plugin provides options to customize the behavior of Contact Form 7 scripts and styles based on your needs.
+
+> :warning: **Note:** This plugin relies on services provided by [LocalWeb](https://localweb.it/ "Web Marketing Agency") and is solely intended for Local Web S.R.L clients.
 
 ## Installation
 
@@ -107,3 +111,5 @@ For more information, updates, and support, please visit [LocalWeb's official we
 
 ### 1.1.2
 - Initial version online.
+
+For more information, updates, and support, please visit [LocalWeb's official website](https://localweb.it/).
