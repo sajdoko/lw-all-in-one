@@ -5,7 +5,7 @@
 **Requires at least:** 4.8.5  
 **Tested up to:** 6.3  
 **Stable tag:** trunk  
-**Requires PHP:** 7.4  
+**Requires PHP:** 5.6  
 **License:** GPL-2.0+  
 **License URI:** [http://www.gnu.org/licenses/gpl-2.0.txt](http://www.gnu.org/licenses/gpl-2.0.txt)
 
@@ -34,7 +34,13 @@ LocalWeb All In One provides the following integrations:
 
 ## Changelog
 
-### 1.7
+### 1.7.2
+- Added backward compatibility down to PHP 5.6.
+
+### 1.7.1
+- Fixed error with str_contains() in older versions of PHP
+
+### 1.7.0
 - Added support for PHP v8.2.
 
 ### 1.6.9

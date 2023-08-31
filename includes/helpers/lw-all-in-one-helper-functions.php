@@ -1,7 +1,7 @@
 <?php
 
 if (!function_exists('clean_domain')) {
-  function clean_domain($domain): string {
+  function clean_domain($domain) {
     $clean = preg_replace('#^http(s)?://#', '', $domain);
     $clean = preg_replace('/^www\./', '', $clean);
     $clean_arr = explode("/", $clean);
@@ -17,7 +17,7 @@ if (!function_exists('clean_domain')) {
 }
 
 if (!function_exists('lw_all_in_one_validate_tracking_id')) {
-  function lw_all_in_one_validate_tracking_id($str): bool {
+  function lw_all_in_one_validate_tracking_id($str) {
     return (bool) preg_match('/^UA-\d+-\d+$|^G-[a-zA-Z0-9]+$|^GTM-[a-zA-Z0-9]+$|^AW-[a-zA-Z0-9]+$|^DC-[a-zA-Z0-9]+$/i', strval($str));
   }
 }

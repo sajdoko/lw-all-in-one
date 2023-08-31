@@ -24,7 +24,7 @@ class Lw_All_In_One_Privacy_Policy_Pages {
    * @access   private
    * @var      string    $plugin_name    The ID of this plugin.
    */
-  private string $plugin_name;
+  private $plugin_name;
 
   /**
    * The version of this plugin.

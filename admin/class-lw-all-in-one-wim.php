@@ -24,7 +24,7 @@ class Lw_All_In_One_Wim {
    * @access   private
    * @var      string    $plugin_name    The ID of this plugin.
    */
-  private string $plugin_name;
+  private $plugin_name;
 
   /**
    * The version of this plugin.
@@ -34,7 +34,7 @@ class Lw_All_In_One_Wim {
    */
   private $version;
 
-  private string $wim_veify_api_url = 'https://localweb.it/chat/api/cliente/verifica-plugin.php';
+  private $wim_veify_api_url = 'https://localweb.it/chat/api/cliente/verifica-plugin.php';
 
   /**
    * Initialize the class and set its properties.
@@ -42,7 +42,7 @@ class Lw_All_In_One_Wim {
    * @param  string  $plugin_name       The name of this plugin.
    * @param  string  $version    The version of this plugin.
    */
-  public function __construct( string $plugin_name, string $version) {
+  public function __construct( $plugin_name, $version) {
 
     $this->plugin_name = $plugin_name;
     $this->version = $version;
@@ -141,7 +141,7 @@ class Lw_All_In_One_Wim {
     }
   }
 
-  public function lw_all_in_one_old_wim_is_active_deactivate(): void {
+  public function lw_all_in_one_old_wim_is_active_deactivate(){
     if (is_plugin_active('web-instant-messenger/web-instant-messenger.php')) {
       delete_option('wim_activation_status');
       delete_option('web-instant-messenger');

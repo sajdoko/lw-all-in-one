@@ -3,8 +3,8 @@ Contributors: sajdoko
 Tags: localweb, local web, chat, wim, web instant messenger, aio
 Requires at least: 4.8.5
 Tested up to: 6.3
-Stable tag: 1.7.0
-Requires PHP: 7.4
+Stable tag: 1.7.2
+Requires PHP: 5.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,7 +30,13 @@ For more information, updates, and support, please visit [LocalWeb's official we
 
 ## Changelog
 
-### 1.7
+### 1.7.2
+- Added backward compatibility down to PHP 5.6.
+
+### 1.7.1
+- Fixed error with str_contains() in older versions of PHP.
+
+### 1.7.0
 - Added support for PHP v8.2.
 
 ### 1.6.9

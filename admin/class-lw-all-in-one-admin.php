@@ -24,7 +24,7 @@ class Lw_All_In_One_Admin {
    * @access   private
    * @var      string    $plugin_name    The ID of this plugin.
    */
-  private string $plugin_name;
+  private $plugin_name;
 
   /**
    * The version of this plugin.
@@ -32,7 +32,7 @@ class Lw_All_In_One_Admin {
    * @access   private
    * @var      string    $version    The current version of this plugin.
    */
-  private string $version;
+  private $version;
 
   /**
    * Initialize the class and set its properties.
@@ -40,24 +40,24 @@ class Lw_All_In_One_Admin {
    * @param  string  $plugin_name       The name of this plugin.
    * @param  string  $version    The version of this plugin.
    */
-  public function __construct( string $plugin_name, string $version) {
+  public function __construct( $plugin_name, $version) {
 
     $this->plugin_name = $plugin_name;
     $this->version = $version;
 
   }
 
-  public function enqueue_styles($hook): void {
-    if ( str_contains( $hook, 'page_lw_all_in_one' ) ) {
+  public function enqueue_styles($hook){
+    if (preg_match('/page_lw_all_in_one/', $hook)) {
       $min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
       wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/lw-all-in-one-admin'.$min.'.css', array(), $this->version, 'all');
     }
   }
 
-  public function enqueue_scripts($hook): void {
+  public function enqueue_scripts($hook){
     // echo $hook;
     // die();
-    if ( str_contains( $hook, 'page_lw_all_in_one' ) ) {
+    if (preg_match('/page_lw_all_in_one/', $hook)) {
       $min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
       wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/lw-all-in-one-admin'.$min.'.js', array('jquery', 'wp-i18n'), $this->version, false);
       wp_set_script_translations($this->plugin_name, LW_ALL_IN_ONE_PLUGIN_NAME);
@@ -219,12 +219,22 @@ class Lw_All_In_One_Admin {
 
   public function get_plugin_options($parent_key = false, $key = false) {
     $options = get_option($this->plugin_name);
+
     if ($parent_key !== false) {
-	    return $options[ $parent_key ][ $key ] ?? '';
+      if (isset($options[$parent_key]) && isset($options[$parent_key][$key])) {
+        return $options[$parent_key][$key];
+      } else {
+        return false;
+      }
     } else {
-	    return $options[ $key ] ?? '';
+      if (isset($options[$key])) {
+        return $options[$key];
+      } else {
+        return false;
+      }
     }
   }
+
 
   public function lw_all_in_one_header_scripts_from_tab() {
     //Plugin options
@@ -264,7 +274,7 @@ class Lw_All_In_One_Admin {
     }
   }
 
-  public function lw_all_in_one_is_base64($string): bool {
+  public function lw_all_in_one_is_base64($string) {
     return (bool) preg_match('/^[a-zA-Z0-9\/\r\n+]*={0,2}$/', $string);
   }
 
