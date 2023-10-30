@@ -32,6 +32,7 @@
       $ga_fields_monitor_email_link = (isset($options['ga_fields']['monitor_email_link'])) ? esc_attr($options['ga_fields']['monitor_email_link']) : '';
       $ga_fields_monitor_tel_link = (isset($options['ga_fields']['monitor_tel_link'])) ? esc_attr($options['ga_fields']['monitor_tel_link']) : '';
       $ga_fields_monitor_form_submit = (isset($options['ga_fields']['monitor_form_submit'])) ? esc_attr($options['ga_fields']['monitor_form_submit']) : '';
+      $ga_fields_monitor_woocommerce_data = (isset($options['ga_fields']['monitor_woocommerce_data'])) ? esc_attr($options['ga_fields']['monitor_woocommerce_data']) : '';
       $wim_activate = (isset($options['wim_activate'])) ? esc_attr($options['wim_activate']) : '';
       $wim_fields_verification_status = (isset($options['wim_fields']['verification_status'])) ? esc_attr($options['wim_fields']['verification_status']) : '';
       $wim_fields_token = (isset($options['wim_fields']['token'])) ? esc_attr($options['wim_fields']['token']) : '';
@@ -158,11 +159,6 @@
                           </td>
                         </tr>
                         <tr>
-                          <td colspan="2">
-                          <p style="padding-left: 1rem;font-style: italic;"><?php _e('<b>*</b> The options below work only for <code>UA-</code> or <code>G-</code> tracking codes!', LW_ALL_IN_ONE_PLUGIN_NAME);?></p>
-                          </td>
-                        </tr>
-                        <tr>
                           <td colspan="2" class="lw-aio-settings-title">
                             <div class="button-secondary lw-aio-settings-custom-switch">
                               <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][monitor_email_link]" class="lw-aio-settings-custom-switch-checkbox" id="monitor_email_link" <?php echo ($ga_fields_monitor_email_link === 'on') ? 'checked="checked"' : '';?>>
@@ -196,6 +192,18 @@
                               </label>
                             </div>
                             <div class="switch-desc"> <?php esc_attr_e('Track Contact Form submission', LW_ALL_IN_ONE_PLUGIN_NAME);?></div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="2" class="lw-aio-settings-title">
+                            <div class="button-secondary lw-aio-settings-custom-switch">
+                              <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ga_fields][monitor_woocommerce_data]" class="lw-aio-settings-custom-switch-checkbox" id="monitor_woocommerce_data" <?php echo ($ga_fields_monitor_woocommerce_data === 'on') ? 'checked="checked"' : '';?>>
+                              <label class="lw-aio-settings-custom-switch-label" for="monitor_woocommerce_data">
+                                <div class="lw-aio-settings-custom-switch-inner"></div>
+                                <div class="lw-aio-settings-custom-switch-switch"></div>
+                              </label>
+                            </div>
+                            <div class="switch-desc"> <?php esc_attr_e('Track WooCommerce data', LW_ALL_IN_ONE_PLUGIN_NAME);?></div>
                           </td>
                         </tr>
                       </tbody>

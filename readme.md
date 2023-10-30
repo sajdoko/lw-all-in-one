@@ -34,6 +34,12 @@ LocalWeb All In One provides the following integrations:
 
 ## Changelog
 
+### 1.7.4
+- Added analytics tracking functionalities for WooCommerce data.
+
+### 1.7.3
+- Added new Spanish language.
+
 ### 1.7.2
 - Added backward compatibility down to PHP 5.6.
 

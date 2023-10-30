@@ -99,6 +99,7 @@ class Lw_All_In_One_Admin {
       $valid['ga_fields']['monitor_email_link'] = $this->get_plugin_options('ga_fields', 'monitor_email_link');
       $valid['ga_fields']['monitor_tel_link'] = $this->get_plugin_options('ga_fields', 'monitor_tel_link');
       $valid['ga_fields']['monitor_form_submit'] = $this->get_plugin_options('ga_fields', 'monitor_form_submit');
+      $valid['ga_fields']['monitor_woocommerce_data'] = $this->get_plugin_options('ga_fields', 'monitor_woocommerce_data');
       add_settings_error(
         $this->plugin_name,
         $this->plugin_name . '_ga_fields_tracking_id_not_valid',
@@ -110,6 +111,7 @@ class Lw_All_In_One_Admin {
       $valid['ga_fields']['monitor_email_link'] = (isset($input['ga_fields']['monitor_email_link']) && $input['ga_fields']['monitor_email_link'] === 'on') ? 'on' : '';
       $valid['ga_fields']['monitor_tel_link'] = (isset($input['ga_fields']['monitor_tel_link']) && $input['ga_fields']['monitor_tel_link'] === 'on') ? 'on' : '';
       $valid['ga_fields']['monitor_form_submit'] = (isset($input['ga_fields']['monitor_form_submit']) && $input['ga_fields']['monitor_form_submit'] === 'on') ? 'on' : '';
+      $valid['ga_fields']['monitor_woocommerce_data'] = (isset($input['ga_fields']['monitor_woocommerce_data']) && $input['ga_fields']['monitor_woocommerce_data'] === 'on') ? 'on' : '';
     }
 
     $valid['wim_activate'] = (isset($input['wim_activate']) && $input['wim_activate'] === 'on') ? 'on' : '';
@@ -320,6 +322,7 @@ class Lw_All_In_One_Admin {
           'monitor_email_link' => '',
           'monitor_tel_link' => '',
           'monitor_form_submit' => '',
+          'monitor_woocommerce_data' => '',
         ),
         'wim_activate' => '',
         'wim_fields' => array(

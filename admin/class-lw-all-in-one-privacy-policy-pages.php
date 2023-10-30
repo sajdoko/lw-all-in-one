@@ -76,10 +76,28 @@ class Lw_All_In_One_Privacy_Policy_Pages {
 
       $date = date('d-m-Y', time());
       $domain = get_option('siteurl', $_SERVER['HTTP_HOST']);
+      $site_lang = get_locale();
       $create_pages_resposes = array();
       $created_pages_save_option = array();
 
       if ($create_cookie_page) {
+        if ($site_lang == 'es_ES') {
+          $page_cookie = get_page_by_path('las-cookies-que-utilizamos');
+          $post_title = "Las cookies que utilizamos";
+
+          $url = $domain . '/las-cookies-que-utilizamos/';
+          $text = 'Este sitio utiliza cookies, incluso de terceros, para permitir una mejor experiencia de navegación y el correcto funcionamiento de las páginas web. Para saber más, cambiar la configuración, dar consentimiento solo para algunos usos o eliminar las cookies de su navegador una vez instalado, haga clic <a href="/las-cookies-que-utilizamos/">aquí</a>. Al continuar navegando, viendo el contenido relativo o accediendo a cualquier elemento colocado fuera de este banner, el visitante consiente expresamente el uso de cookies y tecnologías similares.';
+          $button_text = "Acepto";
+          $cookie_file = file_get_contents( plugin_dir_path(dirname(__FILE__)) . 'admin/privacy-pages/cookie-es_ES.html');
+        } else {
+          $page_cookie = get_page_by_path('cookie-policy');
+          $post_title = "Cookie Policy";
+
+          $url = $domain . '/cookie-policy/';
+          $text = 'Questo sito utilizza cookies, anche di terze parti per consentire una migliore esperienza di navigazione ed un corretto funzionamento delle pagine web. Per saperne di più, per modificare le impostazioni, per prestare il consenso solo ad alcuni utilizzi o per rimuovere i cookies dal proprio browser una volta installati cliccare <a href="/cookie-policy/">qui</a>. Con la prosecuzione della navigazione, visualizzando il relativo contenuto, o accedendo a un qualunque elemento posto all’esterno di questo banner, il visitatore acconsente espressamente all’uso dei cookie e delle tecnologie similari.';
+          $button_text = "Accetto";
+          $cookie_file = file_get_contents( plugin_dir_path(dirname(__FILE__)) . 'admin/privacy-pages/cookie-it_IT.html');
+        }
         include_once 'privacy-pages/cookie.php';
         if ($create_pages_resposes['cookie-policy']['status'] == 'success') {
           $created_pages_save_option['cookie-policy'] = array(
@@ -88,7 +106,18 @@ class Lw_All_In_One_Privacy_Policy_Pages {
           );
         }
       }
+
       if ($create_privacy_page) {
+        if ($site_lang == 'es_ES') {
+          $post_title = "Información Sobre El Tratamiento De Datos Personales";
+          $page_policy = get_page_by_path('informacion-sobre-el-tratamiento-de-datos-personales');
+          $policy_file = file_get_contents( plugin_dir_path(dirname(__FILE__)) . 'admin/privacy-pages/privacy-policy-es_ES.html');
+        } else {
+          $post_title = "Informativa sul trattamento dei dati personali";
+          $page_policy = get_page_by_path('informativa-sul-trattamento-dei-dati-personali');
+          $policy_file = file_get_contents( plugin_dir_path(dirname(__FILE__)) . 'admin/privacy-pages/privacy-policy-it_IT.html');
+        }
+
         include_once 'privacy-pages/privacy.php';
         if ($create_pages_resposes['informativa-sul-trattamento-dei-dati-personali']['status'] == 'success') {
           $created_pages_save_option['informativa-sul-trattamento-dei-dati-personali'] = array(
@@ -97,7 +126,19 @@ class Lw_All_In_One_Privacy_Policy_Pages {
           );
         }
       }
+
       if ($create_info_dati_page) {
+
+        if ($site_lang == 'es_ES') {
+          $post_title = "Informacion sobre el tratamiento de datos";
+          $page_contact = get_page_by_path('informacion-sobre-el-tratamiento-de-datos');
+          $contact_file = file_get_contents( plugin_dir_path(dirname(__FILE__)) . 'admin/privacy-pages/contact-es_ES.html');
+        } else {
+          $post_title = "Informativa trattamento dati";
+          $page_contact = get_page_by_path('informativa-trattamento-dati');
+          $contact_file = file_get_contents( plugin_dir_path(dirname(__FILE__)) . 'admin/privacy-pages/contact-it_IT.html');
+        }
+
         include_once 'privacy-pages/contact.php';
         if ($create_pages_resposes['informativa-trattamento-dati']['status'] == 'success') {
           $created_pages_save_option['informativa-trattamento-dati'] = array(
@@ -106,6 +147,7 @@ class Lw_All_In_One_Privacy_Policy_Pages {
           );
         }
       }
+
       $exiting_option = get_option($this->plugin_name . '_privacy_pages');
       if ($exiting_option) {
         $created_pages_save_option = array_merge($exiting_option, $created_pages_save_option);

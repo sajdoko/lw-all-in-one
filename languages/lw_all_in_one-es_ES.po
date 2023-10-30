@@ -2,10 +2,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LocalWeb All In One\n"
 "POT-Creation-Date: 2020-03-03 17:13+0100\n"
-"PO-Revision-Date: 2023-09-01 17:17+0200\n"
+"PO-Revision-Date: 2023-09-04 10:06+0200\n"
 "Last-Translator: Sajmir Doko <sajdoko@gmail.com>\n"
 "Language-Team: sajdoko <sajmir.doko@localweb.it>\n"
-"Language: it\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -21,28 +21,28 @@ msgstr ""
 
 #: admin/class-lw-all-in-one-admin.php:75
 msgid "LocalWeb All In One Options"
-msgstr "LocalWeb All in One Opzioni"
+msgstr "Opciones AIO LocalWeb"
 
 #: admin/class-lw-all-in-one-admin.php:75
 msgid "LW AIO Options"
-msgstr "Opzioni LW AIO"
+msgstr "Opciones LW AIO"
 
 #: admin/class-lw-all-in-one-admin.php:85
 msgid "Settings"
-msgstr "Impostazioni"
+msgstr "Ajustes"
 
 #: admin/class-lw-all-in-one-admin.php:103
 msgid "Tracking ID is NOT valid!"
-msgstr "Tracking ID NON è valido!"
+msgstr "¡El ID de seguimiento NO es válido!"
 
 #: admin/class-lw-all-in-one-admin.php:154
 msgid "Something went wrong: "
-msgstr "Qualcosa è andato storto: "
+msgstr "Algo salió mal: "
 
 #: admin/class-lw-all-in-one-admin.php:164
 #: admin/class-lw-all-in-one-admin.php:172
 msgid "Invalid response from API server!"
-msgstr "Risposta non valida dal server API!"
+msgstr "¡Respuesta no válida del servidor API!"
 
 #: admin/class-lw-all-in-one-admin.php:189
 #, php-format
@@ -50,8 +50,8 @@ msgid ""
 "Contact Form 7 plugin is not installed! <a href=\"%s\" title=\"Contact Form "
 "7\">Install It Now!</a>"
 msgstr ""
-"Il plug-in Contact Form 7 non è installato! <a href=\"%s\" title=\"Contact "
-"Form 7\">Installalo adesso!</a>"
+"¡El complemento Formulario de contacto 7 no está instalado! <a href=\"%s\" "
+"title=\"Contact Form 7\">¡Instalalo además!</a>"
 
 #: admin/class-lw-all-in-one-admin.php:196
 #, php-format
@@ -59,13 +59,13 @@ msgid ""
 "Contact Form 7 plugin is not activated! <a href=\"%s\" title=\"Contact Form "
 "7\">Activate It Now!</a>"
 msgstr ""
-"Il plug-in Contact Form 7 non è attivato! <a href=\"%s\" title=\"Contact "
-"Form 7\">Attivalo ora!</a>"
+"¡El complemento Contact Form 7 no está activado! <a href=\"%s\" "
+"title=\"Contact Form 7\">¡Actívalo ahora!</a>"
 
 #: admin/class-lw-all-in-one-admin.php:305
 #, php-format
 msgid " | Version %s"
-msgstr " | Versione %s"
+msgstr " | Versión %s"
 
 #: admin/class-lw-all-in-one-admin.php:331
 #: admin/class-lw-all-in-one-ga-events.php:139
@@ -74,19 +74,19 @@ msgstr " | Versione %s"
 #: admin/class-lw-all-in-one-wim.php:56
 #: public/class-lw-all-in-one-public.php:87
 msgid "Security is not valid!"
-msgstr "Sicurezza non è valida!"
+msgstr "¡La seguridad no es válida!"
 
 #: admin/class-lw-all-in-one-admin.php:421
 msgid "Options were reset to defaults!"
-msgstr "Le opzioni sono state ripristinate ai valori predefiniti!"
+msgstr "¡Las opciones se restablecieron a los valores predeterminados!"
 
 #: admin/class-lw-all-in-one-cf7.php:52
 msgid "Saved Contact Form Submissions"
-msgstr "Moduli di contatto inviati e salvati"
+msgstr "Envíos de formularios de contacto guardados"
 
 #: admin/class-lw-all-in-one-cf7.php:52
 msgid "Saved CF7"
-msgstr "CF7 Salvati"
+msgstr "CF7 Guardado"
 
 #: admin/class-lw-all-in-one-cf7.php:158
 #, php-format
@@ -94,49 +94,49 @@ msgid ""
 "You have activated Contact Form 7 Addon but Packet Type and/or Packet Id "
 "seems to be missing. <a href=\"%s\" title=\"Fix it Now\">Fix it Now.</a>"
 msgstr ""
-"Il componente aggiuntivo Contact Form 7 è stato attivato ma il Tipo "
-"Pacchetto e / o l&#39;ID Pacchetto sembrano mancare. <a href=\"%s\" "
-"title=\"Sistemalo ora\">Sistemalo ora.</a>"
+"Ha activado el complemento Contact Form 7 pero parece que falta el tipo de "
+"paquete y/o el ID del paquete. <a href=\"%s\" title=\"Sistemalo "
+"ora\">Arréglalo ahora.</a>"
 
 #: admin/class-lw-all-in-one-cf7.php:178
 msgid "Number of records per page:"
-msgstr "Numero di voci per pagina:"
+msgstr "Número de registros por página:"
 
 #: admin/class-lw-all-in-one-ga-events.php:51
 msgid "Saved Google Analytics Events"
-msgstr "Eventi Google Analytics salvati"
+msgstr "Eventos guardados de Google Analytics"
 
 #: admin/class-lw-all-in-one-ga-events.php:51
 msgid "Saved GA Events"
-msgstr "Eventi GA salvati"
+msgstr "Eventos GA guardados"
 
 #: admin/class-lw-all-in-one-ga-events.php:156
 msgid "Invalid selector!"
-msgstr "Selettore non valido!"
+msgstr "¡Selector no válido!"
 
 #: admin/class-lw-all-in-one-ga-events.php:160
 msgid "Invalid category!"
-msgstr "Categoria non valida!"
+msgstr "¡Categoría no válida!"
 
 #: admin/class-lw-all-in-one-ga-events.php:164
 msgid "Invalid action!"
-msgstr "Azione non valida!"
+msgstr "¡Acción no válida!"
 
 #: admin/class-lw-all-in-one-ga-events.php:179
 msgid "Event added successfully!"
-msgstr "L&#39;evento è stato aggiunto con successo!"
+msgstr "¡Evento agregado exitosamente!"
 
 #: admin/class-lw-all-in-one-ga-events.php:182
 msgid "Event couldn't be saved!"
-msgstr "L&#39;evento non può essere salvato!"
+msgstr "¡El evento no se pudo guardar!"
 
 #: admin/class-lw-all-in-one-ga-events.php:199
 msgid "Event removed successfully!"
-msgstr "L&#39;evento rimosso correttamente!"
+msgstr "¡Evento eliminado exitosamente!"
 
 #: admin/class-lw-all-in-one-ga-events.php:202
 msgid "Event couldn't be removed!"
-msgstr "L&#39;evento non può essere rimosso!"
+msgstr "¡El evento no se pudo eliminar!"
 
 #: admin/class-lw-all-in-one-ga-events.php:220
 #, php-format
@@ -145,10 +145,10 @@ msgid ""
 "Integration</strong> to better track your store events. <a href=\"%s\" "
 "title=\"WooCommerce Google Analytics Integration\">Install Now!</a>"
 msgstr ""
-"Hai Woocommerce attivo. Installa <strong>WooCommerce Google Analytics "
-"Integration</strong> per monitorare meglio gli eventi del tuo negozio. <a "
-"href=\"%s\" title=\"WooCommerce Google Analytics Integration\">Installa ora!"
-"</a>"
+"Tienes Woocommerce activo. Instale la <strong>integración de Google "
+"Analytics de WooCommerce</strong> para realizar un mejor seguimiento de los "
+"eventos de su tienda. <a href=\"%s\" title=\"Integración de WooCommerce "
+"Google Analytics\">¡Instalar ahora!</a>"
 
 #: admin/class-lw-all-in-one-ga-events.php:222
 #, php-format
@@ -157,133 +157,133 @@ msgid ""
 "Integration</strong> to better track your store events. <a href=\"%s\" "
 "title=\"WooCommerce Google Analytics Integration\">Activate Now!</a>"
 msgstr ""
-"Hai Woocommerce attivo. Installa <strong>WooCommerce Google Analytics "
-"Integration</strong> per monitorare meglio gli eventi del tuo negozio. <a "
-"href=\"%s\" title=\"WooCommerce Google Analytics Integration\">Attivare ora!"
-"</a>"
+"Tienes Woocommerce activo. Instale la <strong>integración de Google "
+"Analytics de WooCommerce</strong> para realizar un mejor seguimiento de los "
+"eventos de su tienda. <a href=\"%s\" title=\"Integración de WooCommerce "
+"Google Analytics\">¡Active ahora!</a>"
 
 #: admin/class-lw-all-in-one-ga-events.php:235
 msgid "Number of records per page"
-msgstr "Numero di voci per pagina"
+msgstr "Número de registros por página"
 
 #: admin/class-lw-all-in-one-privacy-policy-pages.php:51
 msgid "LocalWeb Privacy&Policy Pages Options"
-msgstr "LocalWeb opzioni delle pagine Privacy&Policy"
+msgstr "Opciones de páginas de política y privacidad de Local Web Iberia"
 
 #: admin/class-lw-all-in-one-privacy-policy-pages.php:51
 msgid "Privacy&Policy Pages"
-msgstr "Pagine Privacy&Policy"
+msgstr "Páginas de política de privacidad"
 
 #: admin/class-lw-all-in-one-privacy-policy-pages.php:117
 #: admin/class-lw-all-in-one-wim.php:97
 #: public/class-lw-all-in-one-public.php:108
 msgid "Action is not valid!"
-msgstr "L&#39;azione non è valida!"
+msgstr "¡La acción no es válida!"
 
 #: admin/class-lw-all-in-one-wim.php:76
 msgid "Something went wrong!"
-msgstr "Qualcosa è andato storto!"
+msgstr "¡Algo salió mal!"
 
 #: admin/class-lw-all-in-one-wim.php:80
 msgid "WIM authorized but token returned was empty!"
-msgstr "WIM Autorizzato ma il token restituito era vuoto!"
+msgstr "¡WIM autorizado pero el token devuelto estaba vacío!"
 
 #: admin/class-lw-all-in-one-wim.php:83
 msgid "Web Instant Messenger authorized!"
-msgstr "Web Instant Messenger autorizzato!"
+msgstr "Web Instant Messenger autorizado!"
 
 #: admin/class-lw-all-in-one-wim.php:86
 msgid "There was an unknown error!"
-msgstr "Si è verificato un errore sconosciuto!"
+msgstr "¡Hubo un error desconocido!"
 
 #: admin/class-lw-all-in-one-wim.php:93
 msgid "Not a valid response!"
-msgstr "Non è una risposta valida!"
+msgstr "¡No es una respuesta válida!"
 
 #: admin/class-lw-all-in-one-wim.php:126
 msgid "WIM not activated!"
-msgstr "WIM non attivato!"
+msgstr "WIM no activado!"
 
 #: admin/class-lw-all-in-one-wim.php:130
 msgid "WIM not verified!"
-msgstr "WIM non verificato!"
+msgstr "WIM no verificado!"
 
 #: admin/class-lw-all-in-one-wim.php:134
 msgid "Missing business name!"
-msgstr "Nome dell&#39;azienda mancante!"
+msgstr "¡Falta el nombre del negocio!"
 
 #: admin/class-lw-all-in-one-wim.php:138
 msgid "WIM installed!"
-msgstr "WIM installato!"
+msgstr "¡WIM instalado!"
 
 #: admin/partials/lw-all-in-one-admin-cf7-display.php:42
 #: admin/partials/lw-all-in-one-admin-ga-events-display.php:42
 #, php-format
 msgid "Search results for &#8220;%s&#8221;"
-msgstr "Cerca risultati per &#8220;%s&#8221;"
+msgstr "Resultados de la búsqueda para &#8220;%s&#8221;"
 
 #: admin/partials/lw-all-in-one-admin-cf7-display.php:50
 #: admin/partials/lw-all-in-one-admin-ga-events-display.php:50
 msgid "Search Records"
-msgstr "Cerca nei record"
+msgstr "Buscar Registros"
 
 #: admin/partials/lw-all-in-one-admin-cf7-display.php:110
 msgid "Subject"
-msgstr "Oggetto"
+msgstr "Sujeto"
 
 #: admin/partials/lw-all-in-one-admin-cf7-display.php:111
 #: admin/partials/lw-all-in-one-admin-ga-events-display.php:118
 msgid "Date"
-msgstr "Data"
+msgstr "Fecha"
 
 #: admin/partials/lw-all-in-one-admin-cf7-display.php:112
 msgid "Name"
-msgstr "Nome"
+msgstr "Nombre"
 
 #: admin/partials/lw-all-in-one-admin-cf7-display.php:113
 msgid "Surname"
-msgstr "Cognome"
+msgstr "Apellido"
 
 #: admin/partials/lw-all-in-one-admin-cf7-display.php:114
 msgid "Email"
-msgstr "E-mail"
+msgstr "Email"
 
 #: admin/partials/lw-all-in-one-admin-cf7-display.php:115
 msgid "Phone"
-msgstr "Telefono"
+msgstr "Teléfono"
 
 #: admin/partials/lw-all-in-one-admin-cf7-display.php:183
 #: admin/partials/lw-all-in-one-admin-ga-events-display.php:185
 msgid "Delete"
-msgstr "Cancella"
+msgstr "Borrar"
 
 #: admin/partials/lw-all-in-one-admin-cf7-display.php:191
 #: admin/partials/lw-all-in-one-admin-cf7-display.php:199
 #: admin/partials/lw-all-in-one-admin-ga-events-display.php:193
 #: admin/partials/lw-all-in-one-admin-ga-events-display.php:198
 msgid "Not valid request!"
-msgstr "Richiesta non valida!"
+msgstr "¡Solicitud no válida!"
 
 #: admin/partials/lw-all-in-one-admin-cf7-display.php:214
 #: admin/partials/lw-all-in-one-admin-ga-events-display.php:213
 msgid "No records found in the database."
-msgstr "Nessun record trovato nel database."
+msgstr "No se encontraron registros en la base de datos."
 
 #: admin/partials/lw-all-in-one-admin-display.php:79
 msgid "Activate Services"
-msgstr "Attiva I Servizi"
+msgstr "Activar Servicios"
 
 #: admin/partials/lw-all-in-one-admin-display.php:91
 msgid "Activate Google Analytics?"
-msgstr "Attivare Google Analytics?"
+msgstr "¿Activar Google Analytics?"
 
 #: admin/partials/lw-all-in-one-admin-display.php:103
 msgid "Activate Web Instant Messenger?"
-msgstr "Attivare Web Instant Messenger?"
+msgstr "¿Activar Web Instant Messenger?"
 
 #: admin/partials/lw-all-in-one-admin-display.php:115
 msgid "Activate LocalWeb Contact Form 7?"
-msgstr "Attivare LocalWeb Contact Form 7?"
+msgstr "¿Activar el formulario de contacto 7 de LocalWeb?"
 
 #: admin/partials/lw-all-in-one-admin-display.php:126
 msgid "Google Analytics"
@@ -303,86 +303,85 @@ msgstr "Script Header/Footer"
 
 #: admin/partials/lw-all-in-one-admin-display.php:130
 msgid "Plugin Options"
-msgstr "Opzioni Plugin"
+msgstr "Opciones de complemento"
 
 #: admin/partials/lw-all-in-one-admin-display.php:139
 msgid "Google Analytics Options"
-msgstr "Opzioni Google Analytics"
+msgstr "Opciones de Google Analytics"
 
 #: admin/partials/lw-all-in-one-admin-display.php:158
 msgid "Save Google Analytics events locally on the database?"
-msgstr "Salvare gli eventi di Google Analytics localmente sul database?"
+msgstr "¿Guardar eventos de Google Analytics localmente en la base de datos?"
 
 #: admin/partials/lw-all-in-one-admin-display.php:170
 msgid "Track Email link clicks"
-msgstr "Traccia i clic sui link delle email"
+msgstr "Seguimiento de clics en enlaces de correo electrónico"
 
 #: admin/partials/lw-all-in-one-admin-display.php:182
 msgid "Track Telephone link clicks"
-msgstr "Traccia i clic del collegamento telefonico"
+msgstr "Seguimiento de clics en enlaces telefónicos"
 
 #: admin/partials/lw-all-in-one-admin-display.php:194
 msgid "Track Contact Form submission"
-msgstr "Traccia l&#39;invio del modulo di contatto"
+msgstr "Seguimiento del envío del formulario de contacto"
 
 #: admin/partials/lw-all-in-one-admin-display.php:208
 msgid "Track "
-msgstr "Traccia "
+msgstr "Seguimiento "
 
 #: admin/partials/lw-all-in-one-admin-display.php:223
 msgid "Add Custom Tracking Event"
-msgstr "Aggiungi evento di tracciamento personalizzato"
+msgstr "Agregar evento de seguimiento personalizado"
 
 #: admin/partials/lw-all-in-one-admin-display.php:227
 msgid "Event Name:"
-msgstr "Nome dell'evento:"
+msgstr "Nombre del evento:"
 
 #: admin/partials/lw-all-in-one-admin-display.php:235
 msgid "Event Selector:"
-msgstr "Selettore dell'evento:"
+msgstr "Selector de eventos:"
 
 #: admin/partials/lw-all-in-one-admin-display.php:239
 msgid "Allowed only classes and ids"
-msgstr "Consentiti solo classi e id"
+msgstr "Solo se permiten clases e identificaciones"
 
 #: admin/partials/lw-all-in-one-admin-display.php:244
 msgid "Event Category:"
-msgstr "Categoria dell'evento:"
+msgstr "Categoría de evento:"
 
 #: admin/partials/lw-all-in-one-admin-display.php:252
 msgid "Event Action:"
-msgstr "Azione dell'evento:"
+msgstr "Acción del evento:"
 
 #: admin/partials/lw-all-in-one-admin-display.php:260
 msgid "Event Label:"
-msgstr "Etichetta dell'evento:"
+msgstr "Etiqueta del evento:"
 
 #: admin/partials/lw-all-in-one-admin-display.php:270
 msgid "Add Event"
-msgstr "Aggiungi Evento"
+msgstr "Añadir evento"
 
 #: admin/partials/lw-all-in-one-admin-display.php:284
 msgid "Web Instant Messenger Options"
-msgstr "Opzioni di Web Instant Messenger"
+msgstr "Opciones de Web Instant Messenger"
 
 #: admin/partials/lw-all-in-one-admin-display.php:289
 msgid "Business Name"
-msgstr "Nome Azienda/Ragione Sociale"
+msgstr "Nombre del Negocio"
 
 #: admin/partials/lw-all-in-one-admin-display.php:295
 msgid "Insert here your business name which will appear on the chat header"
 msgstr ""
-"Inserisci qui il nome della tua attività che comparirà nell&#39;intestazione "
-"della chat"
+"Inserta aquí el nombre de tu empresa que aparecerá en el encabezado del chat"
 
 #: admin/partials/lw-all-in-one-admin-display.php:300
 msgid "Auto show WIM"
-msgstr "Aprire automaticamente WIM"
+msgstr "¿Mostrar automáticamente WIM"
 
 #: admin/partials/lw-all-in-one-admin-display.php:304
 #: admin/partials/lw-all-in-one-admin-display.php:330
 msgid "YES"
-msgstr "SÌ"
+msgstr "SÍ"
 
 #: admin/partials/lw-all-in-one-admin-display.php:305
 #: admin/partials/lw-all-in-one-admin-display.php:331
@@ -391,7 +390,7 @@ msgstr "NO"
 
 #: admin/partials/lw-all-in-one-admin-display.php:311
 msgid "Auto show WIM after"
-msgstr "Aprire automaticamente WIM dopo"
+msgstr "Mostrar automáticamente WIM después"
 
 #: admin/partials/lw-all-in-one-admin-display.php:315
 msgid "5s"
@@ -419,11 +418,11 @@ msgstr "64s"
 
 #: admin/partials/lw-all-in-one-admin-display.php:326
 msgid "Show On Mobile"
-msgstr "Mostra su dispositivi mobile"
+msgstr "Mostrar en el móvil"
 
 #: admin/partials/lw-all-in-one-admin-display.php:337
 msgid "Language"
-msgstr "Lingua"
+msgstr "Idioma"
 
 #: admin/partials/lw-all-in-one-admin-display.php:341
 msgid "IT"
@@ -435,27 +434,29 @@ msgstr "EN"
 
 #: admin/partials/lw-all-in-one-admin-display.php:348
 msgid "Automatic Message 0"
-msgstr "Messaggio automatico 0"
+msgstr "Mensaje automático 0"
 
 #: admin/partials/lw-all-in-one-admin-display.php:356
 msgid "Automatic Message 1"
-msgstr "Messaggio automatico 1"
+msgstr "Mensaje automático 1"
 
 #: admin/partials/lw-all-in-one-admin-display.php:384
 msgid "Verify Activation"
-msgstr "Verifica attivazione"
+msgstr "Verificar activación"
 
 #: admin/partials/lw-all-in-one-admin-display.php:393
 msgid "Contact Form 7 Addon Options"
-msgstr "Opzioni Contact Form 7 Addon"
+msgstr "Opciones adicionales del formulario de contacto 7"
 
 #: admin/partials/lw-all-in-one-admin-display.php:404
 msgid "Save Contact Form 7 submissions locally on the database?"
-msgstr "Salvare gli invii del modulo di contatto 7 localmente sul database?"
+msgstr ""
+"¿Guardar los envíos del Formulario de contacto 7 localmente en la base de "
+"datos?"
 
 #: admin/partials/lw-all-in-one-admin-display.php:409
 msgid "Packet Type"
-msgstr "Tipo pacchetto"
+msgstr "Tipo de paquete"
 
 #: admin/partials/lw-all-in-one-admin-display.php:414
 msgid "Go Start"
@@ -471,130 +472,129 @@ msgstr "Go Web"
 
 #: admin/partials/lw-all-in-one-admin-display.php:422
 msgid "Packet Id"
-msgstr "ID pacchetto"
+msgstr "ID del paquete"
 
 #: admin/partials/lw-all-in-one-admin-display.php:436
 msgid ""
 "<b>*</b><code>HTML, JS, CSS</code> code is allowed. <b>Be careful</b> what "
 "you insert here because it may break the website!"
 msgstr ""
-"<b>*</b> È consentito il codice <code>HTML, JS, CSS</code> . <b>Fai "
-"attenzione a</b> ciò che inserisci qui perché potrebbe rompere il sito Web!"
+"<b>*</b>Se permite el código <code>HTML, JS, CSS</code>. <b>Ten cuidado</b> "
+"con lo que insertas aquí porque puede dañar el sitio web"
 
 #: admin/partials/lw-all-in-one-admin-display.php:441
 msgid "Scripts in header:"
-msgstr "Script nell header:"
+msgstr "Guiones en el encabezado:"
 
 #: admin/partials/lw-all-in-one-admin-display.php:443
 msgid ""
 "Above script will be inserted into the <code>&lt;head&gt;</code> section."
 msgstr ""
-"Lo script sopra verrà inserito nella sezione <code>&lt;head&gt;</code> ."
+"El script anterior se insertará en la sección <code>&lt;head&gt;</code>."
 
 #: admin/partials/lw-all-in-one-admin-display.php:446
 msgid "Scripts in footer:"
-msgstr "Script nel footer:"
+msgstr "Guiones en pie de página:"
 
 #: admin/partials/lw-all-in-one-admin-display.php:448
 msgid ""
 "Above script will be inserted just before <code>&lt;/body&gt;</code> tag "
 "using <code>wp_footer</code> hook."
 msgstr ""
-"Lo script sopra verrà inserito poco prima del <code>&lt;/body&gt;</code> "
-"usando <code>wp_footer</code> hook ."
+"El script anterior se insertará justo antes de la etiqueta <code>&lt;/"
+"body&gt;</code> usando el gancho <code>wp_footer</code>."
 
 #: admin/partials/lw-all-in-one-admin-display.php:458
 msgid "General Options"
-msgstr "Opzioni generali"
+msgstr "Opciones generales"
 
 #: admin/partials/lw-all-in-one-admin-display.php:463
 msgid "Reset Plugin Options"
-msgstr "Ripristina opzioni del plugin"
+msgstr "Restablecer opciones de complemento"
 
 #: admin/partials/lw-all-in-one-admin-display.php:463
 msgid "Reset"
-msgstr "Ripristina"
+msgstr "Reiniciar"
 
 #: admin/partials/lw-all-in-one-admin-display.php:465
 msgid "<b>Reset Plugin Options!</b> "
-msgstr "<b>Ripristina opzioni del plugin!</b> "
+msgstr "<b>¡Restablecer opciones de complemento!</b> "
 
 #: admin/partials/lw-all-in-one-admin-display.php:465
 msgid "Revert to default plugin options."
-msgstr "Ripristina le opzioni predefinite del plugin."
+msgstr "Vuelva a las opciones de complemento predeterminadas."
 
 #: admin/partials/lw-all-in-one-admin-display.php:477
 msgid "<b>Delete saved data on plugin uninstall?</b> "
-msgstr ""
-"<b>Eliminare i dati salvati durante la disinstallazione del plugin?</b> "
+msgstr "<b>¿Eliminar los datos guardados al desinstalar el complemento?</b> "
 
 #: admin/partials/lw-all-in-one-admin-display.php:477
 msgid ""
 "If selected, saved Google Analytics events, saved Contact Form 7 submissions "
 "and Plugin options will be permanently deleted! "
 msgstr ""
-"Se selezionato, gli eventi di Google Analytics salvati, gli invii del modulo "
-"di contatto salvati e le opzioni del plug-in verranno eliminati in modo "
-"permanente! "
+"Si se selecciona, los eventos guardados de Google Analytics, los envíos "
+"guardados del Formulario de contacto 7 y las opciones de complementos se "
+"eliminarán permanentemente"
 
 #: admin/partials/lw-all-in-one-admin-display.php:489
 msgid ""
 "<b>Enable a daily cron job to delete saved data on the database older than "
 "14 days?</b> "
 msgstr ""
-"<b>Abilitare un cron job giornaliero per eliminare i dati salvati sul "
-"database più vecchi di 14 giorni?</b> "
+"<b>¿Habilitar una tarea cron diaria para eliminar datos guardados en la base "
+"de datos con más de 14 días de antigüedad?</b> "
 
 #: admin/partials/lw-all-in-one-admin-display.php:489
 msgid ""
 "Saved Contact Form 7 submissions older than 14 days will be permanently "
 "deleted!"
 msgstr ""
-"Moduli di contatti salvati più vecchi di 14 giorni verranno eliminati "
-"definitivamente!"
+"¡Los envíos del Formulario de contacto 7 guardados con más de 14 días de "
+"antigüedad se eliminarán permanentemente!"
 
 #: admin/partials/lw-all-in-one-admin-display.php:511
 msgid "Save Options"
-msgstr "Salva Opzioni"
+msgstr "Guardar Opciones"
 
 #: admin/partials/lw-all-in-one-admin-ga-events-display.php:115
 msgid "Category"
-msgstr "Categoria"
+msgstr "Categoría"
 
 #: admin/partials/lw-all-in-one-admin-ga-events-display.php:116
 msgid "Action"
-msgstr "Azione"
+msgstr "Acción"
 
 #: admin/partials/lw-all-in-one-admin-ga-events-display.php:117
 msgid "Label"
-msgstr "Etichetta"
+msgstr "Etiqueta"
 
 #: admin/partials/lw-all-in-one-admin-privacy-policy-display.php:30
 msgid "WARNING!"
-msgstr "ATTENZIONE!"
+msgstr "¡ADVERTENCIA!"
 
 #: admin/partials/lw-all-in-one-admin-privacy-policy-display.php:32
 msgid ""
 "Use this section only if this website's domain is registered by <b>LocalWeb "
 "Srl</b>."
 msgstr ""
-"Utilizzare questa sezione solo se il dominio di questo sito web è registrato "
-"da <b>Local Web Srl</b> ."
+"Utilice esta sección sólo si el dominio de este sitio web está registrado "
+"por <b>Local Web Iberia Sl</b>."
 
 #: admin/partials/lw-all-in-one-admin-privacy-policy-display.php:35
 msgid ""
 "Link at FOOTER section pages \"Informativa sul trattamento dei dati "
 "personali\" and \"Cookie Policy\"."
 msgstr ""
-"Link alle pagine della sezione FOOTER &quot;Informativa sul trattamento dei "
-"dati personali&quot; e &quot;Cookie Policy&quot;."
+"Enlace a las páginas de la sección FOOTER \"Información Sobre El Tratamiento "
+"De Datos Personales\" y \"Las Cookies Que Utilizamos\"."
 
 #: admin/partials/lw-all-in-one-admin-privacy-policy-display.php:38
 msgid ""
 "Link \"Informativa Trattamento Dati\" in all contact forms of the website."
 msgstr ""
-"Link &quot;Informativa Trattamento Dati&quot; in tutti i moduli di contatto "
-"del sito web."
+"Enlace \"Informacion sobre el tratamiento de datos\" en todos los "
+"formularios de contacto del sitio web."
 
 #: admin/partials/lw-all-in-one-admin-privacy-policy-display.php:42
 #, php-format
@@ -603,9 +603,9 @@ msgid ""
 "before creating pages!!! <a href=\"%s\" title=\"Italy Cookie Choices (for EU "
 "Cookie Law)\">Install It Now!</a>"
 msgstr ""
-"Il plugin Italy Cookie Choices non è installato, è necessario installarlo e "
-"attivarlo prima di creare le pagine !!! <a href=\"%s\" title=\"Italy Cookie "
-"Choices (for EU Cookie Law)\">Installalo adesso!</a>"
+"El complemento Italy Cookie Choices no está instalado, ¡debe instalarlo y "
+"activarlo antes de crear páginas! <a href=\"%s\" title=\"Italy Cookie "
+"Choices (for EU Cookie Law)\">¡Instálelo ahora!</a>"
 
 #: admin/partials/lw-all-in-one-admin-privacy-policy-display.php:45
 #, php-format
@@ -614,101 +614,104 @@ msgid ""
 "creating pages!!! <a href=\"%s\" title=\"Italy Cookie Choices (for EU Cookie "
 "Law)\">Activate It Now!</a>"
 msgstr ""
-"Il plugin Italy Cookie Choices non è attivato, devi attivarlo prima di "
-"creare le pagine !!! <a href=\"%s\" title=\"Italy Cookie Choices (for EU "
-"Cookie Law)\">Attivalo ora!</a>"
+"El complemento Italy Cookie Choices no está activado, ¡debes activarlo antes "
+"de crear páginas! <a href=\"%s\" title=\"Italy Cookie Choices (for EU Cookie "
+"Law)\">¡Actívelo ahora!</a>"
 
 #: admin/partials/lw-all-in-one-admin-privacy-policy-display.php:60
 msgid "Choose which pages you want to create:"
-msgstr "Scegli quali pagine vuoi creare:"
+msgstr "Elija qué páginas desea crear:"
 
 #: admin/partials/lw-all-in-one-admin-privacy-policy-display.php:66
 msgid "Cookie Policy page already created: "
-msgstr "Pagina Cookie Policy già creata: "
+msgstr "Página Las cookies que utilizamos ya creada: "
 
 #: admin/partials/lw-all-in-one-admin-privacy-policy-display.php:75
 msgid "Create Cookie Policy page?"
-msgstr "Crea la pagina Cookie Policy?"
+msgstr "¿Crear página Las cookies que utilizamos?"
 
 #: admin/partials/lw-all-in-one-admin-privacy-policy-display.php:82
 msgid "Privacy Policy page already created: "
-msgstr "Pagina Privacy Policy: "
+msgstr ""
+"Página Información Sobre El Tratamiento De Datos Personales ya creada: "
 
 #: admin/partials/lw-all-in-one-admin-privacy-policy-display.php:91
 msgid "Create Privacy Policy page?"
-msgstr "Crea la pagina Privacy Policy?"
+msgstr "¿Crear página Información Sobre El Tratamiento De Datos Personales"
 
 #: admin/partials/lw-all-in-one-admin-privacy-policy-display.php:98
 msgid "Information Treatment page already created: "
-msgstr "Pagina Information Treatment già creata: "
+msgstr "Página Informacion sobre el tratamiento de datos ya creada: "
 
 #: admin/partials/lw-all-in-one-admin-privacy-policy-display.php:107
 msgid "Create Information Treatment page?"
-msgstr "Creare una pagina Information Treatment?"
+msgstr "¿Crear página Informacion sobre el tratamiento de datos"
 
 #: admin/partials/lw-all-in-one-admin-privacy-policy-display.php:117
 msgid "Create Pages"
-msgstr "Crea Pagine"
+msgstr "Crear páginas"
 
 #: admin/privacy-pages/contact.php:20
 msgid "informativa-trattamento-dati could not be update!"
-msgstr "informativa-trattamento-dati non può essere aggiornato!"
+msgstr "informacion-sobre-el-tratamiento-de-datos no se pudo actualizar!"
 
 #: admin/privacy-pages/contact.php:25
 msgid "informativa-trattamento-dati updated successfully!"
-msgstr "informativa-trattamento-dati aggiornato con successo!"
+msgstr "informacion-sobre-el-tratamiento-de-datos actualizado con éxito!"
 
 #: admin/privacy-pages/contact.php:40
 msgid "informativa-trattamento-dati could not be created!"
-msgstr "non è stato possibile creare informativa-trattamento-dati!"
+msgstr "¡No se pudo crear informacion-sobre-el-tratamiento-de-datos!"
 
 #: admin/privacy-pages/contact.php:45
 msgid "informativa-trattamento-dati created successfully!"
-msgstr "informativa-trattamento-dati creato con successo!"
+msgstr "informacion-sobre-el-tratamiento-de-datos creado exitosamente!"
 
 #: admin/privacy-pages/cookie.php:23
 msgid "cookie-policy could not be update!"
-msgstr "cookie-policy non può essere aggiornata!"
+msgstr "¡cookie-policy no se pudo actualizar!"
 
 #: admin/privacy-pages/cookie.php:28
 msgid "cookie-policy updated successfully!"
-msgstr "cookie-policy aggiornata correttamente!"
+msgstr "¡cookie-policy se actualizó correctamente!"
 
 #: admin/privacy-pages/cookie.php:43
 msgid "cookie-policy could not be created!"
-msgstr "cookie-policy non può essere creata!"
+msgstr "¡No se pudo crear cookie-policy!"
 
 #: admin/privacy-pages/cookie.php:48
 msgid "cookie-policy created successfully!"
-msgstr "cookie-policy creata correttamente!"
+msgstr "¡cookie-policy se creó correctamente!"
 
 #: admin/privacy-pages/privacy.php:22
 msgid "informativa-sul-trattamento-dei-dati-personali could not be update!"
 msgstr ""
-"informativa-sul-trattamento-dei-dati-personali non può essere aggiornato!"
+"¡El informacion-sobre-el-tratamiento-de-datos-personales no se pudo "
+"actualizar!"
 
 #: admin/privacy-pages/privacy.php:27
 msgid "informativa-sul-trattamento-dei-dati-personali updated successfully!"
 msgstr ""
-"informativa-sul-trattamento-dei-dati-personali aggiornata con successo!"
+"informacion-sobre-el-tratamiento-de-datos-personales ¡actualizado "
+"exitosamente!"
 
 #: admin/privacy-pages/privacy.php:42
 msgid "informativa-sul-trattamento-dei-dati-personali could not be created!"
 msgstr ""
-"non è stato possibile creare informativa-sul-trattamento-dei-dati-personali!"
+"¡No se pudo crear informacion-sobre-el-tratamiento-de-datos-personales!"
 
 #: admin/privacy-pages/privacy.php:47
 msgid "informativa-sul-trattamento-dei-dati-personali created successfully!"
-msgstr "informativa-sul-trattamento-dei-dati-personali creata con successo!"
+msgstr "informacion-sobre-el-tratamiento-de-datos-personales creado con éxito!"
 
 #: includes/class-lw-all-in-one.php:322
 msgid "Every 5 Minutes"
-msgstr "Ogni 5 Minuti"
+msgstr "Cada 5 minutos"
 
 #: public/class-lw-all-in-one-public.php:101
 msgid "Event Saved!"
-msgstr "Evento Salvato!"
+msgstr "¡Evento guardado!"
 
 #: public/class-lw-all-in-one-public.php:104
 msgid "Event was not Saved!"
-msgstr "L&#39;evento non è stato salvato!"
+msgstr "¡El evento no se guardó!"

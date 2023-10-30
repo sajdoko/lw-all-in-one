@@ -69,7 +69,8 @@ class Lw_All_In_One_Public {
     //Plugin options
     $options = get_option($this->plugin_name);
     $ga_activate = (isset($options['ga_activate'])) ? $options['ga_activate'] : '';
-    $ga_fields_tracking_id = (isset($options['ga_fields']['tracking_id'])) ? $options['ga_fields']['tracking_id'] : '';
+    $ga_fields_tracking_id = (isset($options['ga_fields']['tracking_id'])) ? sanitize_text_field($options['ga_fields']['tracking_id']) : '';
+    $ga_fields_monitor_woocommerce_data = (isset($options['ga_fields']['monitor_woocommerce_data'])) ? sanitize_text_field($options['ga_fields']['monitor_woocommerce_data']) : '';
     if ($ga_activate === 'on' && $ga_fields_tracking_id !== '') {
       $min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
       wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/lw-all-in-one-public'.$min.'.js', array('jquery'), $this->version, true);
@@ -81,8 +82,50 @@ class Lw_All_In_One_Public {
           // 'data_var_2' => 'value 2',
         )
       );
+
+      if ($ga_fields_monitor_woocommerce_data === 'on') {
+        wp_enqueue_script($this->plugin_name.'_woocommerce_gtm', plugin_dir_url(__FILE__) . 'js/lw-all-in-one-woocommerce-gtm'.$min.'.js', array('jquery'), $this->version, true);
+      }
+
     }
 
+  }
+
+  public function include_woocommerce_gtm_tracking() {
+    if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
+      include_once 'partials/lw-all-in-one-public-woocommerce-gtm.php';
+    }
+  }
+
+  public function lw_all_in_one_header_scripts() {
+    //Plugin options
+    $options = get_option($this->plugin_name);
+    $ga_activate = (isset($options['ga_activate'])) ? $options['ga_activate'] : '';
+    $ga_fields_tracking_id = (isset($options['ga_fields']['tracking_id'])) ? sanitize_text_field($options['ga_fields']['tracking_id']) : '';
+    $ga_fields_save_ga_events = (isset($options['ga_fields']['save_ga_events'])) ? sanitize_text_field($options['ga_fields']['save_ga_events']) : '';
+    $ga_fields_monitor_email_link = (isset($options['ga_fields']['monitor_email_link'])) ? sanitize_text_field($options['ga_fields']['monitor_email_link']) : '';
+    $ga_fields_monitor_tel_link = (isset($options['ga_fields']['monitor_tel_link'])) ? sanitize_text_field($options['ga_fields']['monitor_tel_link']) : '';
+    $ga_fields_monitor_form_submit = (isset($options['ga_fields']['monitor_form_submit'])) ? sanitize_text_field($options['ga_fields']['monitor_form_submit']) : '';
+
+    if ($ga_activate === 'on' && $ga_fields_tracking_id !== '') {
+      $tag_type = explode('-', $ga_fields_tracking_id, 2)[0];
+
+      if ($tag_type == 'GTM') {
+        echo "<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f); })(window,document,'script','dataLayer','$ga_fields_tracking_id');</script>", PHP_EOL;
+      } else {
+        echo '<script async src="https://www.googletagmanager.com/gtag/js?id=' . $ga_fields_tracking_id . '"></script>', PHP_EOL;
+        echo "<script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '$ga_fields_tracking_id');</script>", PHP_EOL;
+      }
+
+      echo '<script>';
+      echo 'const lwAioGaActivate=true;';
+      echo 'const lwAioTrackingType="'.$tag_type.'";';
+      echo ($ga_fields_save_ga_events === 'on') ? 'const lwAioSaveGaEvents=true;' : 'const lwAioSaveGaEvents=false;';
+      echo ($ga_fields_monitor_email_link === 'on') ? 'const lwAioMonitorEmailLink=true;' : 'const lwAioMonitorEmailLink=false;';
+      echo ($ga_fields_monitor_tel_link === 'on') ? 'const lwAioMonitorTelLink=true;' : 'const lwAioMonitorTelLink=false;';
+      echo ($ga_fields_monitor_form_submit === 'on') ? 'const lwAioMonitorFormSubmit=true;' : 'const lwAioMonitorFormSubmit=false;';
+      echo '</script>', PHP_EOL;
+    }
   }
 
   public function lw_all_in_one_save_ga_event() {
@@ -108,7 +151,7 @@ class Lw_All_In_One_Public {
     } else {
       wp_send_json_error(__('Action is not valid!', LW_ALL_IN_ONE_PLUGIN_NAME));
     }
-	die();
+	  die();
   }
 
   public function lw_all_in_one_dequeue(){

@@ -154,6 +154,12 @@ class Lw_All_In_One {
     if ($this->check_plugin_options(false, 'ga_activate') === 'on' && $this->check_plugin_options('ga_fields', 'tracking_id') !== '') {
       $this->loader->add_action('wp_ajax_lw_all_in_one_save_ga_event', $plugin_public, 'lw_all_in_one_save_ga_event');
       $this->loader->add_action('wp_ajax_nopriv_lw_all_in_one_save_ga_event', $plugin_public, 'lw_all_in_one_save_ga_event');
+
+      $this->loader->add_action('wp_head', $plugin_public, 'lw_all_in_one_header_scripts');
+
+      if ($this->check_plugin_options('ga_fields', 'monitor_woocommerce_data') === 'on') {
+        $this->loader->add_action('plugins_loaded', $plugin_public, 'include_woocommerce_gtm_tracking');
+      }
     }
   }
 
@@ -165,9 +171,7 @@ class Lw_All_In_One {
     $this->loader->add_filter('set-screen-option', $plugin_ga_events, 'lw_all_in_one_ga_events_screen_options', 10, 3 );
     $this->loader->add_action('load-lw-aio-options_page_lw_all_in_one_ga_events', $plugin_ga_events, 'lw_all_in_one_ga_events_set_screen_options');
 
-    $this->loader->add_action('wp_head', $plugin_ga_events, 'lw_all_in_one_header_scripts');
-
-    $this->loader->add_action('admin_notices', $plugin_ga_events, 'woocommerce_google_analytics_missing_notice');
+    // $this->loader->add_action('admin_notices', $plugin_ga_events, 'woocommerce_google_analytics_missing_notice');
 
     $this->loader->add_action('admin_init', $plugin_ga_events, 'lw_all_in_one_gadwp_is_active_deactivate');
   }
@@ -245,18 +249,18 @@ class Lw_All_In_One {
 
   public static function lw_all_in_one_single_event_run($lw_all_in_one_version) {
 
-    if (version_compare($lw_all_in_one_version, '1.4.5' ) < 0) {
+    if (version_compare($lw_all_in_one_version, '1.7.4' ) <= 0) {
+      if (is_plugin_active('woocommerce/woocommerce.php')) {
+        //Plugin options
+        $options = get_option(LW_ALL_IN_ONE_PLUGIN_NAME);
+        if (!isset($options['ga_fields']['monitor_woocommerce_data'])) {
+          $options['ga_fields']['monitor_woocommerce_data'] = 'on';
+          update_option( LW_ALL_IN_ONE_PLUGIN_NAME, $options );
+        }
+      }
 
-      //Plugin options
-      $options = get_option(LW_ALL_IN_ONE_PLUGIN_NAME);
-      if (!isset($options['lw_aio_fields']['data_retention'])) {
-        $new_options = array();
-        // $new_options['lw_hf_fields']['insert_header'] = base64_decode($options['lw_hf_fields']['insert_header']);
-        // $new_options['lw_hf_fields']['insert_footer'] = base64_decode($options['lw_hf_fields']['insert_footer']);
-        $new_options['lw_aio_fields']['delete_data'] = '';
-        $new_options['lw_aio_fields']['data_retention'] = 'on';
-        $new_options_update = array_merge($options, $new_options);
-        update_option( LW_ALL_IN_ONE_PLUGIN_NAME, $new_options_update );
+      if (is_plugin_active('woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php')) {
+        deactivate_plugins('woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php');
       }
     }
 

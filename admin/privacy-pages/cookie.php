@@ -1,7 +1,4 @@
 <?php
-$page_cookie = get_page_by_path('cookie-policy');
-$cookie_file = file_get_contents( plugin_dir_path(dirname(__FILE__)) . 'privacy-pages/cookie.html');
-
 $patterns = array();
 $patterns[0] = '/replace_cookie_1/';
 $patterns[1] = '/replace_cookie_2/';
@@ -32,7 +29,7 @@ if ($page_cookie->ID != '') {
 
 } else {
   $cookie_page = array(
-    'post_title' => 'Cookie Policy',
+    'post_title' => $post_title,
     'post_status' => 'publish',
     'post_type' => 'page',
     'post_content' => $cookie_file,
@@ -54,9 +51,6 @@ if ($page_cookie->ID != '') {
 
 if (is_plugin_active('italy-cookie-choices/italy-cookie-choices.php')) {
   //plugin is activated
-  $url = $domain . '/cookie-policy/';
-  $text = 'Questo sito utilizza cookies, anche di terze parti per consentire una migliore esperienza di navigazione ed un corretto funzionamento delle pagine web. Per saperne di più, per modificare le impostazioni, per prestare il consenso solo ad alcuni utilizzi o per rimuovere i cookies dal proprio browser una volta installati cliccare <a href="/cookie-policy/">qui</a>. Con la prosecuzione della navigazione, visualizzando il relativo contenuto, o accedendo a un qualunque elemento posto all’esterno di questo banner, il visitatore acconsente espressamente all’uso dei cookie e delle tecnologie similari.';
-  $button_text = "Accetto";
   $cookie_name = "accettoConsensoCookie";
   $cookie_value = "si";
   $italy_cookie_choices = get_option('italy_cookie_choices');
@@ -67,18 +61,13 @@ if (is_plugin_active('italy-cookie-choices/italy-cookie-choices.php')) {
   $italy_cookie_choices['cookie_value'] = $cookie_value;
   update_option('italy_cookie_choices', $italy_cookie_choices);
 } elseif (is_plugin_active('eu-cookie-law/eu-cookie-law.php')) {
-  $page_cookie = get_page_by_path('cookie-policy');
-  $boxlinkid = $page_cookie->ID;
-  $barmessage = 'Questo sito utilizza cookies, anche di terze parti per consentire una migliore esperienza di navigazione ed un corretto funzionamento delle pagine web. Per saperne di più, per modificare le impostazioni, per prestare il consenso solo ad alcuni utilizzi o per rimuovere i cookies dal proprio browser una volta installati cliccare <a href="/cookie-policy/" >qui</a>. Con la prosecuzione della navigazione, visualizzando il relativo contenuto, o accedendo a un qualunque elemento posto all’esterno di questo banner, il visitatore acconsente espressamente all’uso dei cookie e delle tecnologie similari.';
-  $barlink = "Cookie Policy";
-  $barbutton = "Accetto";
+
   $peadig_eucookie = get_option('peadig_eucookie');
-  $peadig_eucookie['barmessage'] = $barmessage;
-  $peadig_eucookie['barlink'] = $barlink;
-  $peadig_eucookie['barbutton'] = $barbutton;
-  $peadig_eucookie['boxlinkid'] = $boxlinkid;
+  $peadig_eucookie['barmessage'] = $text;
+  $peadig_eucookie['barlink'] = $post_title;
+  $peadig_eucookie['barbutton'] = $button_text;
+  $peadig_eucookie['boxlinkid'] = $post_id;
   update_option('peadig_eucookie', $peadig_eucookie);
-} else {
 }
 
 if (is_plugin_active('wp-fastest-cache/wpFastestCache.php')) {

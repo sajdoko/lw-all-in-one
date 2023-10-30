@@ -1,7 +1,4 @@
 <?php
-$page_policy = get_page_by_path('informativa-sul-trattamento-dei-dati-personali');
-$policy_file = file_get_contents( plugin_dir_path(dirname(__FILE__)) . 'privacy-pages/privacy-policy.html');
-
 $patterns = array();
 $patterns[0] = '/replace_privacy_1/';
 $patterns[1] = '/replace_privacy_2/';
@@ -31,7 +28,7 @@ if ($page_policy->ID != '') {
 
 } else {
   $policy_page = array(
-    'post_title' => 'Informativa sul trattamento dei dati personali',
+    'post_title' => $post_title,
     'post_status' => 'publish',
     'post_type' => 'page',
     'post_content' => $policy_file,

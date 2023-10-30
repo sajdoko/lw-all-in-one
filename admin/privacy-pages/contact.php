@@ -1,6 +1,4 @@
 <?php
-$page_contact = get_page_by_path('informativa-trattamento-dati');
-$contact_file = file_get_contents( plugin_dir_path(dirname(__FILE__)) . 'privacy-pages/contact.html');
 
 $patterns = array();
 $patterns[0] = '/replace_contact_2/';
@@ -29,7 +27,7 @@ if ($page_contact->ID != '') {
 
 } else {
   $contact_page = array(
-    'post_title' => 'Informativa trattamento dati',
+    'post_title' => $post_title,
     'post_status' => 'publish',
     'post_type' => 'page',
     'post_content' => $contact_file,
@@ -49,35 +47,35 @@ if ($page_contact->ID != '') {
 
 }
 
-if (is_plugin_active('contact-form-7/wp-contact-form-7.php')) {
-  //plugin is activated
-  $args = array(
-    'post_type' => 'wpcf7_contact_form',
-    'order' => 'ASC',
-  );
+// if (is_plugin_active('contact-form-7/wp-contact-form-7.php')) {
+//   //plugin is activated
+//   $args = array(
+//     'post_type' => 'wpcf7_contact_form',
+//     'order' => 'ASC',
+//   );
 
-  $postet = get_posts($args);
+//   $postet = get_posts($args);
 
-  // The Loop
-  if ($postet != '') {
-    foreach ($postet as $posti) {
-      //PC::debug($posti, 'posti');
-      $content = $posti->post_content;
-      $new_path = 'informativa-trattamento-dati';
-      $content = preg_replace('/informativa-sul-trattamento-dei-dati-personali/', $new_path, $content);
+//   // The Loop
+//   if ($postet != '') {
+//     foreach ($postet as $posti) {
+//       //PC::debug($posti, 'posti');
+//       $content = $posti->post_content;
+//       $new_path = 'informativa-trattamento-dati';
+//       $content = preg_replace('/informativa-sul-trattamento-dei-dati-personali/', $new_path, $content);
 
-      $contact_content = array(
-        'ID' => $posti->ID,
-        'post_content' => $content,
-      );
-      $update3 = wp_update_post($contact_content, true);
+//       $contact_content = array(
+//         'ID' => $posti->ID,
+//         'post_content' => $content,
+//       );
+//       $update3 = wp_update_post($contact_content, true);
 
-      $forma = get_post_meta($posti->ID, '_form');
-      $forma = preg_replace('/informativa-sul-trattamento-dei-dati-personali/', $new_path, $forma);
+//       $forma = get_post_meta($posti->ID, '_form');
+//       $forma = preg_replace('/informativa-sul-trattamento-dei-dati-personali/', $new_path, $forma);
 
-      update_post_meta($posti->ID, '_form', $forma[0]);
+//       update_post_meta($posti->ID, '_form', $forma[0]);
 
-    }
-  }
+//     }
+//   }
 
-}
+// }

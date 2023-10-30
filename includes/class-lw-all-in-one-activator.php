@@ -30,7 +30,7 @@ class Lw_All_In_One_Activator {
     }
     $lw_all_in_one_version = get_option('lw_all_in_one_version');
     // Check if Web Instant Messenger options exist
-    $verification_status = $token = $wim_activate = $rag_soc = $auto_show_wim = $show_wim_after = $show_mobile = $lingua = $messaggio_0 = $messaggio_1 = $cf7_activate = $save_cf7_subm = $opt_scr_deliv = $ga_activate = $tracking_id = $save_ga_events = $monitor_email_link = $monitor_tel_link = $monitor_form_submit = '';
+    $verification_status = $token = $wim_activate = $rag_soc = $auto_show_wim = $show_wim_after = $show_mobile = $lingua = $messaggio_0 = $messaggio_1 = $cf7_activate = $save_cf7_subm = $opt_scr_deliv = $ga_activate = $tracking_id = $save_ga_events = $monitor_email_link = $monitor_tel_link = $monitor_form_submit = $monitor_woocommerce_data = '';
     if ($wim_activation_status = get_option('wim_activation_status')) {
       $verification_status = ($wim_activation_status['activation_status'] == 1) ? 'verified' : '';
       $token = $wim_activation_status['token'];
@@ -64,6 +64,9 @@ class Lw_All_In_One_Activator {
     }
     if (lw_all_in_one_validate_tracking_id($tracking_id)) {
       $ga_activate = $save_ga_events = $monitor_email_link = $monitor_tel_link = $monitor_form_submit = 'on';
+      if (is_plugin_active('woocommerce/woocommerce.php')) {
+        $monitor_woocommerce_data = 'on';
+      }
     }
     if (!get_option(LW_ALL_IN_ONE_PLUGIN_NAME)) {
       $initial_attivation_options = array(
@@ -74,6 +77,7 @@ class Lw_All_In_One_Activator {
           'monitor_email_link' => $monitor_email_link,
           'monitor_tel_link' => $monitor_tel_link,
           'monitor_form_submit' => $monitor_form_submit,
+          'monitor_woocommerce_data' => $monitor_woocommerce_data,
         ),
         'wim_activate' => $wim_activate,
         'wim_fields' => array(
@@ -183,6 +187,9 @@ class Lw_All_In_One_Activator {
     }
     if (is_plugin_active('google-analytics-dashboard-for-wp/gadwp.php')) {
       deactivate_plugins('google-analytics-dashboard-for-wp/gadwp.php');
+    }
+    if (is_plugin_active('woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php')) {
+      deactivate_plugins('woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php');
     }
     if (is_plugin_active('wp-fastest-cache/wpFastestCache.php')) {
       if(isset($GLOBALS['wp_fastest_cache']) && method_exists($GLOBALS['wp_fastest_cache'], 'deleteCache')){
