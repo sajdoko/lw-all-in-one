@@ -670,7 +670,7 @@ function lwaio_woocommerce_cart_item_remove_link_filter( $remove_from_cart_link 
  *
  * @return void
  */
-function gtp4wp_woocommerce_reset_loop() {
+function lwaio_woocommerce_reset_loop() {
 	global $woocommerce_loop;
 
 	$woocommerce_loop['listtype'] = '';
@@ -1288,7 +1288,7 @@ function lwaio_wp_header_top( $echo = true ) {
 // do not add filter if someone enabled WooCommerce integration without an activated WooCommerce plugin.
 if ( function_exists( 'WC' ) ) {
 
-	add_filter( 'loop_end', 'gtp4wp_woocommerce_reset_loop' );
+	add_filter( 'loop_end', 'lwaio_woocommerce_reset_loop' );
 	add_action( 'woocommerce_after_shop_loop_item', 'lwaio_woocommerce_after_shop_loop_item' );
 	add_action( 'woocommerce_after_add_to_cart_button', 'lwaio_woocommerce_single_add_to_cart_tracking' );
 
