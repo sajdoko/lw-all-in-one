@@ -51,6 +51,8 @@ class Lw_All_In_One_Admin {
     if (preg_match('/page_lw_all_in_one/', $hook)) {
       $min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
       wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/lw-all-in-one-admin'.$min.'.css', array(), $this->version, 'all');
+      // Css rules for Color Picker
+      wp_enqueue_style( 'wp-color-picker' );
     }
   }
 
@@ -59,7 +61,7 @@ class Lw_All_In_One_Admin {
     // die();
     if (preg_match('/page_lw_all_in_one/', $hook)) {
       $min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-      wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/lw-all-in-one-admin'.$min.'.js', array('jquery', 'wp-i18n'), $this->version, false);
+      wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/lw-all-in-one-admin'.$min.'.js', array('jquery', 'wp-i18n', 'wp-color-picker'), $this->version, false);
       wp_set_script_translations($this->plugin_name, LW_ALL_IN_ONE_PLUGIN_NAME);
       wp_localize_script($this->plugin_name, 'lw_all_in_one_admin_ajax_object',
         array(
@@ -143,8 +145,6 @@ class Lw_All_In_One_Admin {
       $ret_body = wp_remote_retrieve_body($response);
       $data = recursive_sanitize_array_object(json_decode($ret_body));
 
-      // wp_die(var_dump($ret_body));
-
       if (is_wp_error($response)) {
         $valid['wim_fields']['verification_status'] = '';
         $error_message = $response->get_error_message();
@@ -179,6 +179,15 @@ class Lw_All_In_One_Admin {
     $valid['lw_cf7_fields']['save_cf7_subm'] = (isset($input['lw_cf7_fields']['save_cf7_subm']) && $input['lw_cf7_fields']['save_cf7_subm'] === 'on') ? 'on' : '';
     $valid['lw_cf7_fields']['opt_scr_deliv'] = (isset($input['lw_cf7_fields']['opt_scr_deliv']) && $input['lw_cf7_fields']['opt_scr_deliv'] === 'on') ? 'on' : '';
     $valid['lw_cf7_fields']['tipo_contratto'] = (isset($input['lw_cf7_fields']['tipo_contratto'])) ? sanitize_text_field($input['lw_cf7_fields']['tipo_contratto']) : '';
+    $valid['ck_activate'] = (isset($input['ck_activate']) && $input['ck_activate'] === 'on') ? 'on' : '';
+    $valid['ck_fields']['banner_position'] = (isset($input['ck_fields']['banner_position'])) ? sanitize_text_field($input['ck_fields']['banner_position']) : '';
+    $valid['ck_fields']['ck_page_slug'] = (isset($input['ck_fields']['ck_page_slug'])) ? sanitize_text_field($input['ck_fields']['ck_page_slug']) : '';
+    $valid['ck_fields']['primary_color'] = (isset($input['ck_fields']['primary_color'])) ? sanitize_text_field($input['ck_fields']['primary_color']) : '';
+    $valid['ck_fields']['secondary_color'] = (isset($input['ck_fields']['secondary_color'])) ? sanitize_text_field($input['ck_fields']['secondary_color']) : '';
+    $valid['ck_fields']['heading_message'] = (isset($input['ck_fields']['heading_message'])) ? sanitize_text_field($input['ck_fields']['heading_message']) : '';
+    $valid['ck_fields']['gdpr_message'] = (isset($input['ck_fields']['gdpr_message'])) ? sanitize_textarea_field($input['ck_fields']['gdpr_message']) : '';
+    $valid['ck_fields']['about_ck_message'] = (isset($input['ck_fields']['about_ck_message'])) ? sanitize_textarea_field($input['ck_fields']['about_ck_message']) : '';
+
     $valid['lw_cf7_fields']['id_contratto'] = (isset($input['lw_cf7_fields']['id_contratto'])) ? sanitize_text_field($input['lw_cf7_fields']['id_contratto']) : '';
     if ($valid['cf7_activate'] !== '' && !in_array('contact-form-7/wp-contact-form-7.php', apply_filters('active_plugins', get_option('active_plugins')))) {
       $valid['cf7_activate'] = '';
@@ -301,11 +310,16 @@ class Lw_All_In_One_Admin {
     }
     if (isset($_POST['action']) && $_POST['action'] === "lw_all_in_one_reset_plugin_options") {
       global $wpdb;
-      $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}lw_aio_a_events");
-      $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}lw_aio_cf7");
+      $charset_collate = $wpdb->get_charset_collate();
+      $a_events_table = $wpdb->prefix . LW_ALL_IN_ONE_A_EVENTS_TABLE;
+      $cf7_table = $wpdb->prefix . LW_ALL_IN_ONE_CF7_TABLE;
+      $wpdb->query("DROP TABLE IF EXISTS {$a_events_table}");
+      $wpdb->query("DROP TABLE IF EXISTS {$cf7_table}");
+
       delete_option('lw_all_in_one');
       delete_option('lw_all_in_one_version');
       delete_option('lw_all_in_one_privacy_pages');
+
       if (wp_next_scheduled('lw_all_in_one_data_retention')) {
         wp_clear_scheduled_hook('lw_all_in_one_data_retention');
       }
@@ -313,7 +327,23 @@ class Lw_All_In_One_Admin {
         wp_clear_scheduled_hook('lw_all_in_one_cf7_sync');
       }
 
-      add_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);
+      if (get_locale() == 'es_ES') {
+        $ck_fields['ck_page_slug'] = 'las-cookies-que-utilizamos';
+        $ck_fields['heading_message'] = 'Este sitio web utiliza cookies';
+        $ck_fields['gdpr_message'] = 'Utilizamos cookies para personalizar contenido y anuncios, para proporcionar funciones de redes sociales y para analizar nuestro tráfico. También compartimos información sobre su uso de nuestro sitio con nuestros socios de redes sociales, publicidad y análisis, que pueden combinarla con otra información que les haya proporcionado o que hayan recopilado a partir del uso de sus servicios.';
+        $ck_fields['about_ck_message'] = 'Las cookies son pequeños archivos de texto que pueden ser utilizados por los sitios web para hacer que la experiencia del usuario sea más eficiente. La ley establece que podemos almacenar cookies en su dispositivo si son estrictamente necesarias para el funcionamiento de este sitio. Para todos los demás tipos de cookies necesitamos su permiso. Este sitio utiliza diferentes tipos de cookies. Algunas cookies son colocadas por servicios de terceros que aparecen en nuestras páginas. En cualquier momento puede cambiar o retirar su consentimiento de la Declaración de cookies en nuestro sitio web. Obtenga más información sobre quiénes somos, cómo puede contactarnos y cómo tratamos los datos personales en nuestra Política de privacidad. Especifique su ID de consentimiento y la fecha en que nos contactó con respecto a su consentimiento.';
+      } elseif (get_locale() == 'it_IT') {
+        $ck_fields['ck_page_slug'] = 'cookie-policy';
+        $ck_fields['heading_message'] = 'Questo sito web utilizza i cookie!';
+        $ck_fields['gdpr_message'] = 'Utilizziamo i cookie per personalizzare contenuti ed annunci, per fornire funzionalità dei social media e per analizzare il nostro traffico. Condividiamo inoltre informazioni sul modo in cui utilizza il nostro sito con i nostri partner che si occupano di analisi dei dati web, pubblicità e social media, i quali potrebbero combinarle con altre informazioni che ha fornito loro o che hanno raccolto dal suo utilizzo dei loro servizi.';
+        $ck_fields['about_ck_message'] = "I cookie sono piccoli file di testo che possono essere utilizzati dai siti web per rendere più efficiente l’esperienza per l’utente. La legge afferma che possiamo memorizzare i cookie sul suo dispositivo se sono strettamente necessari per il funzionamento di questo sito. Per tutti gli altri tipi di cookie abbiamo bisogno del suo permesso. Questo sito utilizza diversi tipi di cookie. Alcuni cookie sono collocati da servizi di terzi che compaiono sulle nostre pagine. In qualsiasi momento è possibile modificare o revocare il proprio consenso dalla Dichiarazione dei cookie sul nostro sito Web. Scopra di più su chi siamo, come può contattarci e come trattiamo i dati personali nella nostra Informativa sulla privacy. Specifica l’ID del tuo consenso e la data di quando ci hai contattati per quanto riguarda il tuo consenso.";
+      } else {
+        $ck_fields['ck_page_slug'] = 'cookie-policy';
+        $ck_fields['heading_message'] = 'This website uses cookies!';
+        $ck_fields['gdpr_message'] = 'We use cookies to personalize content and ads, to provide social media features and to analyze our traffic. We also share information about how you use our site with our analytics, advertising and social media partners, who may combine it with other information that you have provided to them or that they have collected from your use of their services.';
+        $ck_fields['about_ck_message'] = "Cookies are small text files that can be used by websites to make the user experience more efficient. The law states that we can store cookies on your device if they are strictly necessary for the operation of this site. For all other types of cookies we need your permission. This site uses different types of cookies. Some cookies are placed by third-party services that appear on our pages. You can change or withdraw your consent at any time from the Cookie Declaration on our website. Find out more about who we are, how you can contact us and how we process personal data in our Privacy Policy. Specify your consent ID and the date you contacted us regarding your consent.";
+      }
+
       $initial_attivation_options = array(
         'ga_activate' => '',
         'ga_fields' => array(
@@ -341,6 +371,16 @@ class Lw_All_In_One_Admin {
           'save_cf7_subm' => '',
           'opt_scr_deliv' => '',
         ),
+        'ck_activate' => '',
+        'ck_fields' => array(
+          'banner_position' => 'bottom',
+          'ck_page_slug' => $ck_fields['ck_page_slug'],
+          'primary_color' => '#18a300',
+          'secondary_color' => '#333333',
+          'heading_message' => $ck_fields['heading_message'],
+          'gdpr_message' => $ck_fields['gdpr_message'],
+          'about_ck_message' => $ck_fields['about_ck_message'],
+        ),
         'lw_hf_fields' => array(
           'insert_header' => '',
           'insert_footer' => '',
@@ -350,11 +390,10 @@ class Lw_All_In_One_Admin {
           'data_retention' => 'on',
         ),
       );
+      // wp_die(var_dump($initial_attivation_options));
       add_option(LW_ALL_IN_ONE_PLUGIN_NAME, $initial_attivation_options);
+      add_option(LW_ALL_IN_ONE_PLUGIN_NAME.'_version', LW_ALL_IN_ONE_VERSION);
 
-      $charset_collate = $wpdb->get_charset_collate();
-      $a_events_table = $wpdb->prefix . LW_ALL_IN_ONE_A_EVENTS_TABLE;
-      $cf7_table = $wpdb->prefix . LW_ALL_IN_ONE_CF7_TABLE;
       require_once ABSPATH . 'wp-admin/includes/upgrade.php';
       if ($wpdb->get_var("show tables like '$a_events_table'") != $a_events_table) {
         $sql1 = "CREATE TABLE $a_events_table (

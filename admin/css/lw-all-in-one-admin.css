@@ -68,12 +68,12 @@ td.lw-aio-settings-title label {
 	font-size: 1em;
 }
 
-#tab_ga_events #col-left {
+#col-left, .col-left {
 	float: left;
 	width: 49%;
 }
 
-#tab_ga_events #col-right {
+#col-right, .col-right {
 	float: right;
 	width: 49%;
 	border-left: 1px solid #ccc;
@@ -237,6 +237,10 @@ input.lw-aio-settings-custom-switch-checkbox {
 }
 .lw-aio-settings-options .lw-aio-table-row {
 	border-bottom: 1px solid #f1f1f1;
+}
+.lw-aio-settings-options th label {
+	float: left;
+	margin: 0 2em;
 }
 .lw-aio-pagination .page-numbers {
 	display: inline-block;

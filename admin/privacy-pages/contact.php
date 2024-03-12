@@ -46,36 +46,3 @@ if ($page_contact->ID != '') {
   }
 
 }
-
-// if (is_plugin_active('contact-form-7/wp-contact-form-7.php')) {
-//   //plugin is activated
-//   $args = array(
-//     'post_type' => 'wpcf7_contact_form',
-//     'order' => 'ASC',
-//   );
-
-//   $postet = get_posts($args);
-
-//   // The Loop
-//   if ($postet != '') {
-//     foreach ($postet as $posti) {
-//       //PC::debug($posti, 'posti');
-//       $content = $posti->post_content;
-//       $new_path = 'informativa-trattamento-dati';
-//       $content = preg_replace('/informativa-sul-trattamento-dei-dati-personali/', $new_path, $content);
-
-//       $contact_content = array(
-//         'ID' => $posti->ID,
-//         'post_content' => $content,
-//       );
-//       $update3 = wp_update_post($contact_content, true);
-
-//       $forma = get_post_meta($posti->ID, '_form');
-//       $forma = preg_replace('/informativa-sul-trattamento-dei-dati-personali/', $new_path, $forma);
-
-//       update_post_meta($posti->ID, '_form', $forma[0]);
-
-//     }
-//   }
-
-// }

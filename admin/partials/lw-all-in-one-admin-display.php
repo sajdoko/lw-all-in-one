@@ -48,6 +48,14 @@
       $lw_cf7_fields_opt_scr_deliv = (isset($options['lw_cf7_fields']['opt_scr_deliv'])) ? esc_attr($options['lw_cf7_fields']['opt_scr_deliv']) : '';
       $lw_cf7_fields_tipo_contratto = (isset($options['lw_cf7_fields']['tipo_contratto'])) ? esc_attr($options['lw_cf7_fields']['tipo_contratto']) : '';
       $lw_cf7_fields_id_contratto = (isset($options['lw_cf7_fields']['id_contratto'])) ? esc_attr($options['lw_cf7_fields']['id_contratto']) : '';
+      $ck_activate = (isset($options['ck_activate'])) ? esc_attr($options['ck_activate']) : '';
+      $ck_fields_banner_position = (isset($options['ck_fields']['banner_position'])) ? esc_attr($options['ck_fields']['banner_position']) : '';
+      $ck_fields_ck_page_slug = (isset($options['ck_fields']['ck_page_slug'])) ? esc_attr($options['ck_fields']['ck_page_slug']) : '';
+      $ck_fields_primary_color = (isset($options['ck_fields']['primary_color'])) ? esc_attr($options['ck_fields']['primary_color']) : '';
+      $ck_fields_secondary_color = (isset($options['ck_fields']['secondary_color'])) ? esc_attr($options['ck_fields']['secondary_color']) : '';
+      $ck_fields_heading_message = (isset($options['ck_fields']['heading_message'])) ? esc_attr($options['ck_fields']['heading_message']) : '';
+      $ck_fields_gdpr_message = (isset($options['ck_fields']['gdpr_message'])) ? esc_textarea($options['ck_fields']['gdpr_message']) : '';
+      $ck_fields_about_ck_message = (isset($options['ck_fields']['about_ck_message'])) ? esc_textarea($options['ck_fields']['about_ck_message']) : '';
       $lw_hf_fields_insert_header = (isset($options['lw_hf_fields']['insert_header'])) ? $options['lw_hf_fields']['insert_header'] : '';
       $lw_hf_fields_insert_footer = (isset($options['lw_hf_fields']['insert_footer'])) ? $options['lw_hf_fields']['insert_footer'] : '';
       $lw_aio_delete_data = (isset($options['lw_aio_fields']['delete_data'])) ? esc_attr($options['lw_aio_fields']['delete_data']) : '';
@@ -62,10 +70,12 @@
         $default_tab = 'tab_wim';
       } else if ($cf7_activate === 'on') {
         $default_tab = 'tab_cf7';
+      } else if ($ck_activate === 'on') {
+        $default_tab = 'tab_cookie_banner';
       } else {
         $default_tab = 'tab_hf';
       }
-      $allowed_tabs = array('tab_ga_events', 'tab_wim', 'tab_cf7', 'tab_hf', 'tab_aio_options');
+      $allowed_tabs = array('tab_ga_events', 'tab_wim', 'tab_cf7', 'tab_cookie_banner', 'tab_hf', 'tab_aio_options');
       $get_tab = isset($_GET['tab']) ? esc_attr(sanitize_text_field($_GET['tab'])) : '';
       $active_tab = (in_array($get_tab, $allowed_tabs)) ? $get_tab : $default_tab;
     ?>
@@ -89,6 +99,18 @@
                         </label>
                       </div>
                       <div class="switch-desc"> <?php esc_attr_e('Activate Google Analytics?', LW_ALL_IN_ONE_PLUGIN_NAME);?></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="lw-aio-settings-title">
+                      <div class="button-secondary lw-aio-settings-custom-switch">
+                        <input type="checkbox" name="<?php echo $this->plugin_name; ?>[ck_activate]" class="lw-aio-settings-custom-switch-checkbox" id="<?php echo $this->plugin_name; ?>_ck_activate" <?php echo ($ck_activate === 'on') ? 'checked="checked"' : '';?>>
+                        <label class="lw-aio-settings-custom-switch-label" for="<?php echo $this->plugin_name; ?>_ck_activate">
+                          <div class="lw-aio-settings-custom-switch-inner"></div>
+                          <div class="lw-aio-settings-custom-switch-switch"></div>
+                        </label>
+                      </div>
+                      <div class="switch-desc"> <?php esc_attr_e('Activate Cookie Consent Banner?', LW_ALL_IN_ONE_PLUGIN_NAME);?></div>
                     </td>
                   </tr>
                   <tr>
@@ -123,15 +145,23 @@
         <div id="post-body-content">
           <div class="inside">
             <h2 class="nav-tab-wrapper">
+
               <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_ga_events" class="nav-tab <?php echo $active_tab == 'tab_ga_events' ? 'nav-tab-active' : ''; ?><?php echo $ga_activate != 'on' ? ' d-none' : ''; ?>"><?php esc_attr_e('Google Analytics', LW_ALL_IN_ONE_PLUGIN_NAME);?></a>
+
+              <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_cookie_banner" class="nav-tab <?php echo $active_tab == 'tab_cookie_banner' ? 'nav-tab-active' : ''; ?><?php echo $ck_activate != 'on' ? ' d-none' : ''; ?>"><?php esc_attr_e('Cookie Banner', LW_ALL_IN_ONE_PLUGIN_NAME);?></a>
+
               <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_wim" class="nav-tab <?php echo $active_tab == 'tab_wim' ? 'nav-tab-active' : ''; ?><?php echo $wim_activate != 'on' ? ' d-none' : ''; ?>"><?php esc_attr_e('Web Instant Messenger', LW_ALL_IN_ONE_PLUGIN_NAME);?></a>
+
               <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_cf7" class="nav-tab <?php echo $active_tab == 'tab_cf7' ? 'nav-tab-active' : ''; ?><?php echo $cf7_activate != 'on' ? ' d-none' : ''; ?>"><?php esc_attr_e('LocalWeb Contact Form 7', LW_ALL_IN_ONE_PLUGIN_NAME);?></a>
+
               <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_hf" class="nav-tab <?php echo $active_tab == 'tab_hf' ? 'nav-tab-active' : ''; ?>"><?php esc_attr_e('Header/Footer Scripts', LW_ALL_IN_ONE_PLUGIN_NAME);?></a>
+
               <a href="?page=<?php echo $this->plugin_name; ?>&tab=tab_aio_options" class="nav-tab <?php echo $active_tab == 'tab_aio_options' ? 'nav-tab-active' : ''; ?>"><?php esc_attr_e('Plugin Options', LW_ALL_IN_ONE_PLUGIN_NAME);?></a>
+
             </h2>
             <div id="tab_ga_events" class="tab-content<?php echo $active_tab != 'tab_ga_events' ? ' d-none' : ''; ?>">
               <div id="col-container">
-                <div id="col-left">
+                <div class="col-left">
 			            <div class="col-wrap">
                     <table id="ga_events_table" class="lw-aio-settings-options<?php echo $ga_activate != 'on' ? ' d-none' : ''; ?>">
                       <tbody>
@@ -212,6 +242,100 @@
                 </div>
                 <div id="col-right">
                   <div class="col-wrap">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="tab_cookie_banner" class="tab-content<?php echo $active_tab != 'tab_cookie_banner' ? ' d-none' : ''; ?>">
+              <div class="col-container<?php echo $ck_activate != 'on' ? ' d-none' : ''; ?>">
+                <div class="col-left">
+                  <div class="col-wrap">
+                    <table class="lw-aio-settings-options">
+                      <tbody>
+                        <tr>
+			                    <th scope="row">
+                            <label for="banner_position"><?php esc_attr_e( 'Banner Position', LW_ALL_IN_ONE_PLUGIN_NAME); ?></label>
+                          </th>
+                          <td>
+                            <select name="<?php echo $this->plugin_name; ?>[ck_fields][banner_position]" id="banner_position">
+                              <option value=""></option>
+                              <option value="top" <?php selected( $ck_fields_banner_position, 'top' ); ?>><?php esc_attr_e( 'Top', LW_ALL_IN_ONE_PLUGIN_NAME); ?></option>
+                              <option value="bottom" <?php selected( $ck_fields_banner_position, 'bottom' ); ?>><?php esc_attr_e( 'Bottom', LW_ALL_IN_ONE_PLUGIN_NAME); ?></option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+			                    <th scope="row">
+                            <label for="ck_page_slug"><?php esc_attr_e( 'Cookie Page', LW_ALL_IN_ONE_PLUGIN_NAME); ?></label>
+                          </th>
+                          <td>
+                            <?php
+                              $args = array(
+                                'post_type' => 'page',
+                                'post_status' => 'publish',
+                                'posts_per_page' => -1,
+                                'orderby' => 'title',
+                                'order' => 'ASC',
+                                's' => 'cookie'
+                              );
+                              $pages = get_posts($args);
+                            ?>
+                            <select name="<?php echo $this->plugin_name; ?>[ck_fields][ck_page_slug]" id="ck_page_slug">
+                                <option value=""></option>
+                              <?php foreach ($pages as $page) { ?>
+                                <option value="<?php echo $page->post_name; ?>" <?php selected( $ck_fields_ck_page_slug, $page->post_name ); ?>><?php echo $page->post_title; ?></option>
+                              <?php } ?>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+			                    <th scope="row">
+                            <label for="primary_color"><?php esc_attr_e( 'Primary Banner Color', LW_ALL_IN_ONE_PLUGIN_NAME); ?></label>
+                          </th>
+                          <td>
+                            <input type="text" id="primary_color" name="<?php echo $this->plugin_name; ?>[ck_fields][primary_color]" <?php echo ($ck_fields_primary_color !== '') ? 'value="'.$ck_fields_primary_color.'"' : '';?> class="lwaio-color-picker">
+                          </td>
+                        </tr>
+                        <tr>
+			                    <th scope="row">
+                            <label for="secondary_color"><?php esc_attr_e( 'Secondary Banner Color', LW_ALL_IN_ONE_PLUGIN_NAME); ?></label>
+                          </th>
+                          <td>
+                            <input type="text" id="secondary_color" name="<?php echo $this->plugin_name; ?>[ck_fields][secondary_color]" <?php echo ($ck_fields_secondary_color !== '') ? 'value="'.$ck_fields_secondary_color.'"' : '';?> class="lwaio-color-picker">
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="col-right">
+                  <div class="col-wrap">
+                    <table class="lw-aio-settings-options">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <h3 class="shfs-labels" for="heading_message"><?php esc_attr_e( 'Heading Message', LW_ALL_IN_ONE_PLUGIN_NAME); ?></h3>
+                            <input type="text" id="heading_message" name="<?php echo $this->plugin_name; ?>[ck_fields][heading_message]" <?php echo ($ck_fields_heading_message !== '') ? 'value="'.$ck_fields_heading_message.'"' : '';?> placeholder="<?php esc_attr_e('This site uses Cookies!', LW_ALL_IN_ONE_PLUGIN_NAME);?>" class="large-text">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <h3 class="shfs-labels" for="gdpr_message"><?php esc_attr_e( 'GDPR Message', LW_ALL_IN_ONE_PLUGIN_NAME); ?></h3>
+                            <textarea rows="3" class="large-text" id="gdpr_message" name="<?php echo $this->plugin_name; ?>[ck_fields][gdpr_message]">
+                              <?php echo $ck_fields_gdpr_message; ?>
+                            </textarea>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <h3 class="shfs-labels" for="about_ck_message"><?php esc_attr_e( 'About Cookies Message', LW_ALL_IN_ONE_PLUGIN_NAME); ?></h3>
+                            <textarea rows="5" class="large-text" id="about_ck_message" name="<?php echo $this->plugin_name; ?>[ck_fields][about_ck_message]">
+                              <?php echo $ck_fields_about_ck_message; ?>
+                            </textarea>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
@@ -412,7 +536,7 @@
                   <tr>
                     <td colspan="2" class="lw-aio-settings-title">
                       <div class="button-secondary reset-button-div">
-                        <a class="button-secondary reset-button" id="lw_aio_reset_data" href="#" title="<?php esc_attr_e( 'Reset Plugin Options' ); ?>"><?php esc_attr_e( 'Reset' ); ?></a>
+                        <a class="button-secondary reset-button" id="lw_aio_reset_data" href="javascript:void(0)" title="<?php esc_attr_e( 'Reset Plugin Options' ); ?>"><?php esc_attr_e( 'Reset' ); ?></a>
                       </div>
                       <div class="switch-desc"> <?php _e('<b>Reset Plugin Options!</b> ', LW_ALL_IN_ONE_PLUGIN_NAME);?> <span class="description"> <?php esc_attr_e('Revert to default plugin options.', LW_ALL_IN_ONE_PLUGIN_NAME);?></span></div>
                     </td>

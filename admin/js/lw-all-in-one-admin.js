@@ -8,6 +8,8 @@
 	} = wp.i18n;
 	$(document).ready(function () {
 
+		$('.lwaio-color-picker').wpColorPicker();
+
 		$("#lw_all_in_one_privacy_policy_pages").submit(function (event) {
 			event.preventDefault();
 			var form_data = new FormData(this);

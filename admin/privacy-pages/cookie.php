@@ -49,27 +49,6 @@ if ($page_cookie->ID != '') {
 
 }
 
-if (is_plugin_active('italy-cookie-choices/italy-cookie-choices.php')) {
-  //plugin is activated
-  $cookie_name = "accettoConsensoCookie";
-  $cookie_value = "si";
-  $italy_cookie_choices = get_option('italy_cookie_choices');
-  $italy_cookie_choices['text'] = $text;
-  $italy_cookie_choices['button_text'] = $button_text;
-  $italy_cookie_choices['url'] = $url;
-  $italy_cookie_choices['cookie_name'] = $cookie_name;
-  $italy_cookie_choices['cookie_value'] = $cookie_value;
-  update_option('italy_cookie_choices', $italy_cookie_choices);
-} elseif (is_plugin_active('eu-cookie-law/eu-cookie-law.php')) {
-
-  $peadig_eucookie = get_option('peadig_eucookie');
-  $peadig_eucookie['barmessage'] = $text;
-  $peadig_eucookie['barlink'] = $post_title;
-  $peadig_eucookie['barbutton'] = $button_text;
-  $peadig_eucookie['boxlinkid'] = $post_id;
-  update_option('peadig_eucookie', $peadig_eucookie);
-}
-
 if (is_plugin_active('wp-fastest-cache/wpFastestCache.php')) {
   if (isset($GLOBALS['wp_fastest_cache']) && method_exists($GLOBALS['wp_fastest_cache'], 'deleteCache')) {
     $GLOBALS['wp_fastest_cache']->deleteCache(true);

@@ -55,11 +55,11 @@ class Lw_All_In_One_Privacy_Policy_Pages {
     include_once 'partials/lw-all-in-one-admin-privacy-policy-display.php';
   }
 
-  public function lw_all_in_one_old_privacy_is_active_deactivate() {
-    if (is_plugin_active('lw-cookie-privacy/lw-cookie-privacy.php')) {
-      deactivate_plugins('lw-cookie-privacy/lw-cookie-privacy.php');
-    } elseif (is_plugin_inactive('lw-cookie-privacy/lw-cookie-privacy.php')) {
-      delete_plugins(array('lw-cookie-privacy/lw-cookie-privacy.php'));
+  public function lw_all_in_one_remove_italy_cookie_choices() {
+    if (is_plugin_active('italy-cookie-choices/italy-cookie-choices.php')) {
+      deactivate_plugins('italy-cookie-choices/italy-cookie-choices.php');
+    } elseif (is_plugin_inactive('italy-cookie-choices/italy-cookie-choices.php')) {
+      delete_plugins(array('italy-cookie-choices/italy-cookie-choices.php'));
     }
   }
 
@@ -84,18 +84,10 @@ class Lw_All_In_One_Privacy_Policy_Pages {
         if ($site_lang == 'es_ES') {
           $page_cookie = get_page_by_path('las-cookies-que-utilizamos');
           $post_title = "Las cookies que utilizamos";
-
-          $url = $domain . '/las-cookies-que-utilizamos/';
-          $text = 'Este sitio utiliza cookies, incluso de terceros, para permitir una mejor experiencia de navegación y el correcto funcionamiento de las páginas web. Para saber más, cambiar la configuración, dar consentimiento solo para algunos usos o eliminar las cookies de su navegador una vez instalado, haga clic <a href="/las-cookies-que-utilizamos/">aquí</a>. Al continuar navegando, viendo el contenido relativo o accediendo a cualquier elemento colocado fuera de este banner, el visitante consiente expresamente el uso de cookies y tecnologías similares.';
-          $button_text = "Acepto";
           $cookie_file = file_get_contents( plugin_dir_path(dirname(__FILE__)) . 'admin/privacy-pages/cookie-es_ES.html');
         } else {
           $page_cookie = get_page_by_path('cookie-policy');
           $post_title = "Cookie Policy";
-
-          $url = $domain . '/cookie-policy/';
-          $text = 'Questo sito utilizza cookies, anche di terze parti per consentire una migliore esperienza di navigazione ed un corretto funzionamento delle pagine web. Per saperne di più, per modificare le impostazioni, per prestare il consenso solo ad alcuni utilizzi o per rimuovere i cookies dal proprio browser una volta installati cliccare <a href="/cookie-policy/">qui</a>. Con la prosecuzione della navigazione, visualizzando il relativo contenuto, o accedendo a un qualunque elemento posto all’esterno di questo banner, il visitatore acconsente espressamente all’uso dei cookie e delle tecnologie similari.';
-          $button_text = "Accetto";
           $cookie_file = file_get_contents( plugin_dir_path(dirname(__FILE__)) . 'admin/privacy-pages/cookie-it_IT.html');
         }
         include_once 'privacy-pages/cookie.php';

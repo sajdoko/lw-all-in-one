@@ -30,7 +30,7 @@ class Lw_All_In_One_Activator {
     }
     $lw_all_in_one_version = get_option('lw_all_in_one_version');
     // Check if Web Instant Messenger options exist
-    $verification_status = $token = $wim_activate = $rag_soc = $auto_show_wim = $show_wim_after = $show_mobile = $lingua = $messaggio_0 = $messaggio_1 = $cf7_activate = $save_cf7_subm = $opt_scr_deliv = $ga_activate = $tracking_id = $save_ga_events = $monitor_email_link = $monitor_tel_link = $monitor_form_submit = $monitor_woocommerce_data = '';
+    $verification_status = $token = $wim_activate = $rag_soc = $auto_show_wim = $show_wim_after = $show_mobile = $lingua = $messaggio_0 = $messaggio_1 = $cf7_activate = $ck_activate = $save_cf7_subm = $opt_scr_deliv = $ga_activate = $tracking_id = $save_ga_events = $monitor_email_link = $monitor_tel_link = $monitor_form_submit = $monitor_woocommerce_data = '';
     if ($wim_activation_status = get_option('wim_activation_status')) {
       $verification_status = ($wim_activation_status['activation_status'] == 1) ? 'verified' : '';
       $token = $wim_activation_status['token'];
@@ -68,6 +68,24 @@ class Lw_All_In_One_Activator {
         $monitor_woocommerce_data = 'on';
       }
     }
+
+    if (get_locale() == 'es_ES') {
+      $ck_fields['ck_page_slug'] = 'las-cookies-que-utilizamos';
+      $ck_fields['heading_message'] = 'Este sitio web utiliza cookies';
+      $ck_fields['gdpr_message'] = 'Utilizamos cookies para personalizar contenido y anuncios, para proporcionar funciones de redes sociales y para analizar nuestro tráfico. También compartimos información sobre su uso de nuestro sitio con nuestros socios de redes sociales, publicidad y análisis, que pueden combinarla con otra información que les haya proporcionado o que hayan recopilado a partir del uso de sus servicios.';
+      $ck_fields['about_ck_message'] = 'Las cookies son pequeños archivos de texto que pueden ser utilizados por los sitios web para hacer que la experiencia del usuario sea más eficiente. La ley establece que podemos almacenar cookies en su dispositivo si son estrictamente necesarias para el funcionamiento de este sitio. Para todos los demás tipos de cookies necesitamos su permiso. Este sitio utiliza diferentes tipos de cookies. Algunas cookies son colocadas por servicios de terceros que aparecen en nuestras páginas. En cualquier momento puede cambiar o retirar su consentimiento de la Declaración de cookies en nuestro sitio web. Obtenga más información sobre quiénes somos, cómo puede contactarnos y cómo tratamos los datos personales en nuestra Política de privacidad. Especifique su ID de consentimiento y la fecha en que nos contactó con respecto a su consentimiento.';
+    } elseif (get_locale() == 'it_IT') {
+      $ck_fields['ck_page_slug'] = 'cookie-policy';
+      $ck_fields['heading_message'] = 'Questo sito web utilizza i cookie!';
+      $ck_fields['gdpr_message'] = 'Utilizziamo i cookie per personalizzare contenuti ed annunci, per fornire funzionalità dei social media e per analizzare il nostro traffico. Condividiamo inoltre informazioni sul modo in cui utilizza il nostro sito con i nostri partner che si occupano di analisi dei dati web, pubblicità e social media, i quali potrebbero combinarle con altre informazioni che ha fornito loro o che hanno raccolto dal suo utilizzo dei loro servizi.';
+      $ck_fields['about_ck_message'] = "I cookie sono piccoli file di testo che possono essere utilizzati dai siti web per rendere più efficiente l’esperienza per l’utente. La legge afferma che possiamo memorizzare i cookie sul suo dispositivo se sono strettamente necessari per il funzionamento di questo sito. Per tutti gli altri tipi di cookie abbiamo bisogno del suo permesso. Questo sito utilizza diversi tipi di cookie. Alcuni cookie sono collocati da servizi di terzi che compaiono sulle nostre pagine. In qualsiasi momento è possibile modificare o revocare il proprio consenso dalla Dichiarazione dei cookie sul nostro sito Web. Scopra di più su chi siamo, come può contattarci e come trattiamo i dati personali nella nostra Informativa sulla privacy. Specifica l’ID del tuo consenso e la data di quando ci hai contattati per quanto riguarda il tuo consenso.";
+    } else {
+      $ck_fields['ck_page_slug'] = 'cookie-policy';
+      $ck_fields['heading_message'] = 'This website uses cookies!';
+      $ck_fields['gdpr_message'] = 'We use cookies to personalize content and ads, to provide social media features and to analyze our traffic. We also share information about how you use our site with our analytics, advertising and social media partners, who may combine it with other information that you have provided to them or that they have collected from your use of their services.';
+      $ck_fields['about_ck_message'] = "Cookies are small text files that can be used by websites to make the user experience more efficient. The law states that we can store cookies on your device if they are strictly necessary for the operation of this site. For all other types of cookies we need your permission. This site uses different types of cookies. Some cookies are placed by third-party services that appear on our pages. You can change or withdraw your consent at any time from the Cookie Declaration on our website. Find out more about who we are, how you can contact us and how we process personal data in our Privacy Policy. Specify your consent ID and the date you contacted us regarding your consent.";
+    }
+
     if (!get_option(LW_ALL_IN_ONE_PLUGIN_NAME)) {
       $initial_attivation_options = array(
         'ga_activate' => $ga_activate,
@@ -95,6 +113,16 @@ class Lw_All_In_One_Activator {
         'lw_cf7_fields' => array(
           'save_cf7_subm' => $save_cf7_subm,
           'opt_scr_deliv' => $opt_scr_deliv,
+        ),
+        'ck_activate' => $ck_activate,
+        'ck_fields' => array(
+          'banner_position' => 'bottom',
+          'ck_page_slug' => $ck_fields['ck_page_slug'],
+          'primary_color' => '#18a300',
+          'secondary_color' => '#333333',
+          'heading_message' => $ck_fields['heading_message'],
+          'gdpr_message' => $ck_fields['gdpr_message'],
+          'about_ck_message' => $ck_fields['about_ck_message'],
         ),
         'lw_hf_fields' => array(
           'insert_header' => '',
@@ -191,6 +219,9 @@ class Lw_All_In_One_Activator {
     if (is_plugin_active('woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php')) {
       deactivate_plugins('woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php');
     }
+    // if (is_plugin_active('italy-cookie-choices/italy-cookie-choices.php')) {
+    //   deactivate_plugins('italy-cookie-choices/italy-cookie-choices.php');
+    // }
     if (is_plugin_active('wp-fastest-cache/wpFastestCache.php')) {
       if(isset($GLOBALS['wp_fastest_cache']) && method_exists($GLOBALS['wp_fastest_cache'], 'deleteCache')){
         $GLOBALS['wp_fastest_cache']->deleteCache(true);

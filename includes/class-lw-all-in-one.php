@@ -161,6 +161,10 @@ class Lw_All_In_One {
         $this->loader->add_action('plugins_loaded', $plugin_public, 'include_woocommerce_gtm_tracking');
       }
     }
+
+    if ($this->check_plugin_options(false, 'ck_activate') == 'on') {
+      $this->loader->add_action('wp_footer', $plugin_public, 'include_cookie_consent');
+    }
   }
 
   private function define_ga_events_hooks() {
@@ -211,7 +215,7 @@ class Lw_All_In_One {
 
     $this->loader->add_action('admin_menu', $plugin_privacy_policy, 'lw_all_in_one_privacy_policy_admin_menu', 99);
 
-    $this->loader->add_action('admin_init', $plugin_privacy_policy, 'lw_all_in_one_old_privacy_is_active_deactivate');
+    // $this->loader->add_action('admin_init', $plugin_privacy_policy, 'lw_all_in_one_remove_italy_cookie_choices');
 
   }
 

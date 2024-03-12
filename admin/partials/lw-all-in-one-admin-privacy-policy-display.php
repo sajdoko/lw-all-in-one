@@ -14,7 +14,7 @@
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
-$italy_cookie_choices_missing = false;
+
 //Plugin options
 $options = get_option($this->plugin_name . '_privacy_pages');
 $cookie_page_options = (isset($options['cookie-policy'])) ? $options['cookie-policy'] : array();
@@ -37,18 +37,8 @@ $trattamento_dati_page_options = (isset($options['informativa-trattamento-dati']
     <p>
       <?php esc_attr_e('Link "Informativa Trattamento Dati" in all contact forms of the website.', LW_ALL_IN_ONE_PLUGIN_NAME);?>
     </p>
-    <?php
-      if (!file_exists(WP_PLUGIN_DIR . '/italy-cookie-choices/italy-cookie-choices.php')) {
-        echo '<p class="danger">' . sprintf(__('Italy Cookie Choices plugin is not installed, you must install and active it before creating pages!!! <a href="%s" title="Italy Cookie Choices (for EU Cookie Law)">Install It Now!</a>', LW_ALL_IN_ONE_PLUGIN_NAME), wp_nonce_url(admin_url('update.php?action=install-plugin&plugin=italy-cookie-choices'), 'install-plugin_italy-cookie-choices')) . '</p>';
-        $italy_cookie_choices_missing = true;
-      } else if (!in_array('italy-cookie-choices/italy-cookie-choices.php', apply_filters('active_plugins', get_option('active_plugins')))) {
-        echo '<p class="danger">'. sprintf(__('Italy Cookie Choices plugin is not activated, you must active it before creating pages!!! <a href="%s" title="Italy Cookie Choices (for EU Cookie Law)">Activate It Now!</a>', LW_ALL_IN_ONE_PLUGIN_NAME), wp_nonce_url(admin_url('plugins.php?action=activate&plugin=italy-cookie-choices/italy-cookie-choices.php'), 'activate-plugin_italy-cookie-choices/italy-cookie-choices.php')) . '</p>';
-        $italy_cookie_choices_missing = true;
-      }
-    ?>
   </div>
   <hr>
-<?php if (!$italy_cookie_choices_missing) : ?>
   <form method="post" name="<?php echo $this->plugin_name; ?>_privacy_policy_pages" id="<?php echo $this->plugin_name; ?>_privacy_policy_pages" action="">
 
     <div id="poststuff" class="lw-aio">
@@ -141,6 +131,4 @@ $trattamento_dati_page_options = (isset($options['informativa-trattamento-dati']
       </div>
     </div>
   </form>
-<?php endif; ?>
-
 </div>

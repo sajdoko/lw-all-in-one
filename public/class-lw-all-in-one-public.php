@@ -1,8 +1,6 @@
 <?php
 
 /**
- * The public-facing functionality of the plugin.
- *
  * @link       https://localweb.it/
  *
  * @package    Lw_All_In_One
@@ -37,6 +35,9 @@ class Lw_All_In_One_Public {
    */
   private $version;
 
+  private $options;
+  public $lwaiobar_settings;
+
   /**
    * Initialize the class and set its properties.
    *
@@ -48,6 +49,17 @@ class Lw_All_In_One_Public {
     $this->plugin_name = $plugin_name;
     $this->version = $version;
 
+    $this->options = get_option($plugin_name);
+    $this->lwaiobar_settings = $this->lwaio_get_default_settings();
+
+    $this->lwaiobar_settings['banner_position'] = (isset($this->options['ck_fields']['banner_position'])) ? esc_attr($this->options['ck_fields']['banner_position']) : '';
+    $this->lwaiobar_settings['ck_page_slug'] = (isset($this->options['ck_fields']['ck_page_slug'])) ? esc_attr($this->options['ck_fields']['ck_page_slug']) : '';
+    $this->lwaiobar_settings['heading_message'] = (isset($this->options['ck_fields']['heading_message'])) ? esc_attr($this->options['ck_fields']['heading_message']) : '';
+    $this->lwaiobar_settings['gdpr_message'] = (isset($this->options['ck_fields']['gdpr_message'])) ? esc_textarea($this->options['ck_fields']['gdpr_message']) : '';
+    $this->lwaiobar_settings['about_ck_message'] = (isset($this->options['ck_fields']['about_ck_message'])) ? esc_textarea($this->options['ck_fields']['about_ck_message']) : '';
+    $this->lwaiobar_settings['primary_color'] = (isset($this->options['ck_fields']['primary_color'])) ? esc_attr($this->options['ck_fields']['primary_color']) : '';
+    $this->lwaiobar_settings['secondary_color'] = (isset($this->options['ck_fields']['secondary_color'])) ? esc_attr($this->options['ck_fields']['secondary_color']) : '';
+
   }
 
   /**
@@ -55,10 +67,14 @@ class Lw_All_In_One_Public {
    *
    */
   public function enqueue_styles() {
+    $ck_activate = (isset($this->options['ck_activate'])) ? $this->options['ck_activate'] : '';
 
-    // $min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+    $min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
     // wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/lw-all-in-one-public'.$min.'.css', array(), $this->version, 'all');
 
+    if ($ck_activate === 'on') {
+      wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/lw-all-in-one-consent'.$min.'.css', array(), $this->version, 'all' );
+    }
   }
 
   /**
@@ -66,65 +82,273 @@ class Lw_All_In_One_Public {
    *
    */
   public function enqueue_scripts(){
-    //Plugin options
-    $options = get_option($this->plugin_name);
-    $ga_activate = (isset($options['ga_activate'])) ? $options['ga_activate'] : '';
-    $ga_fields_tracking_id = (isset($options['ga_fields']['tracking_id'])) ? sanitize_text_field($options['ga_fields']['tracking_id']) : '';
-    $ga_fields_monitor_woocommerce_data = (isset($options['ga_fields']['monitor_woocommerce_data'])) ? sanitize_text_field($options['ga_fields']['monitor_woocommerce_data']) : '';
+    $min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+    $ga_activate = (isset($this->options['ga_activate'])) ? $this->options['ga_activate'] : '';
+    $ck_activate = (isset($this->options['ck_activate'])) ? $this->options['ck_activate'] : '';
+    $ga_fields_tracking_id = (isset($this->options['ga_fields']['tracking_id'])) ? sanitize_text_field($this->options['ga_fields']['tracking_id']) : '';
+
     if ($ga_activate === 'on' && $ga_fields_tracking_id !== '') {
-      $min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
       wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/lw-all-in-one-public'.$min.'.js', array('jquery'), $this->version, true);
       wp_localize_script($this->plugin_name, 'lw_all_in_one_save_ga_event_object',
         array(
           'ajaxurl' => admin_url('admin-ajax.php'),
           'security' => wp_create_nonce($this->plugin_name),
-          // 'data_var_1' => 'value 1',
-          // 'data_var_2' => 'value 2',
         )
       );
 
-      if ($ga_fields_monitor_woocommerce_data === 'on') {
-        wp_enqueue_script($this->plugin_name.'_woocommerce_gtm', plugin_dir_url(__FILE__) . 'js/lw-all-in-one-woocommerce-gtm'.$min.'.js', array('jquery'), $this->version, true);
-      }
+      wp_register_script($this->plugin_name.'_woocommerce_gtm', plugin_dir_url(__FILE__) . 'js/lw-all-in-one-woocommerce-gtm'.$min.'.js', array('jquery'), $this->version, true);
 
+    }
+
+    if ($ck_activate === 'on') {
+      wp_register_script($this->plugin_name . '-bts', plugin_dir_url( __FILE__ ) . 'js/bootstrap.min.js', array( 'jquery' ), $this->version, true );
+      wp_register_script($this->plugin_name . '-consent', plugin_dir_url( __FILE__ ) . 'js/lw-all-in-one-consent'.$min.'.js', array( 'jquery' ), $this->version, true );
     }
 
   }
 
   public function include_woocommerce_gtm_tracking() {
     if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
+      wp_enqueue_script( $this->plugin_name . '_woocommerce_gtm' );
       include_once 'partials/lw-all-in-one-public-woocommerce-gtm.php';
     }
   }
 
+  public function include_cookie_consent() {
+    wp_enqueue_script( $this->plugin_name . '-bts' );
+    wp_enqueue_script( $this->plugin_name . '-consent' );
+
+    $ck_activate = (isset($this->options['ck_activate'])) ? esc_attr($this->options['ck_activate']) : '';
+
+    $categories_data = [
+      [
+        'id_lwaio_category' => 1,
+        'lwaio_category_name' => __('Necessary', $this->plugin_name),
+        'lwaio_category_slug' => 'necessary',
+        'lwaio_category_description' => __('Necessary cookies help make a website usable by enabling basic functions such as page navigation and access to protected areas of the site. The website cannot function properly without these cookies.', $this->plugin_name),
+      ],
+      [
+        'id_lwaio_category' => 2,
+        'lwaio_category_name' => __('Preferences', $this->plugin_name),
+        'lwaio_category_slug' => 'preferences',
+        'lwaio_category_description' => __('Preference cookies allow a website to remember information that changes the way the website behaves or appears, such as your preferred language or the region you are in.', $this->plugin_name),
+      ],
+      [
+        'id_lwaio_category' => 3,
+        'lwaio_category_name' => __('Analytics', $this->plugin_name),
+        'lwaio_category_slug' => 'analytics',
+        'lwaio_category_description' => __('Analytical cookies help website owners understand how visitors interact with sites by collecting and reporting information anonymously.', $this->plugin_name),
+      ],
+      [
+        'id_lwaio_category' => 4,
+        'lwaio_category_name' => __('Marketing', $this->plugin_name),
+        'lwaio_category_slug' => 'marketing',
+        'lwaio_category_description' => __('Marketing cookies are used to track visitors to websites. The intention is to display ads that are relevant and engaging to the individual user and therefore more valuable to publishers and third-party advertisers.', $this->plugin_name),
+      ],
+    ];
+    $cookies = [
+      [
+        'name' => 'lwaio_viewed_cookie',
+        'category' => 'necessary',
+        'domain' => str_replace(array('http://', 'https://'), '', esc_url( home_url( ) )),
+        'duration' => '365',
+        'type' => 'HTTP',
+        'description' => __('Cookie consent preferences.', $this->plugin_name),
+      ],
+      [
+        'name' => 'lwaio_user_preference',
+        'category' => 'necessary',
+        'domain' => str_replace(array('http://', 'https://'), '', esc_url( home_url( ) )),
+        'duration' => '365',
+        'type' => 'HTTP',
+        'description' => __('Cookie consent preferences.', $this->plugin_name),
+      ],
+    ];
+    $preference_cookies = isset( $_COOKIE['lwaio_user_preference'] ) ? json_decode( stripslashes( sanitize_text_field( wp_unslash( $_COOKIE['lwaio_user_preference'] ) ) ), true ) : '';
+    $viewed_cookie = isset( $_COOKIE['lwaio_viewed_cookie'] ) ? sanitize_text_field( wp_unslash( $_COOKIE['lwaio_viewed_cookie'] ) ) : '';
+    foreach ( $categories_data as $category ) {
+      $total     = 0;
+      $temp      = array();
+      $json_temp = array();
+      foreach ( $cookies as $cookie ) {
+        if ( $cookie['category'] === $category['lwaio_category_slug'] ) {
+          $total++;
+          $temp[]                = $cookie;
+          $cookie['description'] = str_replace( '"', '\"', $cookie['description'] );
+          $json_temp[]           = $cookie;
+        }
+      }
+      $category['data']  = $temp;
+      $category['total'] = $total;
+      if ( isset( $preference_cookies[ $category['lwaio_category_slug'] ] ) && 'yes' === $preference_cookies[ $category['lwaio_category_slug'] ] ) {
+        $category['is_ticked'] = true;
+      } else {
+        $category['is_ticked'] = false;
+      }
+      $categories[]      = $category;
+      $category['data']       = $json_temp;
+      $categories_json_data[] = $category;
+    }
+    include_once 'partials/lw-all-in-one-public-ck-consent.php';
+    ?>
+    <script type="text/javascript">
+      /* <![CDATA[ */
+      lwaios_list = '<?php echo str_replace( "'", "\'", wp_json_encode( $categories_json_data ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>';
+      lwaiobar_settings='<?php echo wp_json_encode($this->lwaiobar_settings); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>';
+      /* ]]> */
+    </script>
+    <?php
+  }
+
+  	/**
+	 * Returns default settings.
+	 * If you override the settings here, be ultra careful to use escape characters.
+	 *
+	 * @since 1.0
+	 * @param string $key Return default settings for particular key.
+	 * @return array|mixed
+	 */
+	public function lwaio_get_default_settings( $key = '' ) {
+		$settings = array(
+
+			'background'                      => '#fff',
+			'primary_color'                   => '#18a300',
+			'secondary_color'                 => '#333333',
+			'button_link_color'               => '#fff',
+			'text'                            => '#000',
+
+			'show_again_position'             => 'left', // 'left' = left | 'right' = right.
+			'show_again_margin'               => '3',
+			'auto_hide_delay'                 => '10000',
+			'auto_scroll_offset'              => '10',
+			'cookie_expiry'                   => '365',
+			'opacity'                         => '1',
+			'animate_speed_hide'              => 0,
+			'animate_speed_show'              => 0,
+
+			'button_accept_text'              => __( 'Accept Selected', $this->plugin_name ),
+			'button_accept_text_all'          => __( 'Accept All Cookies', $this->plugin_name ),
+			'button_readmore_text'            => __( 'Read more', $this->plugin_name ),
+			'button_decline_text'             => __( 'Refuse', $this->plugin_name ),
+			'button_settings_text'            => __( 'Cookie Info', $this->plugin_name ),
+			'button_confirm_text'             => __( 'Confirm', $this->plugin_name ),
+			'button_cancel_text'              => __( 'Cancel', $this->plugin_name ),
+			'show_again_text'                 => __( 'Cookie Settings', $this->plugin_name ),
+			'no_cookies_in_cat'               => __( 'We do not use cookies of this type.', $this->plugin_name ),
+			'tab_1_label'                     => __( 'Cookie statement', $this->plugin_name ),
+			'tab_2_label'                     => __( 'Information about cookies', $this->plugin_name ),
+
+			'logging_on'                      => false,
+			'auto_hide'                       => false,
+			'auto_scroll'                     => false,
+			'auto_scroll_reload'              => false,
+			'accept_reload'                   => false,
+			'decline_reload'                  => false,
+			'notify_animate_hide'             => false,
+			'notify_animate_show'             => false,
+			'notify_div_id'                   => '#lwaio-consent-bar',
+			'show_again_div_id'               => '#lwaio-consent-show-again',
+			'header_scripts'                  => '',
+			'body_scripts'                    => '',
+			'footer_scripts'                  => '',
+		);
+		return '' !== $key ? $settings[ $key ] : $settings;
+	}
+
   public function lw_all_in_one_header_scripts() {
-    //Plugin options
-    $options = get_option($this->plugin_name);
-    $ga_activate = (isset($options['ga_activate'])) ? $options['ga_activate'] : '';
-    $ga_fields_tracking_id = (isset($options['ga_fields']['tracking_id'])) ? sanitize_text_field($options['ga_fields']['tracking_id']) : '';
-    $ga_fields_save_ga_events = (isset($options['ga_fields']['save_ga_events'])) ? sanitize_text_field($options['ga_fields']['save_ga_events']) : '';
-    $ga_fields_monitor_email_link = (isset($options['ga_fields']['monitor_email_link'])) ? sanitize_text_field($options['ga_fields']['monitor_email_link']) : '';
-    $ga_fields_monitor_tel_link = (isset($options['ga_fields']['monitor_tel_link'])) ? sanitize_text_field($options['ga_fields']['monitor_tel_link']) : '';
-    $ga_fields_monitor_form_submit = (isset($options['ga_fields']['monitor_form_submit'])) ? sanitize_text_field($options['ga_fields']['monitor_form_submit']) : '';
+    $ga_activate = (isset($this->options['ga_activate'])) ? $this->options['ga_activate'] : '';
+    $ga_fields_tracking_id = (isset($this->options['ga_fields']['tracking_id'])) ? sanitize_text_field($this->options['ga_fields']['tracking_id']) : '';
+    $ga_fields_save_ga_events = (isset($this->options['ga_fields']['save_ga_events'])) ? sanitize_text_field($this->options['ga_fields']['save_ga_events']) : '';
+    $ga_fields_monitor_email_link = (isset($this->options['ga_fields']['monitor_email_link'])) ? sanitize_text_field($this->options['ga_fields']['monitor_email_link']) : '';
+    $ga_fields_monitor_tel_link = (isset($this->options['ga_fields']['monitor_tel_link'])) ? sanitize_text_field($this->options['ga_fields']['monitor_tel_link']) : '';
+    $ga_fields_monitor_form_submit = (isset($this->options['ga_fields']['monitor_form_submit'])) ? sanitize_text_field($this->options['ga_fields']['monitor_form_submit']) : '';
+
+    $preference_cookies = isset( $_COOKIE['lwaio_user_preference'] ) ? json_decode( stripslashes( sanitize_text_field( wp_unslash( $_COOKIE['lwaio_user_preference'] ) ) ), true ) : '';
+    $ad_user_data = isset( $preference_cookies['marketing'] ) && $preference_cookies['marketing'] == 'yes' ? 'granted' : 'denied';
+    $ad_personalization = isset( $preference_cookies['marketing'] ) && $preference_cookies['marketing'] == 'yes' ? 'granted' : 'denied';
+    $analytics_storage = isset( $preference_cookies['analytics'] ) && $preference_cookies['analytics'] == 'yes' ? 'granted' : 'denied';
+    $ad_storage = (($ad_user_data == 'granted') || ($ad_personalization == 'granted') || ($analytics_storage == 'granted')) ? 'granted' : 'denied';
 
     if ($ga_activate === 'on' && $ga_fields_tracking_id !== '') {
       $tag_type = explode('-', $ga_fields_tracking_id, 2)[0];
+      ?>
+      <script>
+        let ad_user_data = '<?php echo $ad_user_data; ?>';
+        let ad_personalization = '<?php echo $ad_personalization; ?>';
+        let analytics_storage = '<?php echo $analytics_storage; ?>';
+        let ad_storage = '<?php echo $ad_storage; ?>';
+        let isGtmTag = '<?php echo $tag_type; ?>' === 'GTM';
+        let gtmScriptSrc = "https://www.googletagmanager.com/gtm.js?id=<?php echo $ga_fields_tracking_id; ?>";
 
-      if ($tag_type == 'GTM') {
-        echo "<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f); })(window,document,'script','dataLayer','$ga_fields_tracking_id');</script>", PHP_EOL;
-      } else {
-        echo '<script async src="https://www.googletagmanager.com/gtag/js?id=' . $ga_fields_tracking_id . '"></script>', PHP_EOL;
-        echo "<script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '$ga_fields_tracking_id');</script>", PHP_EOL;
-      }
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('consent', 'default', {
+          'ad_user_data': ad_user_data,
+          'ad_personalization': ad_personalization,
+          'analytics_storage': analytics_storage,
+          'ad_storage': ad_storage,
+          'wait_for_update': 500,
+        });
+        if (isGtmTag) {
+          dataLayer.push({'gtm.start': new Date().getTime(), 'event': 'gtm.js'});
+        } else {
+          gtag('js', new Date());
+          gtag('config', '<?php echo $ga_fields_tracking_id; ?>');
+          gtmScriptSrc = "https://www.googletagmanager.com/gtag/js?id=<?php echo $ga_fields_tracking_id; ?>";
+        }
 
-      echo '<script>';
-      echo 'const lwAioGaActivate=true;';
-      echo 'const lwAioTrackingType="'.$tag_type.'";';
-      echo ($ga_fields_save_ga_events === 'on') ? 'const lwAioSaveGaEvents=true;' : 'const lwAioSaveGaEvents=false;';
-      echo ($ga_fields_monitor_email_link === 'on') ? 'const lwAioMonitorEmailLink=true;' : 'const lwAioMonitorEmailLink=false;';
-      echo ($ga_fields_monitor_tel_link === 'on') ? 'const lwAioMonitorTelLink=true;' : 'const lwAioMonitorTelLink=false;';
-      echo ($ga_fields_monitor_form_submit === 'on') ? 'const lwAioMonitorFormSubmit=true;' : 'const lwAioMonitorFormSubmit=false;';
-      echo '</script>', PHP_EOL;
+        window.addEventListener("LwAioCookieConsentOnAcceptAll", function(e){
+          gtag("consent", "update", {
+            ad_user_data: "granted",
+            ad_personalization: "granted",
+            ad_storage: "granted",
+            analytics_storage: "granted",
+          });
+          loadGtmScript(gtmScriptSrc);
+        });
+        window.addEventListener("LwAioCookieConsentOnAccept", function(e){
+          ad_user_data = e.detail.lwaio_user_preference.marketing === "yes" ? 'granted' : 'denied';
+          ad_personalization = e.detail.lwaio_user_preference.marketing === "yes" ? 'granted' : 'denied';
+          analytics_storage = e.detail.lwaio_user_preference.analytics === "yes" ? 'granted' : 'denied';
+          ad_storage = (ad_user_data === 'granted' || ad_personalization === 'granted' || analytics_storage === 'granted') ? 'granted' : 'denied';
+          gtag("consent", "update", {
+            ad_user_data: ad_user_data,
+            ad_personalization: ad_personalization,
+            analytics_storage: analytics_storage,
+            ad_storage: ad_storage,
+          });
+          loadGtmScript(gtmScriptSrc);
+        });
+        window.addEventListener("LwAioCookieConsentOnReject", function(e){
+          gtag("consent", "update", {
+            ad_user_data: "denied",
+            ad_personalization: "denied",
+            analytics_storage: "denied",
+            ad_storage: "denied",
+          });
+        });
+
+        if (ad_storage === 'granted') {
+          loadGtmScript(gtmScriptSrc);
+        }
+        function loadGtmScript(gtmScriptSrc) {
+          let gtmScript = document.createElement("script");
+          gtmScript.async = true;
+          gtmScript.src = gtmScriptSrc;
+          let firstScript = document.getElementsByTagName('script')[0];
+          firstScript.parentNode.insertBefore(gtmScript,firstScript);
+        }
+
+      </script>
+      <?php
+        echo '<script>';
+        echo 'const lwAioGaActivate=true;';
+        echo 'const lwAioTrackingType="'.$tag_type.'";';
+        echo ($ga_fields_save_ga_events === 'on') ? 'const lwAioSaveGaEvents=true;' : 'const lwAioSaveGaEvents=false;';
+        echo ($ga_fields_monitor_email_link === 'on') ? 'const lwAioMonitorEmailLink=true;' : 'const lwAioMonitorEmailLink=false;';
+        echo ($ga_fields_monitor_tel_link === 'on') ? 'const lwAioMonitorTelLink=true;' : 'const lwAioMonitorTelLink=false;';
+        echo ($ga_fields_monitor_form_submit === 'on') ? 'const lwAioMonitorFormSubmit=true;' : 'const lwAioMonitorFormSubmit=false;';
+        echo '</script>', PHP_EOL;
     }
   }
 
@@ -155,9 +379,7 @@ class Lw_All_In_One_Public {
   }
 
   public function lw_all_in_one_dequeue(){
-    //Plugin options
-    $options = get_option($this->plugin_name);
-    $opt_scr_deliv = (isset($options['lw_cf7_fields']['opt_scr_deliv'])) ? $options['lw_cf7_fields']['opt_scr_deliv'] : '';
+    $opt_scr_deliv = (isset($this->options['lw_cf7_fields']['opt_scr_deliv'])) ? $this->options['lw_cf7_fields']['opt_scr_deliv'] : '';
 
     if ($opt_scr_deliv === 'on') {
       global $post;
