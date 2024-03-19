@@ -1,48 +1,28 @@
-GDPR_ACCEPT_COOKIE_NAME =
-	typeof GDPR_ACCEPT_COOKIE_NAME !== "undefined" ?
-		GDPR_ACCEPT_COOKIE_NAME :
-		"lwaio_viewed_cookie";
-GDPR_CCPA_COOKIE_NAME =
-	typeof GDPR_CCPA_COOKIE_NAME !== "undefined" ?
-		GDPR_CCPA_COOKIE_NAME :
-		"wpl_optout_cookie";
-US_PRIVACY_COOKIE_NAME =
-	typeof US_PRIVACY_COOKIE_NAME !== "undefined" ?
-		US_PRIVACY_COOKIE_NAME :
-		"usprivacy";
-GDPR_ACCEPT_COOKIE_EXPIRE =
-	typeof GDPR_ACCEPT_COOKIE_EXPIRE !== "undefined" ?
-		GDPR_ACCEPT_COOKIE_EXPIRE :
-		365;
-GDPR_CCPA_COOKIE_EXPIRE =
-	typeof GDPR_CCPA_COOKIE_EXPIRE !== "undefined" ?
-		GDPR_CCPA_COOKIE_EXPIRE :
-		365;
+USR_PREFS_CK_NAME = typeof USR_PREFS_CK_NAME !== "undefined" ? USR_PREFS_CK_NAME : "lwaio_consent_preferences";
+ACTED_CONSENT_CK_NAME = typeof ACTED_CONSENT_CK_NAME !== "undefined" ? ACTED_CONSENT_CK_NAME : "lwaio_consent_acted";
+EXP_CK_NAME = typeof EXP_CK_NAME !== "undefined" ? EXP_CK_NAME : '1 Year';
 
 (function ($) {
 	"use strict";
-	var GDPR_Cookie = {
-		set: function (name, value, days, domain) {
+	let GDPR_Cookie = {
+		set: function (name, value, days, domain = '') {
+				let expires = "";
 			if (days) {
-				var date = new Date();
+				let date = new Date();
 				date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-				var expires = "; expires=" + date.toGMTString();
-			} else {
-				var expires = "";
+				expires = "; expires=" + date.toGMTString();
 			}
 			if (domain) {
-				var domain = "; domain=" + domain;
-			} else {
-				var domain = "";
+				domain = "; domain=" + domain;
 			}
 			document.cookie = name + "=" + value + expires + "; path=/" + domain;
 		},
 		read: function (name) {
-			var nameEQ = name + "=";
-			var ca = document.cookie.split(";");
-			var ca_length = ca.length;
-			for (var i = 0; i < ca_length; i++) {
-				var c = ca[i];
+			let nameEQ = name + "=";
+			let ca = document.cookie.split(";");
+			let ca_length = ca.length;
+			for (let i = 0; i < ca_length; i++) {
+				let c = ca[i];
 				while (c.charAt(0) == " ") {
 					c = c.substring(1, c.length);
 				}
@@ -56,11 +36,11 @@ GDPR_CCPA_COOKIE_EXPIRE =
 			return this.read(name) !== null;
 		},
 		getallcookies: function () {
-			var pairs = document.cookie.split(";");
-			var cookieslist = {};
-			var pairs_length = pairs.length;
-			for (var i = 0; i < pairs_length; i++) {
-				var pair = pairs[i].split("=");
+			let pairs = document.cookie.split(";");
+			let cookieslist = {};
+			let pairs_length = pairs.length;
+			for (let i = 0; i < pairs_length; i++) {
+				let pair = pairs[i].split("=");
 				cookieslist[(pair[0] + "").trim()] = unescape(pair[1]);
 			}
 			return cookieslist;
@@ -74,7 +54,7 @@ GDPR_CCPA_COOKIE_EXPIRE =
 		},
 	};
 
-	var GDPR = {
+	let GDPR = {
 		bar_config: {},
 		show_config: {},
 		allowed_categories: [],
@@ -87,7 +67,7 @@ GDPR_CCPA_COOKIE_EXPIRE =
 			}
 
 			this.settings = JSON.parse(args.settings);
-			GDPR_ACCEPT_COOKIE_EXPIRE = this.settings.cookie_expiry;
+			EXP_CK_NAME = this.settings.cookie_expiry;
 			this.bar_elm = jQuery(this.settings.notify_div_id);
 			this.show_again_elm = jQuery(this.settings.show_again_div_id);
 
@@ -111,15 +91,15 @@ GDPR_CCPA_COOKIE_EXPIRE =
 				if (this.settings.auto_scroll) {
 					window.addEventListener("scroll", GDPR.acceptOnScroll, false);
 				}
-				var lwaio_user_preference = JSON.parse(
-					GDPR_Cookie.read("lwaio_user_preference")
+				let lwaio_consent_preferences = JSON.parse(
+					GDPR_Cookie.read(USR_PREFS_CK_NAME)
 				);
-				var lwaio_viewed_cookie = GDPR_Cookie.read("lwaio_viewed_cookie");
-				var event = "";
+				let lwaio_consent_acted = GDPR_Cookie.read(ACTED_CONSENT_CK_NAME);
+				let event = "";
 					event = new CustomEvent("LwAioCookieConsentOnLoad", {
 						detail: {
-							lwaio_user_preference: lwaio_user_preference,
-							lwaio_viewed_cookie: lwaio_viewed_cookie,
+							lwaio_consent_preferences: lwaio_consent_preferences,
+							lwaio_consent_acted: lwaio_consent_acted,
 						},
 					});
 					window.dispatchEvent(event);
@@ -127,31 +107,30 @@ GDPR_CCPA_COOKIE_EXPIRE =
 		attachEvents: function () {
 			jQuery(".lwaio_action_button").click(function (e) {
 				e.preventDefault();
-				var event = "";
-				var lwaio_user_preference = "";
-				var lwaio_user_preference_val = "";
-				var lwaio_viewed_cookie = "";
-				var lwaio_optout_cookie = "";
-				var elm = jQuery(this);
-				var button_action = elm.attr("data-lwaio_action");
+				let event = "";
+				let lwaio_consent_preferences = "";
+				let lwaio_consent_preferences_val = "";
+				let lwaio_consent_acted = "";
+				let elm = jQuery(this);
+				let button_action = elm.attr("data-lwaio_action");
 
 				if (button_action == "accept_all") {
 					GDPR.enableAllCookies();
 					GDPR.accept_all_close();
-					lwaio_user_preference = JSON.parse(
-						GDPR_Cookie.read("lwaio_user_preference")
+					lwaio_consent_preferences = JSON.parse(
+						GDPR_Cookie.read(USR_PREFS_CK_NAME)
 					);
-					lwaio_user_preference_val = JSON.stringify(lwaio_user_preference);
-					lwaio_viewed_cookie = GDPR_Cookie.read("lwaio_viewed_cookie");
+					lwaio_consent_preferences_val = JSON.stringify(lwaio_consent_preferences);
+					lwaio_consent_acted = GDPR_Cookie.read(ACTED_CONSENT_CK_NAME);
 						GDPR_Cookie.set(
-							"lwaio_user_preference",
-							lwaio_user_preference_val,
-							GDPR_ACCEPT_COOKIE_EXPIRE
+							USR_PREFS_CK_NAME,
+							lwaio_consent_preferences_val,
+							EXP_CK_NAME
 						);
 						event = new CustomEvent("LwAioCookieConsentOnAcceptAll", {
 							detail: {
-								lwaio_user_preference: lwaio_user_preference,
-								lwaio_viewed_cookie: lwaio_viewed_cookie,
+								lwaio_consent_preferences: lwaio_consent_preferences,
+								lwaio_consent_acted: lwaio_consent_acted,
 							},
 						});
 						window.dispatchEvent(event);
@@ -159,21 +138,21 @@ GDPR_CCPA_COOKIE_EXPIRE =
 					GDPR.logConsent(button_action);
 				} else if (button_action == "accept") {
 					GDPR.accept_close();
-					lwaio_user_preference = JSON.parse(
-						GDPR_Cookie.read("lwaio_user_preference")
+					lwaio_consent_preferences = JSON.parse(
+						GDPR_Cookie.read(USR_PREFS_CK_NAME)
 					);
-					lwaio_user_preference_val = JSON.stringify(lwaio_user_preference);
-					lwaio_viewed_cookie = GDPR_Cookie.read("lwaio_viewed_cookie");
+					lwaio_consent_preferences_val = JSON.stringify(lwaio_consent_preferences);
+					lwaio_consent_acted = GDPR_Cookie.read(ACTED_CONSENT_CK_NAME);
 						GDPR_Cookie.set(
-							"lwaio_user_preference",
-							lwaio_user_preference_val,
-							GDPR_ACCEPT_COOKIE_EXPIRE
+							USR_PREFS_CK_NAME,
+							lwaio_consent_preferences_val,
+							EXP_CK_NAME
 						);
 
 						event = new CustomEvent("LwAioCookieConsentOnAccept", {
 							detail: {
-								lwaio_user_preference: lwaio_user_preference,
-								lwaio_viewed_cookie: lwaio_viewed_cookie,
+								lwaio_consent_preferences: lwaio_consent_preferences,
+								lwaio_consent_acted: lwaio_consent_acted,
 							},
 						});
 						window.dispatchEvent(event);
@@ -181,23 +160,23 @@ GDPR_CCPA_COOKIE_EXPIRE =
 					GDPR.logConsent(button_action);
 				} else if (button_action == "reject") {
 					GDPR.reject_close();
-					lwaio_user_preference = JSON.parse(
-						GDPR_Cookie.read("lwaio_user_preference")
+					lwaio_consent_preferences = JSON.parse(
+						GDPR_Cookie.read(USR_PREFS_CK_NAME)
 					);
-					lwaio_viewed_cookie = GDPR_Cookie.read("lwaio_viewed_cookie");
-					GDPR_Cookie.erase("lwaio_user_preference");
-					// GDPR_Cookie.erase('lwaio_viewed_cookie');
+					lwaio_consent_acted = GDPR_Cookie.read(ACTED_CONSENT_CK_NAME);
+					GDPR_Cookie.erase(USR_PREFS_CK_NAME);
+					// GDPR_Cookie.erase('lwaio_consent_acted');
 					event = new CustomEvent("LwAioCookieConsentOnReject", {
 						detail: {
-							lwaio_user_preference: lwaio_user_preference,
-							lwaio_viewed_cookie: lwaio_viewed_cookie,
+							lwaio_consent_preferences: lwaio_consent_preferences,
+							lwaio_consent_acted: lwaio_consent_acted,
 						},
 					});
 					window.dispatchEvent(event);
-					var allCookiesList = GDPR_Cookie.getallcookies();
+					let allCookiesList = GDPR_Cookie.getallcookies();
 					if (typeof allCookiesList === "object" && allCookiesList !== null) {
 						jQuery.each(allCookiesList, function (key, value) {
-							if (key != GDPR_ACCEPT_COOKIE_NAME) {
+							if (key != ACTED_CONSENT_CK_NAME) {
 								GDPR_Cookie.erase(key, "." + window.location.host);
 							}
 						});
@@ -213,46 +192,25 @@ GDPR_CCPA_COOKIE_EXPIRE =
 					GDPR.show_details();
 				} else if (button_action == "hide_settings") {
 					GDPR.hide_details();
-				} else if (button_action == "cancel") {
-					GDPR.ccpa_cancel_close();
-					lwaio_optout_cookie = GDPR_Cookie.read("wpl_optout_cookie");
-					event = new CustomEvent("LwAioCookieConsentOnCancelOptout", {
-						detail: {
-							wpl_optout_cookie: lwaio_optout_cookie,
-						},
-					});
-					window.dispatchEvent(event);
-					GDPR.logConsent(button_action);
-				} else if (button_action == "confirm") {
-					GDPR.confirm_close();
-					lwaio_optout_cookie = GDPR_Cookie.read("wpl_optout_cookie");
-
-					event = new CustomEvent("LwAioCookieConsentOnOptout", {
-						detail: {
-							wpl_optout_cookie: lwaio_optout_cookie,
-						},
-					});
-					window.dispatchEvent(event);
-					GDPR.logConsent(button_action);
 				} else if (button_action == "close_banner") {
 					GDPR.hideHeader();
 					GDPR.accept_close();
-					lwaio_viewed_cookie = GDPR_Cookie.read("lwaio_viewed_cookie");
-					if (lwaio_viewed_cookie != "yes") {
-						lwaio_user_preference = JSON.parse(
-							GDPR_Cookie.read("lwaio_user_preference")
+					lwaio_consent_acted = GDPR_Cookie.read(ACTED_CONSENT_CK_NAME);
+					if (lwaio_consent_acted != "yes") {
+						lwaio_consent_preferences = JSON.parse(
+							GDPR_Cookie.read(USR_PREFS_CK_NAME)
 						);
-						lwaio_user_preference_val = JSON.stringify(lwaio_user_preference);
+						lwaio_consent_preferences_val = JSON.stringify(lwaio_consent_preferences);
 						GDPR_Cookie.set(
-							"lwaio_user_preference",
-							lwaio_user_preference_val,
-							GDPR_ACCEPT_COOKIE_EXPIRE
+							USR_PREFS_CK_NAME,
+							lwaio_consent_preferences_val,
+							EXP_CK_NAME
 						);
 
 						event = new CustomEvent("LwAioCookieConsentOnAccept", {
 							detail: {
-								lwaio_user_preference: lwaio_user_preference,
-								lwaio_viewed_cookie: lwaio_viewed_cookie,
+								lwaio_consent_preferences: lwaio_consent_preferences,
+								lwaio_consent_acted: lwaio_consent_acted,
 							},
 						});
 						window.dispatchEvent(event);
@@ -261,31 +219,31 @@ GDPR_CCPA_COOKIE_EXPIRE =
 			});
 
 			jQuery(".group-switch-buttons input").each(function () {
-				var key = jQuery(this).val();
-				var lwaio_user_preference_arr = {};
-				var lwaio_user_preference_val = "";
-				if (GDPR_Cookie.read("lwaio_user_preference")) {
-					lwaio_user_preference_arr = JSON.parse(
-						GDPR_Cookie.read("lwaio_user_preference")
+				let key = jQuery(this).val();
+				let lwaio_consent_preferences_arr = {};
+				let lwaio_consent_preferences_val = "";
+				if (GDPR_Cookie.read(USR_PREFS_CK_NAME)) {
+					lwaio_consent_preferences_arr = JSON.parse(
+						GDPR_Cookie.read(USR_PREFS_CK_NAME)
 					);
 				}
 				if (key == "necessary" || jQuery(this).is(":checked")) {
-					lwaio_user_preference_arr[key] = "yes";
+					lwaio_consent_preferences_arr[key] = "yes";
 					GDPR.allowed_categories.push(key);
 				} else {
-					lwaio_user_preference_arr[key] = "no";
-					var length = GDPR.allowed_categories.length;
-					for (var i = 0; i < length; i++) {
+					lwaio_consent_preferences_arr[key] = "no";
+					let length = GDPR.allowed_categories.length;
+					for (let i = 0; i < length; i++) {
 						if (GDPR.allowed_categories[i] == key) {
 							GDPR.allowed_categories.splice(i, 1);
 						}
 					}
 				}
-				lwaio_user_preference_val = JSON.stringify(lwaio_user_preference_arr);
+				lwaio_consent_preferences_val = JSON.stringify(lwaio_consent_preferences_arr);
 				GDPR_Cookie.set(
-					"lwaio_user_preference",
-					lwaio_user_preference_val,
-					GDPR_ACCEPT_COOKIE_EXPIRE
+					USR_PREFS_CK_NAME,
+					lwaio_consent_preferences_val,
+					EXP_CK_NAME
 				);
 			});
 			jQuery(document).on("click", "#lwaio-consent-show-again", function (e) {
@@ -301,31 +259,31 @@ GDPR_CCPA_COOKIE_EXPIRE =
 				"click",
 				".group-switch-buttons input",
 				function () {
-					var key = jQuery(this).val();
-					var lwaio_user_preference_arr = {};
-					var lwaio_user_preference_val = "";
-					if (GDPR_Cookie.read("lwaio_user_preference")) {
-						lwaio_user_preference_arr = JSON.parse(
-							GDPR_Cookie.read("lwaio_user_preference")
+					let key = jQuery(this).val();
+					let lwaio_consent_preferences_arr = {};
+					let lwaio_consent_preferences_val = "";
+					if (GDPR_Cookie.read(USR_PREFS_CK_NAME)) {
+						lwaio_consent_preferences_arr = JSON.parse(
+							GDPR_Cookie.read(USR_PREFS_CK_NAME)
 						);
 					}
 					if (jQuery(this).is(":checked")) {
-						lwaio_user_preference_arr[key] = "yes";
+						lwaio_consent_preferences_arr[key] = "yes";
 						GDPR.allowed_categories.push(key);
 					} else {
-						lwaio_user_preference_arr[key] = "no";
-						var length = GDPR.allowed_categories.length;
-						for (var i = 0; i < length; i++) {
+						lwaio_consent_preferences_arr[key] = "no";
+						let length = GDPR.allowed_categories.length;
+						for (let i = 0; i < length; i++) {
 							if (GDPR.allowed_categories[i] == key) {
 								GDPR.allowed_categories.splice(i, 1);
 							}
 						}
 					}
-					lwaio_user_preference_val = JSON.stringify(lwaio_user_preference_arr);
+					lwaio_consent_preferences_val = JSON.stringify(lwaio_consent_preferences_arr);
 					GDPR_Cookie.set(
-						"lwaio_user_preference",
-						lwaio_user_preference_val,
-						GDPR_ACCEPT_COOKIE_EXPIRE
+						USR_PREFS_CK_NAME,
+						lwaio_consent_preferences_val,
+						EXP_CK_NAME
 					);
 				}
 			);
@@ -335,7 +293,7 @@ GDPR_CCPA_COOKIE_EXPIRE =
 				"#lwaio_consent_tabs_overview",
 				function (e) {
 					e.preventDefault();
-					var elm = jQuery(this);
+					let elm = jQuery(this);
 					jQuery("#lwaio_consent_tabs")
 						.find("a")
 						.removeClass(
@@ -363,7 +321,7 @@ GDPR_CCPA_COOKIE_EXPIRE =
 				"#lwaio_consent_tabs_about",
 				function (e) {
 					e.preventDefault();
-					var elm = jQuery(this);
+					let elm = jQuery(this);
 					jQuery("#lwaio_consent_tabs")
 						.find("a")
 						.removeClass(
@@ -391,8 +349,8 @@ GDPR_CCPA_COOKIE_EXPIRE =
 				"#lwaio_consent_overview_cookie_container_types a",
 				function (e) {
 					e.preventDefault();
-					var elm = jQuery(this);
-					var prnt = elm.parent();
+					let elm = jQuery(this);
+					let prnt = elm.parent();
 					prnt
 						.find("a")
 						.removeClass(
@@ -407,8 +365,8 @@ GDPR_CCPA_COOKIE_EXPIRE =
 					);
 					elm.css("border-right-color", GDPR.settings.border_active_color);
 					elm.css("background-color", GDPR.settings.background_active_color);
-					var trgt = jQuery(this).attr("data-target");
-					var cntr = prnt.siblings(
+					let trgt = jQuery(this).attr("data-target");
+					let cntr = prnt.siblings(
 						"#lwaio_consent_overview_cookie_container_type_details"
 					);
 					cntr
@@ -542,7 +500,7 @@ GDPR_CCPA_COOKIE_EXPIRE =
 		},
 
 		toggleBar: function () {
-			if (!GDPR_Cookie.exists(GDPR_ACCEPT_COOKIE_NAME)) {
+			if (!GDPR_Cookie.exists(ACTED_CONSENT_CK_NAME)) {
 				this.displayHeader();
 				if (this.settings.auto_hide) {
 					setTimeout(function () {
@@ -554,33 +512,11 @@ GDPR_CCPA_COOKIE_EXPIRE =
 			}
 		},
 
-		ccpa_cancel_close: function () {
-			GDPR_Cookie.set(GDPR_CCPA_COOKIE_NAME, "no", GDPR_CCPA_COOKIE_EXPIRE);
-			if (this.settings.notify_animate_hide) {
-				this.bar_elm.slideUp(this.settings.animate_speed_hide);
-			}
-			if (this.settings.accept_reload == true) {
-				window.location.reload(true);
-			}
-			return false;
-		},
-
-		confirm_close: function () {
-			GDPR_Cookie.set(GDPR_CCPA_COOKIE_NAME, "yes", GDPR_CCPA_COOKIE_EXPIRE);
-			if (this.settings.notify_animate_hide) {
-				this.bar_elm.slideUp(this.settings.animate_speed_hide);
-			}
-			if (this.settings.accept_reload == true) {
-				window.location.reload(true);
-			}
-			return false;
-		},
-
 		accept_close: function () {
 			GDPR_Cookie.set(
-				GDPR_ACCEPT_COOKIE_NAME,
+				ACTED_CONSENT_CK_NAME,
 				"yes",
-				GDPR_ACCEPT_COOKIE_EXPIRE
+				EXP_CK_NAME
 			);
 			if (this.settings.notify_animate_hide) {
 				this.bar_elm.slideUp(
@@ -599,9 +535,9 @@ GDPR_CCPA_COOKIE_EXPIRE =
 
 		accept_all_close: function () {
 			GDPR_Cookie.set(
-				GDPR_ACCEPT_COOKIE_NAME,
+				ACTED_CONSENT_CK_NAME,
 				"yes",
-				GDPR_ACCEPT_COOKIE_EXPIRE
+				EXP_CK_NAME
 			);
 			if (this.settings.notify_animate_hide) {
 				this.bar_elm.slideUp(
@@ -620,9 +556,9 @@ GDPR_CCPA_COOKIE_EXPIRE =
 
 		reject_close: function () {
 			GDPR_Cookie.set(
-				GDPR_ACCEPT_COOKIE_NAME,
+				ACTED_CONSENT_CK_NAME,
 				"yes",
-				GDPR_ACCEPT_COOKIE_EXPIRE
+				EXP_CK_NAME
 			);
 			GDPR.disableAllCookies();
 			if (this.settings.notify_animate_hide) {
@@ -655,62 +591,62 @@ GDPR_CCPA_COOKIE_EXPIRE =
 			}
 		},
 		disableAllCookies: function () {
-			var lwaio_user_preference_arr = {};
-			var lwaio_user_preference_val = "";
-			if (GDPR_Cookie.read("lwaio_user_preference")) {
-				lwaio_user_preference_arr = JSON.parse(
-					GDPR_Cookie.read("lwaio_user_preference")
+			let lwaio_consent_preferences_arr = {};
+			let lwaio_consent_preferences_val = "";
+			if (GDPR_Cookie.read(USR_PREFS_CK_NAME)) {
+				lwaio_consent_preferences_arr = JSON.parse(
+					GDPR_Cookie.read(USR_PREFS_CK_NAME)
 				);
-				jQuery.each(lwaio_user_preference_arr, function (key, value) {
+				jQuery.each(lwaio_consent_preferences_arr, function (key, value) {
 					if (key != "necessary") {
-						lwaio_user_preference_arr[key] = "no";
+						lwaio_consent_preferences_arr[key] = "no";
 						$('.group-switch-buttons input[value="' + key + '"]').prop(
 							"checked",
 							false
 						);
-						var length = GDPR.allowed_categories.length;
-						for (var i = 0; i < length; i++) {
+						let length = GDPR.allowed_categories.length;
+						for (let i = 0; i < length; i++) {
 							if (GDPR.allowed_categories[i] == key) {
 								GDPR.allowed_categories.splice(i, 1);
 							}
 						}
 					}
 				});
-				lwaio_user_preference_val = JSON.stringify(lwaio_user_preference_arr);
+				lwaio_consent_preferences_val = JSON.stringify(lwaio_consent_preferences_arr);
 				GDPR_Cookie.set(
-					"lwaio_user_preference",
-					lwaio_user_preference_val,
-					GDPR_ACCEPT_COOKIE_EXPIRE
+					USR_PREFS_CK_NAME,
+					lwaio_consent_preferences_val,
+					EXP_CK_NAME
 				);
 			}
 		},
 		enableAllCookies: function () {
-			var lwaio_user_preference_arr = {};
-			var lwaio_user_preference_val = "";
-			if (GDPR_Cookie.read("lwaio_user_preference")) {
-				lwaio_user_preference_arr = JSON.parse(
-					GDPR_Cookie.read("lwaio_user_preference")
+			let lwaio_consent_preferences_arr = {};
+			let lwaio_consent_preferences_val = "";
+			if (GDPR_Cookie.read(USR_PREFS_CK_NAME)) {
+				lwaio_consent_preferences_arr = JSON.parse(
+					GDPR_Cookie.read(USR_PREFS_CK_NAME)
 				);
-				jQuery.each(lwaio_user_preference_arr, function (key, value) {
+				jQuery.each(lwaio_consent_preferences_arr, function (key, value) {
 					if (key != "necessary") {
-						lwaio_user_preference_arr[key] = "yes";
+						lwaio_consent_preferences_arr[key] = "yes";
 						$('.group-switch-buttons input[value="' + key + '"]').prop(
 							"checked",
 							true
 						);
-						var length = GDPR.allowed_categories.length;
-						for (var i = 0; i < length; i++) {
+						let length = GDPR.allowed_categories.length;
+						for (let i = 0; i < length; i++) {
 							if (GDPR.allowed_categories[i] == key) {
 								GDPR.allowed_categories.splice(i, 1);
 							}
 						}
 					}
 				});
-				lwaio_user_preference_val = JSON.stringify(lwaio_user_preference_arr);
+				lwaio_consent_preferences_val = JSON.stringify(lwaio_consent_preferences_arr);
 				GDPR_Cookie.set(
-					"lwaio_user_preference",
-					lwaio_user_preference_val,
-					GDPR_ACCEPT_COOKIE_EXPIRE
+					USR_PREFS_CK_NAME,
+					lwaio_consent_preferences_val,
+					EXP_CK_NAME
 				);
 			}
 		},
@@ -732,12 +668,6 @@ GDPR_CCPA_COOKIE_EXPIRE =
 				jQuery(GDPR.settings.notify_div_id)
 					.find(".lwaio.group-description-buttons")
 					.hide();
-				jQuery(GDPR.settings.notify_div_id)
-					.find("p.ccpa")
-					.css("text-align", "center");
-			}
-			if (ccpa_flag || GDPR_Cookie.exists(GDPR_CCPA_COOKIE_NAME)) {
-				jQuery(GDPR.settings.notify_div_id).find("p.ccpa").hide();
 			}
 			this.show_again_elm.slideUp(this.settings.animate_speed_hide);
 		},
@@ -748,15 +678,15 @@ GDPR_CCPA_COOKIE_EXPIRE =
 			}
 		},
 		acceptOnScroll: function () {
-			var scrollTop = $(window).scrollTop();
-			var docHeight = $(document).height();
-			var winHeight = $(window).height();
-			var scrollPercent = scrollTop / (docHeight - winHeight);
-			var scrollPercentRounded = Math.round(scrollPercent * 100);
+			let scrollTop = $(window).scrollTop();
+			let docHeight = $(document).height();
+			let winHeight = $(window).height();
+			let scrollPercent = scrollTop / (docHeight - winHeight);
+			let scrollPercentRounded = Math.round(scrollPercent * 100);
 
 			if (
 				scrollPercentRounded > GDPR.settings.auto_scroll_offset &&
-				!GDPR_Cookie.exists(GDPR_ACCEPT_COOKIE_NAME)
+				!GDPR_Cookie.exists(ACTED_CONSENT_CK_NAME)
 			) {
 				GDPR.accept_close();
 				window.removeEventListener("scroll", GDPR.acceptOnScroll, false);
@@ -767,7 +697,7 @@ GDPR_CCPA_COOKIE_EXPIRE =
 		},
 	};
 
-	var GDPR_Blocker = {
+	let GDPR_Blocker = {
 		blockingStatus: true,
 		scriptsLoaded: false,
 		set: function (args) {
@@ -781,14 +711,14 @@ GDPR_CCPA_COOKIE_EXPIRE =
 		},
 		removeCookieByCategory: function () {
 			if (GDPR_Blocker.blockingStatus == true) {
-				for (var key in GDPR_Blocker.cookies) {
-					var cookie = GDPR_Blocker.cookies[key];
-					var current_category = cookie["lwaio_category_slug"];
+				for (let key in GDPR_Blocker.cookies) {
+					let cookie = GDPR_Blocker.cookies[key];
+					let current_category = cookie["lwaio_category_slug"];
 					if (GDPR.allowed_categories.indexOf(current_category) === -1) {
-						var cookies = cookie["data"];
+						let cookies = cookie["data"];
 						if (cookies && cookies.length != 0) {
-							for (var c_key in cookies) {
-								var c_cookie = cookies[c_key];
+							for (let c_key in cookies) {
+								let c_cookie = cookies[c_key];
 								GDPR_Cookie.erase(c_cookie["name"]);
 							}
 						}
@@ -797,7 +727,7 @@ GDPR_CCPA_COOKIE_EXPIRE =
 			}
 		},
 		runScripts: function () {
-			var srcReplaceableElms = [
+			let srcReplaceableElms = [
 				"iframe",
 				"IFRAME",
 				"EMBED",
@@ -807,7 +737,7 @@ GDPR_CCPA_COOKIE_EXPIRE =
 				"IMG",
 				"img",
 			];
-			var genericFuncs = {
+			let genericFuncs = {
 				renderByElement: function (callback) {
 					scriptFuncs.renderScripts();
 					htmlElmFuncs.renderSrcElement();
@@ -824,9 +754,9 @@ GDPR_CCPA_COOKIE_EXPIRE =
 					);
 				},
 			};
-			var scriptFuncs = {
+			let scriptFuncs = {
 				scriptsDone: function () {
-					var DOMContentLoadedEvent = document.createEvent("Event");
+					let DOMContentLoadedEvent = document.createEvent("Event");
 					DOMContentLoadedEvent.initEvent("DOMContentLoaded", true, true);
 					window.document.dispatchEvent(DOMContentLoadedEvent);
 				},
@@ -846,19 +776,19 @@ GDPR_CCPA_COOKIE_EXPIRE =
 				},
 
 				insertScript: function ($script, callback) {
-					var allowedAttributes = [
+					let allowedAttributes = [
 						"data-wpl-class",
 						"data-wpl-label",
 						"data-wpl-placeholder",
 						"data-wpl-script-type",
 						"data-wpl-src",
 					];
-					var scriptType = $script.getAttribute("data-wpl-script-type");
-					var elementPosition = $script.getAttribute(
+					let scriptType = $script.getAttribute("data-wpl-script-type");
+					let elementPosition = $script.getAttribute(
 						"data-wpl-element-position"
 					);
-					var isBlock = $script.getAttribute("data-wpl-block");
-					var s = document.createElement("script");
+					let isBlock = $script.getAttribute("data-wpl-block");
+					let s = document.createElement("script");
 					s.type = "text/plain";
 					if ($script.async) {
 						s.async = $script.async;
@@ -873,9 +803,9 @@ GDPR_CCPA_COOKIE_EXPIRE =
 					} else {
 						s.textContent = $script.innerText;
 					}
-					var attrs = jQuery($script).prop("attributes");
-					var length = attrs.length;
-					for (var ii = 0; ii < length; ++ii) {
+					let attrs = jQuery($script).prop("attributes");
+					let length = attrs.length;
+					for (let ii = 0; ii < length; ++ii) {
 						if (attrs[ii].nodeName !== "id") {
 							if (allowedAttributes.indexOf(attrs[ii].nodeName) !== -1) {
 								s.setAttribute(attrs[ii].nodeName, attrs[ii].value);
@@ -884,9 +814,9 @@ GDPR_CCPA_COOKIE_EXPIRE =
 					}
 					if (GDPR_Blocker.blockingStatus === true) {
 						if (
-							(GDPR_Cookie.read(GDPR_ACCEPT_COOKIE_NAME) == "yes" &&
+							(GDPR_Cookie.read(ACTED_CONSENT_CK_NAME) == "yes" &&
 								GDPR.allowed_categories.indexOf(scriptType) !== -1) ||
-							(GDPR_Cookie.read(GDPR_ACCEPT_COOKIE_NAME) == null &&
+							(GDPR_Cookie.read(ACTED_CONSENT_CK_NAME) == null &&
 								isBlock === "false")
 						) {
 							s.setAttribute("data-wpl-consent", "accepted");
@@ -912,15 +842,15 @@ GDPR_CCPA_COOKIE_EXPIRE =
 					}
 				},
 				renderScripts: function () {
-					var $scripts = document.querySelectorAll(
+					let $scripts = document.querySelectorAll(
 						'script[data-wpl-class="wpl-blocker-script"]'
 					);
 					if ($scripts.length > 0) {
-						var runList = [];
-						var typeAttr;
+						let runList = [];
+						let typeAttr;
 						Array.prototype.forEach.call($scripts, function ($script) {
 							typeAttr = $script.getAttribute("type");
-							var elmType = $script.tagName;
+							let elmType = $script.tagName;
 							runList.push(function (callback) {
 								scriptFuncs.insertScript($script, callback);
 							});
@@ -929,23 +859,23 @@ GDPR_CCPA_COOKIE_EXPIRE =
 					}
 				},
 			};
-			var htmlElmFuncs = {
+			let htmlElmFuncs = {
 				renderSrcElement: function () {
-					var blockingElms = document.querySelectorAll(
+					let blockingElms = document.querySelectorAll(
 						'[data-wpl-class="wpl-blocker-script"]'
 					);
-					var length = blockingElms.length;
-					for (var i = 0; i < length; i++) {
-						var currentElm = blockingElms[i];
-						var elmType = currentElm.tagName;
+					let length = blockingElms.length;
+					for (let i = 0; i < length; i++) {
+						let currentElm = blockingElms[i];
+						let elmType = currentElm.tagName;
 						if (srcReplaceableElms.indexOf(elmType) !== -1) {
-							var elmCategory = currentElm.getAttribute("data-wpl-script-type");
-							var isBlock = currentElm.getAttribute("data-wpl-block");
+							let elmCategory = currentElm.getAttribute("data-wpl-script-type");
+							let isBlock = currentElm.getAttribute("data-wpl-block");
 							if (GDPR_Blocker.blockingStatus === true) {
 								if (
-									(GDPR_Cookie.read(GDPR_ACCEPT_COOKIE_NAME) == "yes" &&
+									(GDPR_Cookie.read(ACTED_CONSENT_CK_NAME) == "yes" &&
 										GDPR.allowed_categories.indexOf(elmCategory) !== -1) ||
-									(GDPR_Cookie.read(GDPR_ACCEPT_COOKIE_NAME) != null &&
+									(GDPR_Cookie.read(ACTED_CONSENT_CK_NAME) != null &&
 										isBlock === "false")
 								) {
 									this.replaceSrc(currentElm);
@@ -960,23 +890,23 @@ GDPR_CCPA_COOKIE_EXPIRE =
 				},
 				addPlaceholder: function (htmlElm) {
 					if (jQuery(htmlElm).prev(".wpl-iframe-placeholder").length === 0) {
-						var htmlElemType = htmlElm.getAttribute("data-wpl-placeholder");
-						var htmlElemWidth = htmlElm.getAttribute("width");
-						var htmlElemHeight = htmlElm.getAttribute("height");
+						let htmlElemType = htmlElm.getAttribute("data-wpl-placeholder");
+						let htmlElemWidth = htmlElm.getAttribute("width");
+						let htmlElemHeight = htmlElm.getAttribute("height");
 						if (htmlElemWidth == null) {
 							htmlElemWidth = htmlElm.offsetWidth;
 						}
 						if (htmlElemHeight == null) {
 							htmlElemHeight = htmlElm.offsetHeight;
 						}
-						var pixelPattern = /px/;
+						let pixelPattern = /px/;
 						htmlElemWidth = pixelPattern.test(htmlElemWidth) ?
 							htmlElemWidth :
 							htmlElemWidth + "px";
 						htmlElemHeight = pixelPattern.test(htmlElemHeight) ?
 							htmlElemHeight :
 							htmlElemHeight + "px";
-						var addPlaceholder =
+						let addPlaceholder =
 							'<div style="width:' +
 							htmlElemWidth +
 							"; height:" +
@@ -993,7 +923,7 @@ GDPR_CCPA_COOKIE_EXPIRE =
 				},
 				replaceSrc: function (htmlElm) {
 					if (!htmlElm.hasAttribute("src")) {
-						var htmlElemSrc = htmlElm.getAttribute("data-wpl-src");
+						let htmlElemSrc = htmlElm.getAttribute("data-wpl-src");
 						htmlElm.setAttribute("src", htmlElemSrc);
 						if (jQuery(htmlElm).prev(".wpl-iframe-placeholder").length > 0) {
 							jQuery(htmlElm).prev(".wpl-iframe-placeholder").remove();

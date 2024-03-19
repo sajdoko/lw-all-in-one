@@ -32,14 +32,9 @@
 }
 #lwaio-consent-bar .lwaio_messagebar_content div.group-description {
 	margin: 0;
-	padding: 0 0 1rem 0;
 	font-size: inherit;
 	line-height: inherit;
 	text-align: justify;
-}
-#lwaio-consent-bar .lwaio_messagebar_content div.group-description p {
-	margin: 0;
-	font-size: small;
 }
 
 #lwaio-consent-bar.ccpa.lwaio-banner .lwaio_messagebar_content .group-description {
@@ -187,8 +182,6 @@
 }
 #lwaio-consent-bar .lwaio_messagebar_detail #lwaio_messagebar_detail_body #lwaio_consent #lwaio_consent_overview #lwaio_consent_overview_cookie_container #lwaio_consent_overview_cookie_container_type_details .lwaio_consent_cookie_type_details .lwaio_consent_cookie_type_table_container table.lwaio_consent_cookie_type_table th,
 #lwaio-consent-bar .lwaio_messagebar_detail #lwaio_messagebar_detail_body #lwaio_consent #lwaio_consent_overview #lwaio_consent_overview_cookie_container #lwaio_consent_overview_cookie_container_type_details .lwaio_consent_cookie_type_details .lwaio_consent_cookie_type_table_container table.lwaio_consent_cookie_type_table td {
-	word-break:break-all;
-	max-width:70px;
 	vertical-align:top;
 	text-align:left;
 	padding:2px;

@@ -3,7 +3,7 @@
 **Contributors:** sajdoko  
 **Tags:** localweb, local web, chat, wim, web instant messenger, aio  
 **Requires at least:** 4.8.5  
-**Tested up to:** 6.3  
+**Tested up to:** 6.4.3  
 **Stable tag:** trunk  
 **Requires PHP:** 5.6  
 **License:** GPL-2.0+  
@@ -33,6 +33,9 @@ LocalWeb All In One provides the following integrations:
 4. From the "LW AIO Options" page, you can activate or deactivate the various services provided by the plugin.
 
 ## Changelog
+
+### 1.8.0
+- Added functionalities to display cookie banner consent.
 
 ### 1.7.4
 - Added analytics tracking functionalities for WooCommerce data.

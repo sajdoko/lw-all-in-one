@@ -2,8 +2,8 @@
 Contributors: sajdoko
 Tags: localweb, local web, chat, wim, web instant messenger, aio
 Requires at least: 4.8.5
-Tested up to: 6.3
-Stable tag: 1.7.2
+Tested up to: 6.4.3
+Stable tag: 1.8
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -29,6 +29,9 @@ For more information, updates, and support, please visit [LocalWeb's official we
 4. From the "LW AIO Options" page, you can activate or deactivate the various services provided by the plugin.
 
 ## Changelog
+
+### 1.8.0
+- Added functionalities to display cookie banner consent.
 
 ### 1.7.4
 - Added analytics tracking functionalities for WooCommerce data.

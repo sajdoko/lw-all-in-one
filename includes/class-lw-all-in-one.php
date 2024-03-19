@@ -61,11 +61,7 @@ class Lw_All_In_One {
     } else {
       $this->version = '1.0.0';
     }
-    if (defined('LW_ALL_IN_ONE_PLUGIN_NAME')) {
-      $this->plugin_name = LW_ALL_IN_ONE_PLUGIN_NAME;
-    } else {
-      $this->plugin_name = 'lw_all_in_one';
-    }
+    $this->plugin_name = 'lw_all_in_one';
 
     $this->load_dependencies();
     $this->set_locale();
@@ -84,7 +80,6 @@ class Lw_All_In_One {
       $this->lw_all_in_one_schedule_cf7_sync();
     }
     $this->define_privacy_policy_hooks();
-
   }
 
   private function load_dependencies() {
@@ -108,7 +103,6 @@ class Lw_All_In_One {
     require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-lw-all-in-one-privacy-policy-pages.php';
 
     $this->loader = new Lw_All_In_One_Loader();
-
   }
 
   private function set_locale() {
@@ -116,7 +110,6 @@ class Lw_All_In_One {
     $plugin_i18n = new Lw_All_In_One_i18n();
 
     $this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
-
   }
 
   private function define_admin_hooks() {
@@ -126,7 +119,7 @@ class Lw_All_In_One {
     $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
     $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
 
-    $this->loader->add_filter('auto_update_plugin', $plugin_admin, 'lw_all_in_one_auto_update', 10, 2 );
+    $this->loader->add_filter('auto_update_plugin', $plugin_admin, 'lw_all_in_one_auto_update', 10, 2);
 
     $this->loader->add_action('admin_menu', $plugin_admin, 'lw_all_in_one_add_admin_menu', 99);
 
@@ -156,6 +149,7 @@ class Lw_All_In_One {
       $this->loader->add_action('wp_ajax_nopriv_lw_all_in_one_save_ga_event', $plugin_public, 'lw_all_in_one_save_ga_event');
 
       $this->loader->add_action('wp_head', $plugin_public, 'lw_all_in_one_header_scripts');
+      $this->loader->add_action('wp_footer', $plugin_public, 'lw_all_in_one_footer_scripts');
 
       if ($this->check_plugin_options('ga_fields', 'monitor_woocommerce_data') === 'on') {
         $this->loader->add_action('plugins_loaded', $plugin_public, 'include_woocommerce_gtm_tracking');
@@ -172,7 +166,7 @@ class Lw_All_In_One {
     $plugin_ga_events = new Lw_All_In_One_Ga_Events($this->get_plugin_name(), $this->get_version());
 
     $this->loader->add_action('admin_menu', $plugin_ga_events, 'lw_all_in_one_ga_events_admin_menu', 99);
-    $this->loader->add_filter('set-screen-option', $plugin_ga_events, 'lw_all_in_one_ga_events_screen_options', 10, 3 );
+    $this->loader->add_filter('set-screen-option', $plugin_ga_events, 'lw_all_in_one_ga_events_screen_options', 10, 3);
     $this->loader->add_action('load-lw-aio-options_page_lw_all_in_one_ga_events', $plugin_ga_events, 'lw_all_in_one_ga_events_set_screen_options');
 
     // $this->loader->add_action('admin_notices', $plugin_ga_events, 'woocommerce_google_analytics_missing_notice');
@@ -183,8 +177,6 @@ class Lw_All_In_One {
   private function define_wim_hooks() {
 
     $plugin_wim = new Lw_All_In_One_Wim($this->get_plugin_name(), $this->get_version());
-
-		$this->loader->add_action( 'wp_footer', $plugin_wim, 'lw_all_in_one_insert_wim_footer');
 
     $this->loader->add_action('wp_ajax_lw_all_in_one_verify_wim_attivation', $plugin_wim, 'lw_all_in_one_verify_wim_attivation');
 
@@ -205,7 +197,6 @@ class Lw_All_In_One {
     }
 
     $this->loader->add_action('admin_init', $plugin_cf7, 'lw_all_in_one_old_cf7_is_active_deactivate');
-
   }
 
   private function define_privacy_policy_hooks() {
@@ -240,31 +231,61 @@ class Lw_All_In_One {
     $lw_all_in_one_version = get_option('lw_all_in_one_version', '1.0.0');
     if (version_compare($lw_all_in_one_version,  LW_ALL_IN_ONE_VERSION) < 0) {
       if (!wp_next_scheduled('lw_all_in_one_single_event')) {
-        wp_schedule_single_event( time() + 60, 'lw_all_in_one_single_event' , array($lw_all_in_one_version) );
+        wp_schedule_single_event(time() + 60, 'lw_all_in_one_single_event', array($lw_all_in_one_version));
       }
-      add_action('lw_all_in_one_single_event', array( __CLASS__, 'lw_all_in_one_single_event_run' ));
+      add_action('lw_all_in_one_single_event', array(__CLASS__, 'lw_all_in_one_single_event_run'));
     } else {
       if (wp_next_scheduled('lw_all_in_one_single_event')) {
-        wp_clear_scheduled_hook( 'lw_all_in_one_single_event' );
+        wp_clear_scheduled_hook('lw_all_in_one_single_event');
       }
     }
-
   }
 
   public static function lw_all_in_one_single_event_run($lw_all_in_one_version) {
 
-    if (version_compare($lw_all_in_one_version, '1.7.4' ) <= 0) {
+    if (version_compare($lw_all_in_one_version, '1.7.4') <= 0) {
       if (is_plugin_active('woocommerce/woocommerce.php')) {
-        //Plugin options
-        $options = get_option(LW_ALL_IN_ONE_PLUGIN_NAME);
+        $options = get_option('lw_all_in_one');
         if (!isset($options['ga_fields']['monitor_woocommerce_data'])) {
           $options['ga_fields']['monitor_woocommerce_data'] = 'on';
-          update_option( LW_ALL_IN_ONE_PLUGIN_NAME, $options );
+          update_option('lw_all_in_one', $options);
         }
       }
 
       if (is_plugin_active('woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php')) {
         deactivate_plugins('woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php');
+      }
+    }
+
+    if (version_compare($lw_all_in_one_version, '1.8') <= 0) {
+      $options = get_option('lw_all_in_one');
+      if (!isset($options['ck_activate'])) {
+
+        if (get_locale() == 'es_ES') {
+          $ck_fields['ck_page_slug'] = 'las-cookies-que-utilizamos';
+          $ck_fields['heading_message'] = 'Este sitio web utiliza cookies';
+          $ck_fields['gdpr_message'] = 'Utilizamos cookies para personalizar contenido y anuncios, para proporcionar funciones de redes sociales y para analizar nuestro tráfico. También compartimos información sobre su uso de nuestro sitio con nuestros socios de redes sociales, publicidad y análisis, que pueden combinarla con otra información que les haya proporcionado o que hayan recopilado a partir del uso de sus servicios.';
+          $ck_fields['about_ck_message'] = 'Las cookies son pequeños archivos de texto que pueden ser utilizados por los sitios web para hacer que la experiencia del usuario sea más eficiente. La ley establece que podemos almacenar cookies en su dispositivo si son estrictamente necesarias para el funcionamiento de este sitio. Para todos los demás tipos de cookies necesitamos su permiso. Este sitio utiliza diferentes tipos de cookies. Algunas cookies son colocadas por servicios de terceros que aparecen en nuestras páginas. En cualquier momento puede cambiar o retirar su consentimiento de la Declaración de cookies en nuestro sitio web. Obtenga más información sobre quiénes somos, cómo puede contactarnos y cómo tratamos los datos personales en nuestra Política de privacidad. Especifique su ID de consentimiento y la fecha en que nos contactó con respecto a su consentimiento.';
+        } elseif (get_locale() == 'it_IT') {
+          $ck_fields['ck_page_slug'] = 'cookie-policy';
+          $ck_fields['heading_message'] = 'Questo sito web utilizza i cookie!';
+          $ck_fields['gdpr_message'] = 'Utilizziamo i cookie per personalizzare contenuti ed annunci, per fornire funzionalità dei social media e per analizzare il nostro traffico. Condividiamo inoltre informazioni sul modo in cui utilizza il nostro sito con i nostri partner che si occupano di analisi dei dati web, pubblicità e social media, i quali potrebbero combinarle con altre informazioni che ha fornito loro o che hanno raccolto dal suo utilizzo dei loro servizi.';
+          $ck_fields['about_ck_message'] = "I cookie sono piccoli file di testo che possono essere utilizzati dai siti web per rendere più efficiente l’esperienza per l’utente. La legge afferma che possiamo memorizzare i cookie sul suo dispositivo se sono strettamente necessari per il funzionamento di questo sito. Per tutti gli altri tipi di cookie abbiamo bisogno del suo permesso. Questo sito utilizza diversi tipi di cookie. Alcuni cookie sono collocati da servizi di terzi che compaiono sulle nostre pagine. In qualsiasi momento è possibile modificare o revocare il proprio consenso dalla Dichiarazione dei cookie sul nostro sito Web. Scopra di più su chi siamo, come può contattarci e come trattiamo i dati personali nella nostra Informativa sulla privacy. Specifica l’ID del tuo consenso e la data di quando ci hai contattati per quanto riguarda il tuo consenso.";
+        } else {
+          $ck_fields['ck_page_slug'] = 'cookie-policy';
+          $ck_fields['heading_message'] = 'This website uses cookies!';
+          $ck_fields['gdpr_message'] = 'We use cookies to personalize content and ads, to provide social media features and to analyze our traffic. We also share information about how you use our site with our analytics, advertising and social media partners, who may combine it with other information that you have provided to them or that they have collected from your use of their services.';
+          $ck_fields['about_ck_message'] = "Cookies are small text files that can be used by websites to make the user experience more efficient. The law states that we can store cookies on your device if they are strictly necessary for the operation of this site. For all other types of cookies we need your permission. This site uses different types of cookies. Some cookies are placed by third-party services that appear on our pages. You can change or withdraw your consent at any time from the Cookie Declaration on our website. Find out more about who we are, how you can contact us and how we process personal data in our Privacy Policy. Specify your consent ID and the date you contacted us regarding your consent.";
+        }
+        $options['ck_activate'] = '';
+        $options['ck_fields']['banner_position'] = $ck_fields['ck_page_slug'];
+        $options['ck_fields']['ck_page_slug'] = 'bottom';
+        $options['ck_fields']['primary_color'] = '#18a300';
+        $options['ck_fields']['secondary_color'] = '#333333';
+        $options['ck_fields']['heading_message'] = $ck_fields['heading_message'];
+        $options['ck_fields']['gdpr_message'] = $ck_fields['gdpr_message'];
+        $options['ck_fields']['about_ck_message'] = $ck_fields['about_ck_message'];
+        update_option('lw_all_in_one', $options);
       }
     }
 
@@ -274,12 +295,12 @@ class Lw_All_In_One {
   private function lw_all_in_one_schedule_data_retention() {
     if ($this->check_plugin_options('lw_aio_fields', 'data_retention') === 'on') {
       if (!wp_next_scheduled('lw_all_in_one_data_retention')) {
-          wp_schedule_event(time(), 'daily', 'lw_all_in_one_data_retention');
+        wp_schedule_event(time(), 'daily', 'lw_all_in_one_data_retention');
       }
-      add_action('lw_all_in_one_data_retention', array( __CLASS__, 'lw_all_in_one_data_retention_run' ));
+      add_action('lw_all_in_one_data_retention', array(__CLASS__, 'lw_all_in_one_data_retention_run'));
     } else {
       if (wp_next_scheduled('lw_all_in_one_data_retention')) {
-        wp_clear_scheduled_hook( 'lw_all_in_one_data_retention' );
+        wp_clear_scheduled_hook('lw_all_in_one_data_retention');
       }
     }
   }
@@ -294,7 +315,7 @@ class Lw_All_In_One {
   public function lw_all_in_one_5_min_schedule($schedules) {
     $schedules['lw_all_in_one_every_5_min_schedule'] = array(
       'interval' => 300,
-      'display' => __('Every 5 Minutes', LW_ALL_IN_ONE_PLUGIN_NAME),
+      'display' => __('Every 5 Minutes', 'lw_all_in_one'),
     );
     return $schedules;
   }
@@ -303,12 +324,12 @@ class Lw_All_In_One {
     if ($this->check_plugin_options('lw_cf7_fields', 'save_cf7_subm') === 'on') {
       add_filter('cron_schedules', array($this, 'lw_all_in_one_5_min_schedule'));
       if (!wp_next_scheduled('lw_all_in_one_cf7_sync')) {
-          wp_schedule_event(time(), 'lw_all_in_one_every_5_min_schedule', 'lw_all_in_one_cf7_sync');
+        wp_schedule_event(time(), 'lw_all_in_one_every_5_min_schedule', 'lw_all_in_one_cf7_sync');
       }
-      add_action('lw_all_in_one_cf7_sync', array( __CLASS__, 'lw_all_in_one_cf7_sync_run' ));
+      add_action('lw_all_in_one_cf7_sync', array(__CLASS__, 'lw_all_in_one_cf7_sync_run'));
     } else {
       if (wp_next_scheduled('lw_all_in_one_cf7_sync')) {
-        wp_clear_scheduled_hook( 'lw_all_in_one_cf7_sync' );
+        wp_clear_scheduled_hook('lw_all_in_one_cf7_sync');
       }
     }
   }
@@ -350,7 +371,8 @@ class Lw_All_In_One {
           $cf7_table,
           array(
             'sent' => $inviato,
-          ), array('id' => $id)
+          ),
+          array('id' => $id)
         );
       }
     }
@@ -373,5 +395,4 @@ class Lw_All_In_One {
       }
     }
   }
-
 }

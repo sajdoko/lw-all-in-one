@@ -25,15 +25,7 @@ if (!defined('WPINC')) {
   die;
 }
 
-/**
- * Currently plugin version.
- */
 define('LW_ALL_IN_ONE_VERSION', '1.8');
-
-/**
- * Plugin name.
- */
-define('LW_ALL_IN_ONE_PLUGIN_NAME', 'lw_all_in_one');
 define('LW_ALL_IN_ONE_PLUGIN', plugin_basename(__FILE__));
 define('LW_ALL_IN_ONE_PLUGIN_MAIN_FILE', __FILE__);
 

@@ -686,7 +686,7 @@ function lwaio_woocommerce_reset_loop() {
 function lwaio_woocommerce_add_related_to_loop( $arg ) {
 	global $woocommerce_loop;
 
-	$woocommerce_loop['listtype'] = __( 'Related Products', LW_ALL_IN_ONE_PLUGIN_NAME );
+	$woocommerce_loop['listtype'] = __( 'Related Products', 'lw_all_in_one' );
 
 	return $arg;
 }
@@ -701,7 +701,7 @@ function lwaio_woocommerce_add_related_to_loop( $arg ) {
 function lwaio_woocommerce_add_cross_sell_to_loop( $arg ) {
 	global $woocommerce_loop;
 
-	$woocommerce_loop['listtype'] = __( 'Cross-Sell Products', LW_ALL_IN_ONE_PLUGIN_NAME );
+	$woocommerce_loop['listtype'] = __( 'Cross-Sell Products', 'lw_all_in_one' );
 
 	return $arg;
 }
@@ -716,7 +716,7 @@ function lwaio_woocommerce_add_cross_sell_to_loop( $arg ) {
 function lwaio_woocommerce_add_upsells_to_loop( $arg ) {
 	global $woocommerce_loop;
 
-	$woocommerce_loop['listtype'] = __( 'Upsell Products', LW_ALL_IN_ONE_PLUGIN_NAME );
+	$woocommerce_loop['listtype'] = __( 'Upsell Products', 'lw_all_in_one' );
 
 	return $arg;
 }
@@ -804,7 +804,7 @@ function lwaio_widget_title_filter( $widget_title ) {
 	global $lwaio_product_counter, $lwaio_last_widget_title;
 
 	$lwaio_product_counter   = 1;
-	$lwaio_last_widget_title = $widget_title . __( ' (widget)', LW_ALL_IN_ONE_PLUGIN_NAME );
+	$lwaio_last_widget_title = $widget_title . __( ' (widget)', 'lw_all_in_one' );
 
 	return $widget_title;
 }
@@ -818,7 +818,7 @@ function lwaio_widget_title_filter( $widget_title ) {
 function lwaio_before_recent_products_loop() {
 	global $woocommerce_loop;
 
-	$woocommerce_loop['listtype'] = __( 'Recent Products', LW_ALL_IN_ONE_PLUGIN_NAME );
+	$woocommerce_loop['listtype'] = __( 'Recent Products', 'lw_all_in_one' );
 }
 
 /**
@@ -830,7 +830,7 @@ function lwaio_before_recent_products_loop() {
 function lwaio_before_sale_products_loop() {
 	global $woocommerce_loop;
 
-	$woocommerce_loop['listtype'] = __( 'Sale Products', LW_ALL_IN_ONE_PLUGIN_NAME );
+	$woocommerce_loop['listtype'] = __( 'Sale Products', 'lw_all_in_one' );
 }
 
 /**
@@ -842,7 +842,7 @@ function lwaio_before_sale_products_loop() {
 function lwaio_before_best_selling_products_loop() {
 	global $woocommerce_loop;
 
-	$woocommerce_loop['listtype'] = __( 'Best Selling Products', LW_ALL_IN_ONE_PLUGIN_NAME );
+	$woocommerce_loop['listtype'] = __( 'Best Selling Products', 'lw_all_in_one' );
 }
 
 /**
@@ -854,7 +854,7 @@ function lwaio_before_best_selling_products_loop() {
 function lwaio_before_top_rated_products_loop() {
 	global $woocommerce_loop;
 
-	$woocommerce_loop['listtype'] = __( 'Top Rated Products', LW_ALL_IN_ONE_PLUGIN_NAME );
+	$woocommerce_loop['listtype'] = __( 'Top Rated Products', 'lw_all_in_one' );
 }
 
 /**
@@ -866,7 +866,7 @@ function lwaio_before_top_rated_products_loop() {
 function lwaio_before_featured_products_loop() {
 	global $woocommerce_loop;
 
-	$woocommerce_loop['listtype'] = __( 'Featured Products', LW_ALL_IN_ONE_PLUGIN_NAME );
+	$woocommerce_loop['listtype'] = __( 'Featured Products', 'lw_all_in_one' );
 }
 
 /**
@@ -878,7 +878,7 @@ function lwaio_before_featured_products_loop() {
 function lwaio_before_related_products_loop() {
 	global $woocommerce_loop;
 
-	$woocommerce_loop['listtype'] = __( 'Related Products', LW_ALL_IN_ONE_PLUGIN_NAME );
+	$woocommerce_loop['listtype'] = __( 'Related Products', 'lw_all_in_one' );
 }
 
 /**
@@ -902,11 +902,11 @@ function lwaio_woocommerce_get_product_list_item_extra_tag( $product, $listtype,
 	}
 
 	if ( is_search() ) {
-		$list_name = __( 'Search Results', LW_ALL_IN_ONE_PLUGIN_NAME );
+		$list_name = __( 'Search Results', 'lw_all_in_one' );
 	} elseif ( '' !== $listtype ) {
 		$list_name = $listtype;
 	} else {
-		$list_name = __( 'General Product List', LW_ALL_IN_ONE_PLUGIN_NAME );
+		$list_name = __( 'General Product List', 'lw_all_in_one' );
 	}
 
 	$paged          = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
@@ -1065,7 +1065,7 @@ function lwaio_woocommerce_grouped_product_list_column_label( $labelvalue, $prod
 		return $labelvalue;
 	}
 
-	$list_name = __( 'Grouped Product Detail Page', LW_ALL_IN_ONE_PLUGIN_NAME );
+	$list_name = __( 'Grouped Product Detail Page', 'lw_all_in_one' );
 
 	$ec_product_array = lwaio_process_product(
 		$product,

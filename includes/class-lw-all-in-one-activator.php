@@ -18,17 +18,10 @@
  */
 class Lw_All_In_One_Activator {
 
-  /**
-   * Short Description. (use period)
-   *
-   * Long Description.
-   *
-   */
   public static function activate() {
     if (!get_option('lw_all_in_one_version')) {
       add_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);
     }
-    $lw_all_in_one_version = get_option('lw_all_in_one_version');
     // Check if Web Instant Messenger options exist
     $verification_status = $token = $wim_activate = $rag_soc = $auto_show_wim = $show_wim_after = $show_mobile = $lingua = $messaggio_0 = $messaggio_1 = $cf7_activate = $ck_activate = $save_cf7_subm = $opt_scr_deliv = $ga_activate = $tracking_id = $save_ga_events = $monitor_email_link = $monitor_tel_link = $monitor_form_submit = $monitor_woocommerce_data = '';
     if ($wim_activation_status = get_option('wim_activation_status')) {
@@ -86,7 +79,7 @@ class Lw_All_In_One_Activator {
       $ck_fields['about_ck_message'] = "Cookies are small text files that can be used by websites to make the user experience more efficient. The law states that we can store cookies on your device if they are strictly necessary for the operation of this site. For all other types of cookies we need your permission. This site uses different types of cookies. Some cookies are placed by third-party services that appear on our pages. You can change or withdraw your consent at any time from the Cookie Declaration on our website. Find out more about who we are, how you can contact us and how we process personal data in our Privacy Policy. Specify your consent ID and the date you contacted us regarding your consent.";
     }
 
-    if (!get_option(LW_ALL_IN_ONE_PLUGIN_NAME)) {
+    if (!get_option('lw_all_in_one')) {
       $initial_attivation_options = array(
         'ga_activate' => $ga_activate,
         'ga_fields' => array(
@@ -133,10 +126,10 @@ class Lw_All_In_One_Activator {
           'data_retention' => 'on',
         ),
       );
-      add_option(LW_ALL_IN_ONE_PLUGIN_NAME, $initial_attivation_options);
+      add_option('lw_all_in_one', $initial_attivation_options);
     }
     // if (version_compare($lw_all_in_one_version, '1.4.0') < 0) {
-    //   $exiting_options = get_option(LW_ALL_IN_ONE_PLUGIN_NAME);
+    //   $exiting_options = get_option('lw_all_in_one');
     //   if ($exiting_options) {
     //     $new_options = array();
     //     $new_options['lw_hf_fields']['insert_header'] = base64_decode($exiting_options['lw_hf_fields']['insert_header']);
@@ -144,7 +137,7 @@ class Lw_All_In_One_Activator {
     //     $new_options['lw_aio_fields']['delete_data'] = '';
     //     $new_options['lw_aio_fields']['data_retention'] = 'on';
     //     $new_options_update = array_merge($exiting_options, $new_options);
-    //     update_option( LW_ALL_IN_ONE_PLUGIN_NAME, $new_options_update );
+    //     update_option( 'lw_all_in_one', $new_options_update );
     //   }
     // }
     // update_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);

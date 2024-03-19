@@ -49,7 +49,7 @@ class Lw_All_In_One_Cf7 {
   }
 
   public function lw_all_in_one_cf7_admin_submenu() {
-   add_submenu_page($this->plugin_name, __('Saved Contact Form Submissions', LW_ALL_IN_ONE_PLUGIN_NAME), __('Saved CF7', LW_ALL_IN_ONE_PLUGIN_NAME), 'manage_options', $this->plugin_name . '_cf7', array($this, 'lw_all_in_one_cf7_display_page'));
+   add_submenu_page($this->plugin_name, __('Saved Contact Form Submissions', 'lw_all_in_one'), __('Saved CF7', 'lw_all_in_one'), 'manage_options', $this->plugin_name . '_cf7', array($this, 'lw_all_in_one_cf7_display_page'));
   }
 
   public function lw_all_in_one_cf7_display_page() {
@@ -155,7 +155,7 @@ class Lw_All_In_One_Cf7 {
     $lw_cf7_fields_saved_tipo_contratto = (isset($options['lw_cf7_fields']['tipo_contratto'])) ? sanitize_text_field($options['lw_cf7_fields']['tipo_contratto']) : '';
     $lw_cf7_fields_saved_id_contratto = (isset($options['lw_cf7_fields']['id_contratto'])) ? sanitize_text_field($options['lw_cf7_fields']['id_contratto']) : '';
     if ($lw_cf7_fields_saved_tipo_contratto == '' || $lw_cf7_fields_saved_id_contratto == '') {
-      echo '<div class="error"><p><img src="' . trailingslashit(plugin_dir_url(__FILE__)) . 'img/icon.png' . '"/> ' . sprintf(__('You have activated Contact Form 7 Addon but Packet Type and/or Packet Id seems to be missing. <a href="%s" title="Fix it Now">Fix it Now.</a>', LW_ALL_IN_ONE_PLUGIN_NAME), admin_url('admin.php?page=lw_all_in_one&tab=tab_cf7&fix_packet#tipo_contratto')) . '</p></div>';
+      echo '<div class="error"><p><img src="' . trailingslashit(plugin_dir_url(__FILE__)) . 'img/icon.png' . '"/> ' . sprintf(__('You have activated Contact Form 7 Addon but Packet Type and/or Packet Id seems to be missing. <a href="%s" title="Fix it Now">Fix it Now.</a>', 'lw_all_in_one'), admin_url('admin.php?page=lw_all_in_one&tab=tab_cf7&fix_packet#tipo_contratto')) . '</p></div>';
     }
   }
 
@@ -175,7 +175,7 @@ class Lw_All_In_One_Cf7 {
 		// $option = 'lw-aio-options_page_lw_all_in_one_cf7_per_page';
 		$option = 'per_page';
 		$args = [
-			'label'   => __('Number of records per page:', LW_ALL_IN_ONE_PLUGIN_NAME),
+			'label'   => __('Number of records per page:', 'lw_all_in_one'),
 			'default' => 10,
 			'option'  => 'records_per_page'
 		];

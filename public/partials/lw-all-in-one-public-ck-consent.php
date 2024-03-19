@@ -17,13 +17,13 @@
       </p>
     </div>
     <div class="lwaio group-description-buttons">
-      <button id="cookie_action_accept" class="lwaio_action_button btn" tabindex="0" aria-label="Accept" data-lwaio_action="accept"><?php echo $this->lwaiobar_settings['button_accept_text']; ?></button>
+      <button id="cookie_action_accept" class="lwaio_action_button btn" tabindex="0" data-lwaio_action="accept"><?php echo $this->lwaiobar_settings['button_accept_text']; ?></button>
 
-      <button id="cookie_action_reject" class="lwaio_action_button btn" tabindex="0" aria-label="Reject" data-lwaio_action="reject"><?php echo $this->lwaiobar_settings['button_decline_text']; ?></button>
+      <button id="cookie_action_reject" class="lwaio_action_button btn" tabindex="0" data-lwaio_action="reject"><?php echo $this->lwaiobar_settings['button_decline_text']; ?></button>
 
-      <button id="cookie_action_settings" class="lwaio_action_button btn" tabindex="0" aria-label="Cookie Info" data-lwaio_action="show_settings"><?php echo $this->lwaiobar_settings['button_settings_text']; ?></button>
+      <button id="cookie_action_settings" class="lwaio_action_button btn" tabindex="0" data-lwaio_action="show_settings"><?php echo $this->lwaiobar_settings['button_settings_text']; ?></button>
 
-      <button id="cookie_action_accept_all" class="lwaio_action_button btn" tabindex="0" aria-label="Accept All" data-lwaio_action="accept_all"><?php echo $this->lwaiobar_settings['button_accept_text_all']; ?></button>
+      <button id="cookie_action_accept_all" class="lwaio_action_button btn" tabindex="0" data-lwaio_action="accept_all"><?php echo $this->lwaiobar_settings['button_accept_text_all']; ?></button>
 
     </div>
     <div class="lwaio group-switch-buttons">
@@ -71,11 +71,11 @@
                       <table id="lwaio_messagebar_detail_table_<?php echo $category['lwaio_category_slug']; ?>" class="lwaio_consent_cookie_type_table">
                         <thead>
                           <tr>
-                            <th scope="col"><?php echo __('Name', $this->plugin_name); ?></th>
-                            <th scope="col"><?php echo __('Domain', $this->plugin_name); ?></th>
-                            <th scope="col"><?php echo __('Purpose', $this->plugin_name); ?></th>
-                            <th scope="col"><?php echo __('Expiry', $this->plugin_name); ?></th>
-                            <th scope="col"><?php echo __('Type', $this->plugin_name); ?></th>
+                            <th scope="col"><?php echo __('Name', 'lw_all_in_one'); ?></th>
+                            <th scope="col"><?php echo __('Domain', 'lw_all_in_one'); ?></th>
+                            <th scope="col"><?php echo __('Purpose', 'lw_all_in_one'); ?></th>
+                            <th scope="col"><?php echo __('Expiry', 'lw_all_in_one'); ?></th>
+                            <th scope="col"><?php echo __('Type', 'lw_all_in_one'); ?></th>
                           </tr>
                         </thead>
                         <tbody>
