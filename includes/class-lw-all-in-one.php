@@ -278,8 +278,8 @@ class Lw_All_In_One {
           $ck_fields['about_ck_message'] = "Cookies are small text files that can be used by websites to make the user experience more efficient. The law states that we can store cookies on your device if they are strictly necessary for the operation of this site. For all other types of cookies we need your permission. This site uses different types of cookies. Some cookies are placed by third-party services that appear on our pages. You can change or withdraw your consent at any time from the Cookie Declaration on our website. Find out more about who we are, how you can contact us and how we process personal data in our Privacy Policy. Specify your consent ID and the date you contacted us regarding your consent.";
         }
         $options['ck_activate'] = '';
-        $options['ck_fields']['banner_position'] = $ck_fields['ck_page_slug'];
-        $options['ck_fields']['ck_page_slug'] = 'bottom';
+        $options['ck_fields']['banner_position'] = 'bottom';
+        $options['ck_fields']['ck_page_slug'] = $ck_fields['ck_page_slug'];
         $options['ck_fields']['primary_color'] = '#18a300';
         $options['ck_fields']['secondary_color'] = '#333333';
         $options['ck_fields']['heading_message'] = $ck_fields['heading_message'];
