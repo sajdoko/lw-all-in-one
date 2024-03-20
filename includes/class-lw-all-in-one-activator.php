@@ -216,6 +216,8 @@ class Lw_All_In_One_Activator {
     //   deactivate_plugins('italy-cookie-choices/italy-cookie-choices.php');
     // }
     if (is_plugin_active('wp-fastest-cache/wpFastestCache.php')) {
+      // Exclude from cache 'lwaio_*' cookies
+      update_option( 'WpFastestCacheExclude', json_encode([["prefix" => "contain", "content" => "lwaio_", "type" => "cookie"]]));
       if(isset($GLOBALS['wp_fastest_cache']) && method_exists($GLOBALS['wp_fastest_cache'], 'deleteCache')){
         $GLOBALS['wp_fastest_cache']->deleteCache(true);
       }

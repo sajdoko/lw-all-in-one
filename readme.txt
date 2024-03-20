@@ -1,6 +1,6 @@
 === LocalWeb All In One ===
 Contributors: sajdoko
-Tags: localweb, local web, chat, wim, web instant messenger, aio
+Tags: localweb, local web, chat, wim, web instant messenger
 Requires at least: 4.8.5
 Tested up to: 6.4.3
 Stable tag: 1.8

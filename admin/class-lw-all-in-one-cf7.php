@@ -150,13 +150,7 @@ class Lw_All_In_One_Cf7 {
     if (!current_user_can('manage_options')) {
       return;
     }
-    //Plugin options
-    $options = get_option($this->plugin_name);
-    $lw_cf7_fields_saved_tipo_contratto = (isset($options['lw_cf7_fields']['tipo_contratto'])) ? sanitize_text_field($options['lw_cf7_fields']['tipo_contratto']) : '';
-    $lw_cf7_fields_saved_id_contratto = (isset($options['lw_cf7_fields']['id_contratto'])) ? sanitize_text_field($options['lw_cf7_fields']['id_contratto']) : '';
-    if ($lw_cf7_fields_saved_tipo_contratto == '' || $lw_cf7_fields_saved_id_contratto == '') {
-      echo '<div class="error"><p><img src="' . trailingslashit(plugin_dir_url(__FILE__)) . 'img/icon.png' . '"/> ' . sprintf(__('You have activated Contact Form 7 Addon but Packet Type and/or Packet Id seems to be missing. <a href="%s" title="Fix it Now">Fix it Now.</a>', 'lw_all_in_one'), admin_url('admin.php?page=lw_all_in_one&tab=tab_cf7&fix_packet#tipo_contratto')) . '</p></div>';
-    }
+    echo '<div class="error"><p><img src="' . trailingslashit(plugin_dir_url(__FILE__)) . 'img/icon.png' . '"/> ' . sprintf(__('You have activated Contact Form 7 Addon but Packet Type and/or Packet Id seems to be missing. <a href="%s" title="Fix it Now">Fix it Now.</a>', 'lw_all_in_one'), admin_url('admin.php?page=lw_all_in_one&tab=tab_cf7&fix_packet#tipo_contratto')) . '</p></div>';
   }
 
   public function lw_all_in_one_old_cf7_is_active_deactivate() {

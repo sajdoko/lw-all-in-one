@@ -185,10 +185,18 @@ class Lw_All_In_One {
 
   private function define_cf7_hooks() {
 
+    $options = get_option($this->plugin_name);
+    $lw_cf7_fields_saved_save_cf7_subm = (isset($options['lw_cf7_fields']['save_cf7_subm'])) ? sanitize_text_field($options['lw_cf7_fields']['save_cf7_subm']) : '';
+    $lw_cf7_fields_saved_tipo_contratto = (isset($options['lw_cf7_fields']['tipo_contratto'])) ? sanitize_text_field($options['lw_cf7_fields']['tipo_contratto']) : '';
+    $lw_cf7_fields_saved_id_contratto = (isset($options['lw_cf7_fields']['id_contratto'])) ? sanitize_text_field($options['lw_cf7_fields']['id_contratto']) : '';
+
     $plugin_cf7 = new Lw_All_In_One_Cf7($this->get_plugin_name(), $this->get_version());
 
+    if ($lw_cf7_fields_saved_save_cf7_subm == 'on' && ($lw_cf7_fields_saved_tipo_contratto == '' || $lw_cf7_fields_saved_id_contratto == '')) {
+      $this->loader->add_action('admin_notices', $plugin_cf7, 'lw_all_in_one_cf7_packet_notice');
+    }
+
     $this->loader->add_action('admin_menu', $plugin_cf7, 'lw_all_in_one_cf7_admin_submenu', 99);
-    $this->loader->add_action('admin_notices', $plugin_cf7, 'lw_all_in_one_cf7_packet_notice');
     $this->loader->add_filter('set-screen-option', $plugin_cf7, 'lw_all_in_one_cf7_screen_options', 10, 3);
     $this->loader->add_action('load-lw-aio-options_page_lw_all_in_one_cf7', $plugin_cf7, 'lw_all_in_one_cf7_set_screen_options');
 
@@ -287,6 +295,9 @@ class Lw_All_In_One {
         $options['ck_fields']['about_ck_message'] = $ck_fields['about_ck_message'];
         update_option('lw_all_in_one', $options);
       }
+
+      // Exclude from cache 'lwaio_*' cookies
+      update_option( 'WpFastestCacheExclude', json_encode([["prefix" => "contain", "content" => "lwaio_", "type" => "cookie"]]));
     }
 
     update_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);

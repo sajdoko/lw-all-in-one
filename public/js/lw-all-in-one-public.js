@@ -60,7 +60,7 @@
 			}
 		}
 	});
-	$(window).load(function () {
+	$(window).on("load", function () {
 		if ($('[id="rag_soc"]').length > 1) {
 			console.log('wim_twice');
 		}
