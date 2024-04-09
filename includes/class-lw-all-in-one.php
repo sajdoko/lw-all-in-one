@@ -144,12 +144,12 @@ class Lw_All_In_One {
     $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
     $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'lw_all_in_one_dequeue');
 
+    $this->loader->add_action('wp_head', $plugin_public, 'lw_all_in_one_header_scripts');
+    $this->loader->add_action('wp_footer', $plugin_public, 'lw_all_in_one_footer_scripts');
+
     if ($this->check_plugin_options(false, 'ga_activate') === 'on' && $this->check_plugin_options('ga_fields', 'tracking_id') !== '') {
       $this->loader->add_action('wp_ajax_lw_all_in_one_save_ga_event', $plugin_public, 'lw_all_in_one_save_ga_event');
       $this->loader->add_action('wp_ajax_nopriv_lw_all_in_one_save_ga_event', $plugin_public, 'lw_all_in_one_save_ga_event');
-
-      $this->loader->add_action('wp_head', $plugin_public, 'lw_all_in_one_header_scripts');
-      $this->loader->add_action('wp_footer', $plugin_public, 'lw_all_in_one_footer_scripts');
 
       if ($this->check_plugin_options('ga_fields', 'monitor_woocommerce_data') === 'on') {
         $this->loader->add_action('plugins_loaded', $plugin_public, 'include_woocommerce_gtm_tracking');
@@ -251,17 +251,15 @@ class Lw_All_In_One {
 
   public static function lw_all_in_one_single_event_run($lw_all_in_one_version) {
 
-    if (version_compare($lw_all_in_one_version, '1.7.4') <= 0) {
-      if (is_plugin_active('woocommerce/woocommerce.php')) {
-        $options = get_option('lw_all_in_one');
-        if (!isset($options['ga_fields']['monitor_woocommerce_data'])) {
-          $options['ga_fields']['monitor_woocommerce_data'] = 'on';
-          update_option('lw_all_in_one', $options);
+    if (version_compare($lw_all_in_one_version, '1.8.2') <= 0) {
+      // Update translation files
+      // If translation files do not exist under /wp-content/languages/plugins/, copy them from the plugin directory /languages/
+      $translated_locales = array('es_ES', 'it_IT');
+      foreach ($translated_locales as $locale) {
+        if (!file_exists(WP_LANG_DIR . '/plugins/lw_all_in_one-'.$locale.'.mo')) {
+          copy(dirname(LW_ALL_IN_ONE_PLUGIN_MAIN_FILE) . '/languages/lw_all_in_one-'.$locale.'.po', WP_LANG_DIR . '/plugins/lw_all_in_one-'.$locale.'.po');
+          copy(dirname(LW_ALL_IN_ONE_PLUGIN_MAIN_FILE) . '/languages/lw_all_in_one-'.$locale.'.mo', WP_LANG_DIR . '/plugins/lw_all_in_one-'.$locale.'.mo');
         }
-      }
-
-      if (is_plugin_active('woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php')) {
-        deactivate_plugins('woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php');
       }
     }
 

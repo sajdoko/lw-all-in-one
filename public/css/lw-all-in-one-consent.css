@@ -216,11 +216,11 @@
 }
 
 input.lwaio-custom-switch-checkbox {
-	display: none;
+	display: none !important;
 }
 
 .lwaio-custom-switch-label {
-	display: block;
+	display: block !important;
 	overflow: hidden;
 	cursor: pointer;
 	background: transparent;

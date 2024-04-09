@@ -509,15 +509,15 @@ class Lw_All_In_One_Public {
           firstScript.parentNode.insertBefore(gtmScript, firstScript);
         }
       </script>
-<?php
-      echo '<script>';
-      echo 'const lwAioGaActivate=true;';
-      echo 'const lwAioTrackingType="' . $tag_type . '";';
-      echo ($ga_fields_save_ga_events === 'on') ? 'const lwAioSaveGaEvents=true;' : 'const lwAioSaveGaEvents=false;';
-      echo ($ga_fields_monitor_email_link === 'on') ? 'const lwAioMonitorEmailLink=true;' : 'const lwAioMonitorEmailLink=false;';
-      echo ($ga_fields_monitor_tel_link === 'on') ? 'const lwAioMonitorTelLink=true;' : 'const lwAioMonitorTelLink=false;';
-      echo ($ga_fields_monitor_form_submit === 'on') ? 'const lwAioMonitorFormSubmit=true;' : 'const lwAioMonitorFormSubmit=false;';
-      echo '</script>', PHP_EOL;
+      <?php
+        echo '<script>';
+        echo 'const lwAioGaActivate=true;';
+        echo 'const lwAioTrackingType="' . $tag_type . '";';
+        echo ($ga_fields_save_ga_events === 'on') ? 'const lwAioSaveGaEvents=true;' : 'const lwAioSaveGaEvents=false;';
+        echo ($ga_fields_monitor_email_link === 'on') ? 'const lwAioMonitorEmailLink=true;' : 'const lwAioMonitorEmailLink=false;';
+        echo ($ga_fields_monitor_tel_link === 'on') ? 'const lwAioMonitorTelLink=true;' : 'const lwAioMonitorTelLink=false;';
+        echo ($ga_fields_monitor_form_submit === 'on') ? 'const lwAioMonitorFormSubmit=true;' : 'const lwAioMonitorFormSubmit=false;';
+        echo '</script>', PHP_EOL;
     }
   }
 

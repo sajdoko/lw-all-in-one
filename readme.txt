@@ -30,6 +30,9 @@ For more information, updates, and support, please visit [LocalWeb's official we
 
 ## Changelog
 
+### 1.8.2
+- Updated translation files
+
 ### 1.8.0
 - Added functionalities to display cookie banner consent.
 

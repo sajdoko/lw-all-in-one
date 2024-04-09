@@ -34,6 +34,9 @@ LocalWeb All In One provides the following integrations:
 
 ## Changelog
 
+### 1.8.2
+- Updated translation files
+
 ### 1.8.0
 - Added functionalities to display cookie banner consent.
 

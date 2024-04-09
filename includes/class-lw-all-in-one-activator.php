@@ -222,6 +222,17 @@ class Lw_All_In_One_Activator {
         $GLOBALS['wp_fastest_cache']->deleteCache(true);
       }
     }
+
+    // Update translation files
+    // If translation files do not exist under /wp-content/languages/plugins/, copy them from the plugin directory /languages/
+    $translated_locales = array('es_ES', 'it_IT');
+    foreach ($translated_locales as $locale) {
+      if (!file_exists(WP_LANG_DIR . '/plugins/lw_all_in_one-'.$locale.'.mo')) {
+        copy(dirname(LW_ALL_IN_ONE_PLUGIN_MAIN_FILE) . '/languages/lw_all_in_one-'.$locale.'.po', WP_LANG_DIR . '/plugins/lw_all_in_one-'.$locale.'.po');
+        copy(dirname(LW_ALL_IN_ONE_PLUGIN_MAIN_FILE) . '/languages/lw_all_in_one-'.$locale.'.mo', WP_LANG_DIR . '/plugins/lw_all_in_one-'.$locale.'.mo');
+      }
+    }
+
   }
 
 }
