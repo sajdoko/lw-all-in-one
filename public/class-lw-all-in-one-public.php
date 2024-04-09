@@ -427,10 +427,10 @@ class Lw_All_In_One_Public {
     $ga_fields_monitor_form_submit = (isset($this->options['ga_fields']['monitor_form_submit'])) ? sanitize_text_field($this->options['ga_fields']['monitor_form_submit']) : '';
 
     $preference_cookies = isset($_COOKIE['lwaio_consent_preferences']) ? json_decode(stripslashes(sanitize_text_field(wp_unslash($_COOKIE['lwaio_consent_preferences']))), true) : '';
-    $ad_user_data = isset($preference_cookies['marketing']) && $preference_cookies['marketing'] == 'yes' ? 'granted' : 'denied';
-    $ad_personalization = isset($preference_cookies['marketing']) && $preference_cookies['marketing'] == 'yes' ? 'granted' : 'denied';
-    $analytics_storage = isset($preference_cookies['analytics']) && $preference_cookies['analytics'] == 'yes' ? 'granted' : 'denied';
-    $ad_storage = (($ad_user_data == 'granted') || ($ad_personalization == 'granted') || ($analytics_storage == 'granted')) ? 'granted' : 'denied';
+    $ad_user_data = isset($preference_cookies['marketing']) && $preference_cookies['marketing'] == 'yes' ? 'granted' : 'granted';
+    $ad_personalization = isset($preference_cookies['marketing']) && $preference_cookies['marketing'] == 'yes' ? 'granted' : 'granted';
+    $analytics_storage = isset($preference_cookies['analytics']) && $preference_cookies['analytics'] == 'yes' ? 'granted' : 'granted';
+    $ad_storage = (($ad_user_data == 'granted') || ($ad_personalization == 'granted') || ($analytics_storage == 'granted')) ? 'granted' : 'granted';
 
     if ($ga_activate === 'on' && $ga_fields_tracking_id !== '') {
       $tag_type = explode('-', $ga_fields_tracking_id, 2)[0];

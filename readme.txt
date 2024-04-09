@@ -2,7 +2,7 @@
 Contributors: sajdoko
 Tags: localweb, local web, chat, wim, web instant messenger
 Requires at least: 4.8.5
-Tested up to: 6.4.3
+Tested up to: 6.5
 Stable tag: 1.8
 Requires PHP: 5.6
 License: GPLv2 or later
