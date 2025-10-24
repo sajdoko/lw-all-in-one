@@ -38,6 +38,10 @@ class Lw_All_In_One_Activator {
       $messaggio_0 = $wim_old_options['messaggio_0'];
       $messaggio_1 = $wim_old_options['messaggio_1'];
     }
+    if (get_option('italy_cookie_choices')) {
+      $ck_activate = 'on';
+      delete_option('italy_cookie_choices');
+    }
     // Check if LW Contact Form 7 Addon plugin is activated
     if (is_plugin_active('lw-contact-form/localweb.php')) {
       $cf7_activate = $save_cf7_subm = $opt_scr_deliv = 'on';
@@ -212,9 +216,9 @@ class Lw_All_In_One_Activator {
     if (is_plugin_active('woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php')) {
       deactivate_plugins('woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php');
     }
-    // if (is_plugin_active('italy-cookie-choices/italy-cookie-choices.php')) {
-    //   deactivate_plugins('italy-cookie-choices/italy-cookie-choices.php');
-    // }
+    if (is_plugin_active('italy-cookie-choices/italy-cookie-choices.php')) {
+      deactivate_plugins('italy-cookie-choices/italy-cookie-choices.php');
+    }
     if (is_plugin_active('wp-fastest-cache/wpFastestCache.php')) {
       // Exclude from cache 'lwaio_*' cookies
       update_option( 'WpFastestCacheExclude', json_encode([["prefix" => "contain", "content" => "lwaio_", "type" => "cookie"]]));
