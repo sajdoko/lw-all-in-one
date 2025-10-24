@@ -64,7 +64,6 @@ class Lw_All_In_One {
     $this->plugin_name = 'lw_all_in_one';
 
     $this->load_dependencies();
-    $this->set_locale();
     $this->lw_all_in_one_schedule_data_retention();
     $this->lw_all_in_one_schedule_single_event();
     $this->define_admin_hooks();
@@ -103,13 +102,6 @@ class Lw_All_In_One {
     require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-lw-all-in-one-privacy-policy-pages.php';
 
     $this->loader = new Lw_All_In_One_Loader();
-  }
-
-  private function set_locale() {
-
-    $plugin_i18n = new Lw_All_In_One_i18n();
-
-    $this->loader->add_action('init', $plugin_i18n, 'load_plugin_textdomain');
   }
 
   private function define_admin_hooks() {
@@ -261,6 +253,9 @@ class Lw_All_In_One {
           copy(dirname(LW_ALL_IN_ONE_PLUGIN_MAIN_FILE) . '/languages/lw-all-in-one-'.$locale.'.mo', WP_LANG_DIR . '/plugins/lw-all-in-one-'.$locale.'.mo');
         }
       }
+      $options = get_option('lw_all_in_one');
+      $options['ck_activate'] = 'on';
+      update_option('lw_all_in_one', $options);
     }
 
     if (version_compare($lw_all_in_one_version, '1.8.3') <= 0) {
@@ -292,6 +287,7 @@ class Lw_All_In_One {
     global $wpdb;
     $cf7_table = $wpdb->prefix . LW_ALL_IN_ONE_CF7_TABLE;
 
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table cleanup for data retention
     $wpdb->query(" DELETE FROM $cf7_table WHERE DATE(time) < DATE_SUB(DATE(NOW()), INTERVAL 14 DAY) ");
   }
 
@@ -320,7 +316,8 @@ class Lw_All_In_One {
   public static function lw_all_in_one_cf7_sync_run() {
     global $wpdb;
     $cf7_table = $wpdb->prefix . LW_ALL_IN_ONE_CF7_TABLE;
-    $select_nn_inviato = $wpdb->get_row("SELECT * FROM " . $cf7_table . " WHERE sent !='Si'");
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table query for CF7 sync
+    $select_nn_inviato = $wpdb->get_row($wpdb->prepare("SELECT * FROM $cf7_table WHERE sent !=%s", 'Si'));
     if ($select_nn_inviato !== null) {
       $re_invia = array();
       $re_invia['nome'] = sanitize_text_field($select_nn_inviato->name);
@@ -350,6 +347,7 @@ class Lw_All_In_One {
       if ($data->response == "OK") {
         $inviato = "Si";
         $id = $select_nn_inviato->id;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table update for sync status
         $wpdb->update(
           $cf7_table,
           array(

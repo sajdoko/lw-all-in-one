@@ -160,6 +160,7 @@ class Lw_All_In_One_Activator {
     $cf7_table = $wpdb->prefix . LW_ALL_IN_ONE_CF7_TABLE;
 
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table check
     if ($wpdb->get_var("show tables like '$a_events_table'") != $a_events_table) {
       $sql1 = "CREATE TABLE $a_events_table (
             id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -169,9 +170,11 @@ class Lw_All_In_One_Activator {
             ga_label varchar(250) DEFAULT '' NULL,
             PRIMARY KEY (id)
           ) $charset_collate;";
+      // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange -- Custom table creation
       dbDelta($sql1);
     }
 
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table check
     if ($wpdb->get_var("show tables like '$cf7_table'") != $cf7_table) {
       $sql2 = "CREATE TABLE $cf7_table (
             id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -188,16 +191,19 @@ class Lw_All_In_One_Activator {
             sent varchar(2) DEFAULT '' NULL,
             PRIMARY KEY (id)
           ) $charset_collate;";
+      // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange -- Custom table creation
       dbDelta($sql2);
     }
 
     $old_cf7_table = $wpdb->prefix . 'inserimenti_cf';
     $old_cf7_table_transfer_err = array();
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Legacy table check
     if ($wpdb->get_var("show tables like '$old_cf7_table'") == $old_cf7_table) {
+      // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Legacy table migration
       $inserimenti_cf_results = $wpdb->get_results("SELECT * FROM $old_cf7_table");
       if ($wpdb->num_rows > 0) {
         foreach ($inserimenti_cf_results as $cf) {
-          $new_time = date('Y-m-d H:i:s', $cf->time);
+          $new_time = gmdate('Y-m-d H:i:s', $cf->time);
           $old_data = array('subject' => $cf->soggetto, 'message' => $cf->messaggio, 'name' => $cf->nome, 'surname' => $cf->cognome, 'time' => $new_time, 'email' => $cf->email, 'phone' => $cf->telefono, 'tipo_Contratto' => $cf->tipo_Contratto, 'id_Contratto' => $cf->id_Contratto, 'submited_page' => $cf->submited_page, 'sent' => $cf->inviato);
           $format = array('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');
           if (!$wpdb->insert($cf7_table, $old_data, $format)) {
@@ -206,6 +212,7 @@ class Lw_All_In_One_Activator {
         }
       }
       if (empty($old_cf7_table_transfer_err)) {
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Legacy table cleanup
         $wpdb->query("DROP TABLE IF EXISTS $old_cf7_table");
       }
     }

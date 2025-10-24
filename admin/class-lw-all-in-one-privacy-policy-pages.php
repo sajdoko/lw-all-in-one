@@ -74,7 +74,7 @@ class Lw_All_In_One_Privacy_Policy_Pages {
       $create_privacy_page = isset($_POST[ $this->plugin_name . '_privacy_page']) && $_POST[ $this->plugin_name . '_privacy_page'] == 'on';
       $create_info_dati_page = isset($_POST[ $this->plugin_name . '_trattamento_dati_page']) && $_POST[ $this->plugin_name . '_trattamento_dati_page'] == 'on';
 
-      $date = date('d-m-Y', time());
+      $date = gmdate('d-m-Y', time());
       $domain = get_option('siteurl', $_SERVER['HTTP_HOST']);
       $site_lang = get_locale();
       $create_pages_resposes = array();

@@ -436,12 +436,12 @@ class Lw_All_In_One_Public {
       $tag_type = explode('-', $ga_fields_tracking_id, 2)[0];
     ?>
       <script>
-        let ad_user_data = '<?php echo $ad_user_data; ?>';
-        let ad_personalization = '<?php echo $ad_personalization; ?>';
-        let analytics_storage = '<?php echo $analytics_storage; ?>';
-        let ad_storage = '<?php echo $ad_storage; ?>';
-        let isGtmTag = '<?php echo $tag_type; ?>' === 'GTM';
-        let gtmScriptSrc = "https://www.googletagmanager.com/gtm.js?id=<?php echo $ga_fields_tracking_id; ?>";
+        let ad_user_data = '<?php echo esc_js($ad_user_data); ?>';
+        let ad_personalization = '<?php echo esc_js($ad_personalization); ?>';
+        let analytics_storage = '<?php echo esc_js($analytics_storage); ?>';
+        let ad_storage = '<?php echo esc_js($ad_storage); ?>';
+        let isGtmTag = '<?php echo esc_js($tag_type); ?>' === 'GTM';
+        let gtmScriptSrc = "https://www.googletagmanager.com/gtm.js?id=<?php echo esc_js($ga_fields_tracking_id); ?>";
 
         window.dataLayer = window.dataLayer || [];
 
@@ -462,8 +462,8 @@ class Lw_All_In_One_Public {
           });
         } else {
           gtag('js', new Date());
-          gtag('config', '<?php echo $ga_fields_tracking_id; ?>');
-          gtmScriptSrc = "https://www.googletagmanager.com/gtag/js?id=<?php echo $ga_fields_tracking_id; ?>";
+          gtag('config', '<?php echo esc_js($ga_fields_tracking_id); ?>');
+          gtmScriptSrc = "https://www.googletagmanager.com/gtag/js?id=<?php echo esc_js($ga_fields_tracking_id); ?>";
         }
 
         window.addEventListener("LwAioCookieConsentOnAcceptAll", function(e) {
@@ -512,7 +512,7 @@ class Lw_All_In_One_Public {
       <?php
         echo '<script>';
         echo 'const lwAioGaActivate=true;';
-        echo 'const lwAioTrackingType="' . $tag_type . '";';
+        echo 'const lwAioTrackingType="' . esc_js($tag_type) . '";';
         echo ($ga_fields_save_ga_events === 'on') ? 'const lwAioSaveGaEvents=true;' : 'const lwAioSaveGaEvents=false;';
         echo ($ga_fields_monitor_email_link === 'on') ? 'const lwAioMonitorEmailLink=true;' : 'const lwAioMonitorEmailLink=false;';
         echo ($ga_fields_monitor_tel_link === 'on') ? 'const lwAioMonitorTelLink=true;' : 'const lwAioMonitorTelLink=false;';
@@ -571,6 +571,7 @@ class Lw_All_In_One_Public {
       $table = $wpdb->prefix . LW_ALL_IN_ONE_A_EVENTS_TABLE;
       $data = array('time' => current_time('mysql', 1), 'ga_category' => $event_category, 'ga_action' => $event_action, 'ga_label' => $event_label);
       $format = array('%s', '%s', '%s', '%s');
+      // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table insert for GA events
       if ($wpdb->insert($table, $data, $format)) {
         wp_send_json_success(__('Event Saved!', 'lw-all-in-one'));
       } else {

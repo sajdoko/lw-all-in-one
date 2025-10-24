@@ -9,7 +9,7 @@ if (!function_exists('clean_domain')) {
     $strip = array("~", "`", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "=", "+", "[", "{", "]",
       "}", "\\", "|", ";", ":", "\"", "'", "&#8216;", "&#8217;", "&#8220;", "&#8221;", "&#8211;", "&#8212;",
       "â€”", "â€“", ",", "<", ">", "/", "?", " ");
-    $clean = str_replace($strip, "", strip_tags($clean));
+    $clean = str_replace($strip, "", wp_strip_all_tags($clean));
     $clean = (function_exists('mb_strtolower')) ? mb_strtolower($clean, 'UTF-8') : strtolower( mb_convert_encoding( $clean, 'UTF-8' ) );
 
 	return strtolower($clean);

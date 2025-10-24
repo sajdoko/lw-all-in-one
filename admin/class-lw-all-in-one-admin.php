@@ -151,7 +151,7 @@ class Lw_All_In_One_Admin {
         add_settings_error(
           $this->plugin_name,
           $this->plugin_name . '_settings_not_updated_error',
-          _e('Something went wrong!', 'lw-all-in-one'),
+          esc_html__('Something went wrong!', 'lw-all-in-one'),
           'error'
         );
       } elseif ((isset($data->response)) && $data->response == 'success') {
@@ -255,7 +255,11 @@ class Lw_All_In_One_Admin {
     $lw_hf_fields_insert_header = (isset($options['lw_hf_fields']['insert_header'])) ? $options['lw_hf_fields']['insert_header'] : '';
 
     if ($lw_hf_fields_insert_header !== '') {
-      echo ($this->lw_all_in_one_is_base64($lw_hf_fields_insert_header)) ? (base64_decode($lw_hf_fields_insert_header)) : $lw_hf_fields_insert_header, "\n";
+      echo
+        $this->lw_all_in_one_is_base64($lw_hf_fields_insert_header)
+        // Here is expected html/js/css code - escaped with wp_kses_post() to allow safe HTML
+        ? wp_kses_post(base64_decode($lw_hf_fields_insert_header))
+        : wp_kses_post($lw_hf_fields_insert_header), "\n";
     }
   }
 
@@ -265,7 +269,7 @@ class Lw_All_In_One_Admin {
     $lw_hf_fields_insert_footer = (isset($options['lw_hf_fields']['insert_footer'])) ? $options['lw_hf_fields']['insert_footer'] : '';
 
     if ($lw_hf_fields_insert_footer !== '') {
-      echo ($this->lw_all_in_one_is_base64($lw_hf_fields_insert_footer)) ? (base64_decode($lw_hf_fields_insert_footer)) : $lw_hf_fields_insert_footer, "\n";
+      echo ($this->lw_all_in_one_is_base64($lw_hf_fields_insert_footer)) ? wp_kses_post(base64_decode($lw_hf_fields_insert_footer)) : wp_kses_post($lw_hf_fields_insert_footer), "\n";
     }
     echo '<style>.grecaptcha-badge{visibility: hidden !important}</style>', "\n";
   }
@@ -294,7 +298,8 @@ class Lw_All_In_One_Admin {
   public function lw_all_in_one_admin_footer_text($text) {
     $current_screen = get_current_screen();
     if ($current_screen->parent_base == 'lw_all_in_one') {
-      $lw_aio_plugin_data = get_plugin_data(LW_ALL_IN_ONE_PLUGIN_MAIN_FILE);
+	    // Prevent early translation call by setting $translate to false.
+      $lw_aio_plugin_data = get_plugin_data(LW_ALL_IN_ONE_PLUGIN_MAIN_FILE, false, /* $translate */ false);
       $plugin_name = $lw_aio_plugin_data['Name'];
       /* translators: 1: Plugin version. */
       return $plugin_name . sprintf(__(' | Version %s', 'lw-all-in-one'), LW_ALL_IN_ONE_VERSION);
@@ -316,7 +321,9 @@ class Lw_All_In_One_Admin {
       $charset_collate = $wpdb->get_charset_collate();
       $a_events_table = $wpdb->prefix . LW_ALL_IN_ONE_A_EVENTS_TABLE;
       $cf7_table = $wpdb->prefix . LW_ALL_IN_ONE_CF7_TABLE;
+      // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table deletion
       $wpdb->query("DROP TABLE IF EXISTS {$a_events_table}");
+      // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table deletion
       $wpdb->query("DROP TABLE IF EXISTS {$cf7_table}");
 
       delete_option('lw_all_in_one');
@@ -398,6 +405,7 @@ class Lw_All_In_One_Admin {
       add_option('lw_all_in_one'.'_version', LW_ALL_IN_ONE_VERSION);
 
       require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+      // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table check
       if ($wpdb->get_var("show tables like '$a_events_table'") != $a_events_table) {
         $sql1 = "CREATE TABLE $a_events_table (
               id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -407,8 +415,10 @@ class Lw_All_In_One_Admin {
               ga_label varchar(250) DEFAULT '' NULL,
               PRIMARY KEY (id)
             ) $charset_collate;";
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange -- Custom table creation
         dbDelta($sql1);
       }
+      // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table check
       if ($wpdb->get_var("show tables like '$cf7_table'") != $cf7_table) {
         $sql2 = "CREATE TABLE $cf7_table (
               id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -425,6 +435,7 @@ class Lw_All_In_One_Admin {
               sent varchar(2) DEFAULT '' NULL,
               PRIMARY KEY (id)
             ) $charset_collate;";
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange -- Custom table creation
         dbDelta($sql2);
       }
 
