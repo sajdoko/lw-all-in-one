@@ -509,19 +509,41 @@
                 <tbody>
                   <tr>
                     <td>
-                    <p><?php esc_html_e('<b>*</b><code>HTML, JS, CSS</code> code is allowed. <b>Be careful</b> what you insert here because it may break the website!', 'lw-all-in-one');?></p>
+                    <p><?php
+                      /* translators: %1$s = bold asterisk, %2$s = code tag with allowed types, %3$s = bold "Be careful" */
+                      $message = sprintf(
+                        __('%1$s%2$s code is allowed. %3$s what you insert here because it may break the website!', 'lw-all-in-one'),
+                        '<b>*</b>',
+                        '<code>HTML, JS, CSS</code>',
+                        '<b>Be careful</b>'
+                      );
+                      echo wp_kses_post( $message );
+                    ?></p>
                     </td>
                   </tr>
                   <tr>
                     <td>
                       <h3 class="shfs-labels" for="insert_header"><?php esc_attr_e( 'Scripts in header:', 'lw-all-in-one'); ?></h3>
                       <textarea rows="10" cols="100" id="insert_header" name="<?php echo esc_attr($this->plugin_name); ?>[lw_hf_fields][insert_header]"><?php echo ($lw_hf_fields_insert_header !== '') ? esc_textarea(($this->lw_all_in_one_is_base64($lw_hf_fields_insert_header)) ? (base64_decode($lw_hf_fields_insert_header)) : $lw_hf_fields_insert_header) : ''; ?></textarea>
-                      <p> <?php esc_html_e('Above script will be inserted into the <code>&lt;head&gt;</code> section.', 'lw-all-in-one');?></p>
+                      <p><?php
+                        echo wp_kses_post( sprintf(
+                          /* translators: %s = code tag */
+                          __('Above script will be inserted into the %s section.', 'lw-all-in-one'),
+                          '<code>&lt;head&gt;</code>'
+                        ) );
+                      ?></p>
                     </td>
-                    <td>
+                    <td style="padding-left: 10px;">
                       <h3 class="shfs-labels" for="insert_footer"><?php esc_attr_e( 'Scripts in footer:', 'lw-all-in-one'); ?></h3>
                       <textarea rows="10" cols="100" id="insert_footer" name="<?php echo esc_attr($this->plugin_name); ?>[lw_hf_fields][insert_footer]"><?php echo ($lw_hf_fields_insert_footer !== '') ? esc_textarea(($this->lw_all_in_one_is_base64($lw_hf_fields_insert_footer)) ? (base64_decode($lw_hf_fields_insert_footer)) : $lw_hf_fields_insert_footer) : ''; ?></textarea>
-                      <p> <?php esc_html_e('Above script will be inserted just before <code>&lt;/body&gt;</code> tag using <code>wp_footer</code> hook.', 'lw-all-in-one');?></p>
+                      <p> <?php
+                      echo wp_kses_post( sprintf(
+                        /* translators: %s = code tag */
+                        __('Above script will be inserted just before %s tag using %s hook.', 'lw-all-in-one'),
+                        '<code>&lt;/body&gt;</code>',
+                        '<code>wp_footer</code>'
+                      ) );
+                      ?></p>
                     </td>
                   </tr>
                 </tbody>
@@ -583,9 +605,9 @@
       </div>
       <br class="clear">
       <hr>
-    </div>
 
-    <?php submit_button(__('Save Options', 'lw-all-in-one'), 'primary', 'submit', TRUE);?>
+      <?php submit_button(__('Save Options', 'lw-all-in-one'), 'primary', 'submit', TRUE);?>
+    </div>
   </form>
   <?php
     // echo "<pre>";

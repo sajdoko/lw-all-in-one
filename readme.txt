@@ -41,6 +41,12 @@ For more information, updates, and support, please visit [LocalWeb's official we
 
 == Changelog ==
 
+= 1.9.0 =
+
+* Updated styles for improved UI consistency
+* Enhanced accessibility features
+* Fixed various bugs and issues
+
 = 1.8.4 =
 * Enhance security and code quality by sanitizing output and database queries
 
