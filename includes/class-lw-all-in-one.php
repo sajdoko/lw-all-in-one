@@ -253,6 +253,7 @@ class Lw_All_In_One {
       }
       $options = get_option('lw_all_in_one');
       $options['ck_activate'] = 'on';
+      $options['ck_page_slug'] = 'cookie-policy';
       update_option('lw_all_in_one', $options);
     }
 
@@ -260,6 +261,7 @@ class Lw_All_In_One {
       if (get_option('italy_cookie_choices')) {
         $options = get_option('lw_all_in_one');
         $options['ck_activate'] = 'on';
+        $options['ck_page_slug'] = 'cookie-policy';
         update_option('lw_all_in_one', $options);
         delete_option('italy_cookie_choices');
       }
