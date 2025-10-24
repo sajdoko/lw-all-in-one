@@ -71,11 +71,11 @@
                       <table id="lwaio_messagebar_detail_table_<?php echo $category['lwaio_category_slug']; ?>" class="lwaio_consent_cookie_type_table">
                         <thead>
                           <tr>
-                            <th scope="col"><?php echo __('Name', 'lw_all_in_one'); ?></th>
-                            <th scope="col"><?php echo __('Domain', 'lw_all_in_one'); ?></th>
-                            <th scope="col"><?php echo __('Purpose', 'lw_all_in_one'); ?></th>
-                            <th scope="col"><?php echo __('Expiry', 'lw_all_in_one'); ?></th>
-                            <th scope="col"><?php echo __('Type', 'lw_all_in_one'); ?></th>
+                            <th scope="col"><?php echo __('Name', 'lw-all-in-one'); ?></th>
+                            <th scope="col"><?php echo __('Domain', 'lw-all-in-one'); ?></th>
+                            <th scope="col"><?php echo __('Purpose', 'lw-all-in-one'); ?></th>
+                            <th scope="col"><?php echo __('Expiry', 'lw-all-in-one'); ?></th>
+                            <th scope="col"><?php echo __('Type', 'lw-all-in-one'); ?></th>
                           </tr>
                         </thead>
                         <tbody>

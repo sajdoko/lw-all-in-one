@@ -39,7 +39,8 @@ class Lw_All_In_One_Cf7_List_Table {
     echo '<hr class="wp-header-end">';
     if ( ! empty( $s ) ) {
       echo sprintf( '<span class="subtitle">'
-        . __( 'Search results for &#8220;%s&#8221;', 'lw_all_in_one' )
+        /* translators: %s: Search query entered by the user */
+        . __( 'Search results for &#8220;%s&#8221;', 'lw-all-in-one')
         . '</span>', esc_html( $s ) );
     }
 
@@ -47,7 +48,7 @@ class Lw_All_In_One_Cf7_List_Table {
     wp_nonce_field( 'bulk_delete_records_cf7', 'bulk_delete_nonce_cf7' );
     echo '<input type="hidden" name="page" value="' . esc_attr( $page ) . '" />';
 
-    $ListTableClassCf7->search_box( __( 'Search Records', 'lw_all_in_one' ), 'lw_all_in_one' . '-s-cf7-record' );
+    $ListTableClassCf7->search_box( __( 'Search Records', 'lw-all-in-one'), 'lw_all_in_one' . '-s-cf7-record' );
 
     $ListTableClassCf7->display();
     echo '</form>';
@@ -107,12 +108,12 @@ class Lw_All_In_One_Cf7_List_Table_Class extends WP_List_Table {
   public function get_columns() {
     $columns = [
       'cb' => '<input type="checkbox" />',
-      'subject' => esc_attr__('Subject', 'lw_all_in_one'),
-      'time' => esc_attr__('Date', 'lw_all_in_one'),
-      'name' => esc_attr__('Name', 'lw_all_in_one'),
-      'surname' => esc_attr__('Surname', 'lw_all_in_one'),
-      'email' => esc_attr__('Email', 'lw_all_in_one'),
-      'phone' => esc_attr__('Phone', 'lw_all_in_one'),
+      'subject' => esc_attr__('Subject', 'lw-all-in-one'),
+      'time' => esc_attr__('Date', 'lw-all-in-one'),
+      'name' => esc_attr__('Name', 'lw-all-in-one'),
+      'surname' => esc_attr__('Surname', 'lw-all-in-one'),
+      'email' => esc_attr__('Email', 'lw-all-in-one'),
+      'phone' => esc_attr__('Phone', 'lw-all-in-one'),
     ];
     return $columns;
   }
@@ -180,7 +181,7 @@ class Lw_All_In_One_Cf7_List_Table_Class extends WP_List_Table {
   }
 
   public function get_bulk_actions() {
-    $actions = ['bulk-delete-cf7' => esc_attr__('Delete', 'lw_all_in_one')];
+    $actions = ['bulk-delete-cf7' => esc_attr__('Delete', 'lw-all-in-one')];
     return $actions;
   }
 
@@ -188,15 +189,15 @@ class Lw_All_In_One_Cf7_List_Table_Class extends WP_List_Table {
 
     if ('delete-cf7' === $this->current_action()) {
       if (!wp_verify_nonce($_REQUEST['_wpnonce'], 'delete')) {
-        wp_die( __('Not valid request!', 'lw_all_in_one') );
+        wp_die( __('Not valid request!', 'lw-all-in-one') );
       }
       self::wpdb_delete_records(absint(sanitize_text_field($_REQUEST['record_id'])));
-      // $redirect_to_ga = add_query_arg( array( 'status' => 'success', 'message' => __('Record deleted!', 'lw_all_in_one') ), $redirect_to_ga );
+      // $redirect_to_ga = add_query_arg( array( 'status' => 'success', 'message' => __('Record deleted!', 'lw-all-in-one') ), $redirect_to_ga );
       // wp_safe_redirect($redirect_to_ga);
       // return;
     } else if ('bulk-delete-cf7' === $this->current_action()) {
       if (!wp_verify_nonce($_REQUEST['bulk_delete_nonce_cf7'], 'bulk_delete_records_cf7')) {
-        wp_die( __('Not valid request!', 'lw_all_in_one') );
+        wp_die( __('Not valid request!', 'lw-all-in-one') );
       }
       if (isset($_REQUEST['bulk-delete-cf7']) && is_array($_REQUEST['bulk-delete-cf7'])) {
         $delete_ids = recursive_sanitize_array_object($_REQUEST['bulk-delete-cf7']);
@@ -214,7 +215,7 @@ class Lw_All_In_One_Cf7_List_Table_Class extends WP_List_Table {
   }
 
   public function no_items() {
-    _e('No records found in the database.', 'lw_all_in_one');
+    _e('No records found in the database.', 'lw-all-in-one');
   }
 
   public static function record_count() {

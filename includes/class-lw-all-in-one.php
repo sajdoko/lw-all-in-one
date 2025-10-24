@@ -109,7 +109,7 @@ class Lw_All_In_One {
 
     $plugin_i18n = new Lw_All_In_One_i18n();
 
-    $this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
+    $this->loader->add_action('init', $plugin_i18n, 'load_plugin_textdomain');
   }
 
   private function define_admin_hooks() {
@@ -251,6 +251,18 @@ class Lw_All_In_One {
 
   public static function lw_all_in_one_single_event_run($lw_all_in_one_version) {
 
+    if (version_compare($lw_all_in_one_version, '1.8.4') <= 0) {
+      // Update translation files
+      // If translation files do not exist under /wp-content/languages/plugins/, copy them from the plugin directory /languages/
+      $translated_locales = array('es_ES', 'it_IT');
+      foreach ($translated_locales as $locale) {
+        if (!file_exists(WP_LANG_DIR . '/plugins/lw-all-in-one-'.$locale.'.mo')) {
+          copy(dirname(LW_ALL_IN_ONE_PLUGIN_MAIN_FILE) . '/languages/lw-all-in-one-'.$locale.'.po', WP_LANG_DIR . '/plugins/lw-all-in-one-'.$locale.'.po');
+          copy(dirname(LW_ALL_IN_ONE_PLUGIN_MAIN_FILE) . '/languages/lw-all-in-one-'.$locale.'.mo', WP_LANG_DIR . '/plugins/lw-all-in-one-'.$locale.'.mo');
+        }
+      }
+    }
+
     if (version_compare($lw_all_in_one_version, '1.8.3') <= 0) {
       if (get_option('italy_cookie_choices')) {
         $options = get_option('lw_all_in_one');
@@ -286,7 +298,7 @@ class Lw_All_In_One {
   public function lw_all_in_one_5_min_schedule($schedules) {
     $schedules['lw_all_in_one_every_5_min_schedule'] = array(
       'interval' => 300,
-      'display' => __('Every 5 Minutes', 'lw_all_in_one'),
+      'display' => esc_html__('Every 5 Minutes', 'lw-all-in-one'),
     );
     return $schedules;
   }

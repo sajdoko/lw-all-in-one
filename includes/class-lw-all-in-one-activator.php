@@ -19,6 +19,9 @@
 class Lw_All_In_One_Activator {
 
   public static function activate() {
+    // Suppress any output during activation
+    ob_start();
+    
     if (!get_option('lw_all_in_one_version')) {
       add_option('lw_all_in_one_version', LW_ALL_IN_ONE_VERSION);
     }
@@ -66,12 +69,18 @@ class Lw_All_In_One_Activator {
       }
     }
 
-    if (get_locale() == 'es_ES') {
+    // Get site locale without triggering translation loading
+    $site_locale = get_option('WPLANG');
+    if (empty($site_locale)) {
+      $site_locale = 'en_US'; // Default locale
+    }
+
+    if ($site_locale == 'es_ES') {
       $ck_fields['ck_page_slug'] = 'las-cookies-que-utilizamos';
       $ck_fields['heading_message'] = 'Este sitio web utiliza cookies';
       $ck_fields['gdpr_message'] = 'Utilizamos cookies para personalizar contenido y anuncios, para proporcionar funciones de redes sociales y para analizar nuestro tráfico. También compartimos información sobre su uso de nuestro sitio con nuestros socios de redes sociales, publicidad y análisis, que pueden combinarla con otra información que les haya proporcionado o que hayan recopilado a partir del uso de sus servicios.';
       $ck_fields['about_ck_message'] = 'Las cookies son pequeños archivos de texto que pueden ser utilizados por los sitios web para hacer que la experiencia del usuario sea más eficiente. La ley establece que podemos almacenar cookies en su dispositivo si son estrictamente necesarias para el funcionamiento de este sitio. Para todos los demás tipos de cookies necesitamos su permiso. Este sitio utiliza diferentes tipos de cookies. Algunas cookies son colocadas por servicios de terceros que aparecen en nuestras páginas. En cualquier momento puede cambiar o retirar su consentimiento de la Declaración de cookies en nuestro sitio web. Obtenga más información sobre quiénes somos, cómo puede contactarnos y cómo tratamos los datos personales en nuestra Política de privacidad. Especifique su ID de consentimiento y la fecha en que nos contactó con respecto a su consentimiento.';
-    } elseif (get_locale() == 'it_IT') {
+    } elseif ($site_locale == 'it_IT') {
       $ck_fields['ck_page_slug'] = 'cookie-policy';
       $ck_fields['heading_message'] = 'Questo sito web utilizza i cookie!';
       $ck_fields['gdpr_message'] = 'Utilizziamo i cookie per personalizzare contenuti ed annunci, per fornire funzionalità dei social media e per analizzare il nostro traffico. Condividiamo inoltre informazioni sul modo in cui utilizza il nostro sito con i nostri partner che si occupano di analisi dei dati web, pubblicità e social media, i quali potrebbero combinarle con altre informazioni che ha fornito loro o che hanno raccolto dal suo utilizzo dei loro servizi.';
@@ -232,11 +241,13 @@ class Lw_All_In_One_Activator {
     $translated_locales = array('es_ES', 'it_IT');
     foreach ($translated_locales as $locale) {
       if (!file_exists(WP_LANG_DIR . '/plugins/lw_all_in_one-'.$locale.'.mo')) {
-        copy(dirname(LW_ALL_IN_ONE_PLUGIN_MAIN_FILE) . '/languages/lw_all_in_one-'.$locale.'.po', WP_LANG_DIR . '/plugins/lw_all_in_one-'.$locale.'.po');
-        copy(dirname(LW_ALL_IN_ONE_PLUGIN_MAIN_FILE) . '/languages/lw_all_in_one-'.$locale.'.mo', WP_LANG_DIR . '/plugins/lw_all_in_one-'.$locale.'.mo');
+        @copy(dirname(LW_ALL_IN_ONE_PLUGIN_MAIN_FILE) . '/languages/lw_all_in_one-'.$locale.'.po', WP_LANG_DIR . '/plugins/lw_all_in_one-'.$locale.'.po');
+        @copy(dirname(LW_ALL_IN_ONE_PLUGIN_MAIN_FILE) . '/languages/lw_all_in_one-'.$locale.'.mo', WP_LANG_DIR . '/plugins/lw_all_in_one-'.$locale.'.mo');
       }
     }
 
+    // Clean up any output that may have been generated
+    ob_end_clean();
   }
 
 }

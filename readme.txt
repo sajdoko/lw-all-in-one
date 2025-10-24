@@ -2,8 +2,8 @@
 Contributors: sajdoko
 Tags: localweb, local web, chat, wim, web instant messenger
 Requires at least: 4.8.5
-Tested up to: 6.8.3
-Stable tag: 1.8.3
+Tested up to: 6.8
+Stable tag: 1.8.4
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html

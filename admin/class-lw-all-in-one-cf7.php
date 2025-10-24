@@ -49,7 +49,7 @@ class Lw_All_In_One_Cf7 {
   }
 
   public function lw_all_in_one_cf7_admin_submenu() {
-   add_submenu_page($this->plugin_name, __('Saved Contact Form Submissions', 'lw_all_in_one'), __('Saved CF7', 'lw_all_in_one'), 'manage_options', $this->plugin_name . '_cf7', array($this, 'lw_all_in_one_cf7_display_page'));
+   add_submenu_page($this->plugin_name, __('Saved Contact Form Submissions', 'lw-all-in-one'), __('Saved CF7', 'lw-all-in-one'), 'manage_options', $this->plugin_name . '_cf7', array($this, 'lw_all_in_one_cf7_display_page'));
   }
 
   public function lw_all_in_one_cf7_display_page() {
@@ -150,7 +150,8 @@ class Lw_All_In_One_Cf7 {
     if (!current_user_can('manage_options')) {
       return;
     }
-    echo '<div class="error"><p><img src="' . trailingslashit(plugin_dir_url(__FILE__)) . 'img/icon.png' . '"/> ' . sprintf(__('You have activated Contact Form 7 Addon but Packet Type and/or Packet Id seems to be missing. <a href="%s" title="Fix it Now">Fix it Now.</a>', 'lw_all_in_one'), admin_url('admin.php?page=lw_all_in_one&tab=tab_cf7&fix_packet#tipo_contratto')) . '</p></div>';
+    /* translators: 1: URL to plugin settings page. */
+    echo '<div class="error"><p><img src="' . trailingslashit(plugin_dir_url(__FILE__)) . 'img/icon.png' . '"/> ' . sprintf(__('You have activated Contact Form 7 Addon but Packet Type and/or Packet Id seems to be missing. <a href="%s" title="Fix it Now">Fix it Now.</a>', 'lw-all-in-one'), admin_url('admin.php?page=lw_all_in_one&tab=tab_cf7&fix_packet#tipo_contratto')) . '</p></div>';
   }
 
   public function lw_all_in_one_old_cf7_is_active_deactivate() {
@@ -169,7 +170,7 @@ class Lw_All_In_One_Cf7 {
 		// $option = 'lw-aio-options_page_lw_all_in_one_cf7_per_page';
 		$option = 'per_page';
 		$args = [
-			'label'   => __('Number of records per page:', 'lw_all_in_one'),
+			'label'   => __('Number of records per page:', 'lw-all-in-one'),
 			'default' => 10,
 			'option'  => 'records_per_page'
 		];
