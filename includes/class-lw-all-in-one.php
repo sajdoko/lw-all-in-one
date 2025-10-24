@@ -85,8 +85,6 @@ class Lw_All_In_One {
 
     require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-lw-all-in-one-loader.php';
 
-    require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-lw-all-in-one-i18n.php';
-
     require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helpers/lw-all-in-one-helper-functions.php';
 
     require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-lw-all-in-one-admin.php';
