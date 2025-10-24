@@ -29,9 +29,9 @@
     <div class="lwaio group-switch-buttons">
       <?php foreach ($categories as $category) : ?>
         <div class="lwaio_buttons_wrapper">
-          <div class="button-secondary lwaio-custom-switch">
+          <div class="button-secondary lwaio-custom-switch<?php echo ($category['lwaio_category_slug'] == 'necessary') ? ' custom-switch-disabled' : ''; ?>">
             <?php if ($category['lwaio_category_slug'] == 'necessary') : ?>
-              <input type="checkbox" id="lwaio_button_<?php echo esc_attr($category['lwaio_category_slug']); ?>" class="lwaio-custom-switch-checkbox custom-switch-disabled" disabled="disabled" checked="checked" value="<?php echo esc_attr($category['lwaio_category_slug']); ?>">
+              <input type="checkbox" id="lwaio_button_<?php echo esc_attr($category['lwaio_category_slug']); ?>" class="lwaio-custom-switch-checkbox" disabled="disabled" checked="checked" value="<?php echo esc_attr($category['lwaio_category_slug']); ?>">
             <?php else : ?>
               <input type="checkbox" id="lwaio_button_<?php echo esc_attr($category['lwaio_category_slug']); ?>" class="lwaio-custom-switch-checkbox" tabindex="0" <?php if ($category['is_ticked'] && !$viewed_cookie) : ?> checked="checked" <?php elseif ($category['is_ticked']) : ?> checked="checked" <?php endif; ?> value="<?php echo esc_attr($category['lwaio_category_slug']); ?>">
             <?php endif; ?>
