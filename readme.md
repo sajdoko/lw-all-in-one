@@ -3,8 +3,8 @@ Contributors: sajdoko
 Tags: localweb, local web, chat, wim, web instant messenger
 Requires at least: 4.8.5
 Tested up to: 6.8
-Stable tag: 1.8.4
 Requires PHP: 5.6
+Stable tag: trunk
 License: GPLv2 or later
 License URI: <https://www.gnu.org/licenses/gpl-2.0.html>
 
@@ -40,6 +40,10 @@ For more information, updates, and support, please visit [LocalWeb's official we
 5. Plugin options page.
 
 == Changelog ==
+
+= 1.8.4 =
+
+* Enhance security and code quality by sanitizing output and database queries
 
 = 1.8.3 =
 
