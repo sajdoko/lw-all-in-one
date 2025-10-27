@@ -257,9 +257,9 @@ class Lw_All_In_One_Admin {
     if ($lw_hf_fields_insert_header !== '') {
       echo
         $this->lw_all_in_one_is_base64($lw_hf_fields_insert_header)
-        // Here is expected html/js/css code - escaped with wp_kses_post() to allow safe HTML
-        ? wp_kses_post(base64_decode($lw_hf_fields_insert_header))
-        : wp_kses_post($lw_hf_fields_insert_header), "\n";
+        // Here is expected html/js/css code - escaped with lw_all_in_one_kses_extended() to allow safe HTML including script and style tags
+        ? lw_all_in_one_kses_extended(base64_decode($lw_hf_fields_insert_header))
+        : lw_all_in_one_kses_extended($lw_hf_fields_insert_header), "\n";
     }
   }
 
@@ -269,7 +269,7 @@ class Lw_All_In_One_Admin {
     $lw_hf_fields_insert_footer = (isset($options['lw_hf_fields']['insert_footer'])) ? $options['lw_hf_fields']['insert_footer'] : '';
 
     if ($lw_hf_fields_insert_footer !== '') {
-      echo ($this->lw_all_in_one_is_base64($lw_hf_fields_insert_footer)) ? wp_kses_post(base64_decode($lw_hf_fields_insert_footer)) : wp_kses_post($lw_hf_fields_insert_footer), "\n";
+      echo ($this->lw_all_in_one_is_base64($lw_hf_fields_insert_footer)) ? lw_all_in_one_kses_extended(base64_decode($lw_hf_fields_insert_footer)) : lw_all_in_one_kses_extended($lw_hf_fields_insert_footer), "\n";
     }
     echo '<style>.grecaptcha-badge{visibility: hidden !important}</style>', "\n";
   }
