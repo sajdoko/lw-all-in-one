@@ -366,7 +366,7 @@ input.lwaio-custom-switch-checkbox {
 	-webkit-overflow-scrolling: touch;
 }
 
-/** Bootstrap button CSS */
+/** Button CSS */
 #lwaio-consent-bar .btn,
 .lwaio_messagebar_detail .btn {
 	display: inline-block;

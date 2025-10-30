@@ -102,7 +102,6 @@ class Lw_All_In_One_Public {
     }
 
     if ($ck_activate === 'on') {
-      wp_register_script($this->plugin_name . '-bts', plugin_dir_url(__FILE__) . 'js/bootstrap.min.js', array('jquery'), $this->version, true);
       wp_register_script($this->plugin_name . '-consent', plugin_dir_url(__FILE__) . 'js/lw-all-in-one-consent' . $min . '.js', array('jquery'), $this->version, true);
     }
   }
