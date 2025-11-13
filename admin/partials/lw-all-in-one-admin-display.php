@@ -512,7 +512,7 @@
                     <p><?php
                       /* translators: %1$s = bold asterisk, %2$s = code tag with allowed types, %3$s = bold "Be careful" */
                       $message = sprintf(
-                        __('%1$s%2$s code is allowed. %3$s what you insert here because it may break the website!', 'lw-all-in-one'),
+                        __('%1$s%2$s code is allowed (including script, style, meta, iframe, noscript tags with data-* attributes and event handlers). %3$s what you insert here because it may break the website!', 'lw-all-in-one'),
                         '<b>*</b>',
                         '<code>HTML, JS, CSS</code>',
                         '<b>Be careful</b>'

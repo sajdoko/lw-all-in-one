@@ -42,6 +42,16 @@ if (!function_exists('lw_all_in_one_kses_extended')) {
    * Extended version of wp_kses that allows HTML, script, and style tags.
    * Used for header/footer scripts where we need to allow these tags.
    *
+   * Allowed tags include:
+   * - All standard post tags (p, div, span, a, img, etc.)
+   * - script (with type, src, async, defer, etc.)
+   * - style (with type, media, scoped, nonce)
+   * - noscript
+   * - meta (for Google site verification, Open Graph, charset, etc.)
+   * - iframe (for embeds and tracking pixels)
+   * - Event handlers (onclick, onload, onerror)
+   * - Data attributes (data-*)
+   *
    * @param string $content The content to sanitize
    * @return string Sanitized content with allowed tags
    */
@@ -73,6 +83,16 @@ if (!function_exists('lw_all_in_one_kses_extended')) {
 
     // Add noscript tag
     $allowed_tags['noscript'] = array();
+
+    // Add meta tag (for Google site verification, Open Graph, etc.)
+    $allowed_tags['meta'] = array(
+      'name' => true,
+      'content' => true,
+      'property' => true,
+      'charset' => true,
+      'http-equiv' => true,
+      'scheme' => true,
+    );
 
     // Add iframe (often used with scripts like Google Analytics)
     $allowed_tags['iframe'] = array(
