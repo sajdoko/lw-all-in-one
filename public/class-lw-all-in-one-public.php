@@ -86,6 +86,21 @@ PEM;
    * URL format: /?assegna_sso=1&token=...
    */
   public function lw_all_in_one_handle_assegna_sso() {
+    // Lightweight probe endpoint so Assegna can verify the plugin is active before minting an SSO URL.
+    // GET /?assegna_sso_probe=1
+    if (isset($_GET['assegna_sso_probe'])) {
+      if (function_exists('nocache_headers')) {
+        nocache_headers();
+      }
+
+      wp_send_json_success([
+        'active' => true,
+        'plugin' => 'lw-all-in-one',
+        'sso' => 'assegna',
+        'version' => (string) $this->version,
+      ]);
+    }
+
     if (!isset($_GET['assegna_sso'])) {
       return;
     }
