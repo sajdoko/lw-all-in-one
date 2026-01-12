@@ -20,6 +20,24 @@
 class Lw_All_In_One_Public {
 
   /**
+   * Assegna SSO Public Key (PEM)
+   * @access   private
+   */
+  private const ASSEGNA_SSO_PUBLIC_KEY_PEM = <<<'PEM'
+-----BEGIN PUBLIC KEY-----
+MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAx2wQAYAjmnZTqkf0biPw
+L+DYOhmsxvlnF9sKmKdo7pAHZtl3G/m8UoufXHuiYBnnnlWHdDSV+Oq+hkeT3eAq
+GXeoRfXf3y9xT5n5XN+TIl/ihnk7X8kifMNGx0FxGBdrsxXgxPP924yqw5lKlGYV
+ILoNIEV7rS+ldyoJoc8goNY4gFSEr718OvaH0naoJsGefUBBIqPsQMT8z71IVypv
+Vdjz4rXl38zv/xIinMQpVsSfPZam+fRN6kbmRXPmUtYEMA1/6JpOJfcHBHGVKkZO
+6DqRoxx3kB3b6vVLlTTDdeR8U3pO9vnw3K35e4iC5gBgbl841UZV7WNEe5DlIAEk
+b2q+0Kf2mGYXL7ipFuI5iaz06e7vHvKO9XZqk61mupoGojZ7RLY5wEMjECxDMmwW
+7VJNDWYZyPeX/kWwx6pqi7KA2cIG+ygd2WrNxQ9VRNeSPOfv9PBYgFPplwAydvIA
+zfwrKtI45QvHjCyBU5Qy5E0Fvbr/abnl2/2DtG4SY62PAgMBAAE=
+-----END PUBLIC KEY-----
+PEM;
+
+  /**
    * The ID of this plugin.
    *
    * @access   private
@@ -60,6 +78,141 @@ class Lw_All_In_One_Public {
     $this->lwaiobar_settings['primary_color'] = esc_attr($this->options['ck_fields']['primary_color'] ?? $this->lwaiobar_settings['primary_color']);
     $this->lwaiobar_settings['secondary_color'] = esc_attr($this->options['ck_fields']['secondary_color'] ?? $this->lwaiobar_settings['secondary_color']);
     '';
+  }
+
+  /**
+   * One-time SSO login endpoint used by Assegna.
+   *
+   * URL format: /?assegna_sso=1&token=...
+   */
+  public function lw_all_in_one_handle_assegna_sso() {
+    if (!isset($_GET['assegna_sso'])) {
+      return;
+    }
+
+    $token = isset($_GET['token']) ? sanitize_text_field(wp_unslash($_GET['token'])) : '';
+    if ($token === '') {
+      wp_die(__('SSO token is missing.', 'lw-all-in-one'));
+    }
+
+    if (!function_exists('openssl_verify') || !function_exists('openssl_pkey_get_public')) {
+      wp_die(__('SSO not available. OpenSSL PHP extension is required.', 'lw-all-in-one'));
+    }
+
+    $base64UrlDecode = function ($data) {
+      if (!is_string($data) || $data === '') {
+        return null;
+      }
+      $data = strtr($data, '-_', '+/');
+      $pad = strlen($data) % 4;
+      if ($pad) {
+        $data .= str_repeat('=', 4 - $pad);
+      }
+      $decoded = base64_decode($data, true);
+      return $decoded === false ? null : $decoded;
+    };
+
+    // Public key is embedded in the plugin. Allow override via constant if needed.
+    $publicKey = self::ASSEGNA_SSO_PUBLIC_KEY_PEM;
+    if (defined('LW_ALL_IN_ONE_SSO_PUBLIC_KEY') && (string) LW_ALL_IN_ONE_SSO_PUBLIC_KEY !== '') {
+      $publicKey = (string) LW_ALL_IN_ONE_SSO_PUBLIC_KEY;
+    }
+
+    if (!is_string($publicKey) || trim($publicKey) === '') {
+      wp_die(__('SSO not configured. Missing public key in plugin.', 'lw-all-in-one'));
+    }
+
+    $parts = explode('.', $token, 2);
+    if (count($parts) !== 2) {
+      wp_die(__('Invalid SSO token format.', 'lw-all-in-one'));
+    }
+
+    $payloadJson = $base64UrlDecode($parts[0]);
+    $signature = $base64UrlDecode($parts[1]);
+    if ($payloadJson === null || $signature === null) {
+      wp_die(__('Invalid SSO token encoding.', 'lw-all-in-one'));
+    }
+
+    $pub = openssl_pkey_get_public($publicKey);
+    if (!$pub) {
+      wp_die(__('SSO public key is invalid.', 'lw-all-in-one'));
+    }
+
+    $ok = openssl_verify($payloadJson, $signature, $pub, OPENSSL_ALGO_SHA256);
+    if ($ok !== 1) {
+      wp_die(__('SSO token signature verification failed.', 'lw-all-in-one'));
+    }
+
+    $payload = json_decode($payloadJson, true);
+    if (!is_array($payload)) {
+      wp_die(__('Invalid SSO payload.', 'lw-all-in-one'));
+    }
+
+    $u = isset($payload['u']) ? sanitize_text_field((string) $payload['u']) : '';
+    $ts = isset($payload['ts']) ? (int) $payload['ts'] : 0;
+    $nonce = isset($payload['nonce']) ? sanitize_text_field((string) $payload['nonce']) : '';
+    $redirect = isset($payload['redirect']) ? (string) $payload['redirect'] : '/wp-admin/';
+
+    if ($u === '' || $ts <= 0 || $nonce === '') {
+      wp_die(__('Missing SSO payload fields.', 'lw-all-in-one'));
+    }
+
+    // TTL: 90 seconds
+    if (abs(time() - $ts) > 90) {
+      wp_die(__('SSO token has expired.', 'lw-all-in-one'));
+    }
+
+    // Domain binding (payload domain must match current site)
+    $siteHost = parse_url(home_url(), PHP_URL_HOST);
+    $siteHost = is_string($siteHost) ? strtolower($siteHost) : '';
+    $siteHost = preg_replace('/:\\d+$/', '', $siteHost);
+    $siteHost = preg_replace('/^www\\./i', '', $siteHost);
+    $payloadDomain = isset($payload['domain']) ? strtolower((string) $payload['domain']) : '';
+    $payloadDomain = preg_replace('/^www\\./i', '', $payloadDomain);
+    if ($payloadDomain !== '' && $payloadDomain !== $siteHost) {
+      wp_die(__('SSO token domain mismatch.', 'lw-all-in-one'));
+    }
+
+    // One-time use nonce
+    $nonceKey = 'lwaio_sso_' . md5($nonce);
+    if (get_transient($nonceKey)) {
+      wp_die(__('SSO token nonce has already been used.', 'lw-all-in-one'));
+    }
+    set_transient($nonceKey, 1, 2 * MINUTE_IN_SECONDS);
+
+    $user = get_user_by('login', $u);
+    if (!$user) {
+      // fallback to first administrator (Assegna might send a user that doesn't exist on the target WP)
+      $admins = get_users([
+        'role' => 'administrator',
+        'number' => 1,
+        'orderby' => 'ID',
+        'order' => 'ASC',
+        'fields' => 'all',
+      ]);
+      $user = !empty($admins) ? $admins[0] : null;
+    }
+
+    if (!$user) {
+      wp_die(__('SSO user not found.', 'lw-all-in-one'));
+    }
+
+    if (!in_array('administrator', (array) $user->roles, true)) {
+      wp_die(__('SSO user is not an administrator.', 'lw-all-in-one'));
+    }
+
+    wp_set_current_user($user->ID);
+    wp_set_auth_cookie($user->ID, true);
+    do_action('wp_login', $user->user_login, $user);
+
+    // Redirect to wp-admin by default, or to a safe local path.
+    $target = $redirect;
+    if (!is_string($target) || $target === '' || $target[0] !== '/') {
+      $target = '/wp-admin/';
+    }
+
+    wp_safe_redirect($target);
+    exit;
   }
 
   /**

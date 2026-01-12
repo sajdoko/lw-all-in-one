@@ -41,6 +41,10 @@ For more information, updates, and support, please visit [LocalWeb's official we
 
 == Changelog ==
 
+= 1.9.1 =
+
+* Add SSO functionality with public key verification and endpoint handling
+
 = 1.9.0 =
 
 * Updated styles for improved UI consistency
