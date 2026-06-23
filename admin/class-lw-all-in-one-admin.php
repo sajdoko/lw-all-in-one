@@ -92,6 +92,11 @@ class Lw_All_In_One_Admin {
   }
 
   public function validate_lw_all_in_one_settings($input) {
+    if (isset($_POST['option_page']) && $_POST['option_page'] !== $this->plugin_name) {
+      $existing_options = get_option($this->plugin_name, array());
+      return array_merge($existing_options, is_array($input) ? $input : array());
+    }
+
     $valid = array();
     $valid['ga_activate'] = (isset($input['ga_activate']) && $input['ga_activate'] === 'on') ? 'on' : '';
     $valid['ga_fields']['tracking_id'] = (isset($input['ga_fields']['tracking_id'])) ? sanitize_text_field($input['ga_fields']['tracking_id']) : '';
@@ -227,7 +232,7 @@ class Lw_All_In_One_Admin {
     if (!current_user_can('manage_options')) {
       return;
     }
-    register_setting($this->plugin_name, $this->plugin_name, array($this, 'validate_lw_all_in_one_settings'));
+    register_setting($this->plugin_name, $this->plugin_name, array('sanitize_callback' => array($this, 'validate_lw_all_in_one_settings')));
   }
 
   public function get_plugin_options($parent_key = false, $key = false) {
@@ -275,8 +280,11 @@ class Lw_All_In_One_Admin {
   }
 
   public function sanitize_header_footer_scripts($scripts) {
+    if (!current_user_can('unfiltered_html')) {
+      return '';
+    }
     // Remove PHP code
-    $scripts = preg_replace('/<\?php.+?\?>$/ms', '', $scripts);
+    $scripts = preg_replace('/<\?.*?(?:\?>|$)/s', '', $scripts);
     return base64_encode($scripts);
   }
 
@@ -441,6 +449,43 @@ class Lw_All_In_One_Admin {
 
       wp_send_json_success(array('message' => __('Options were reset to defaults!', 'lw-all-in-one')));
       die();
+    }
+  }
+
+  public function lw_all_in_one_clean_admin_notices() {
+    global $wp_filter;
+
+    $hooks = array( 'admin_notices', 'user_admin_notices', 'network_admin_notices' );
+    $allowed_functions = array( 'update_nag', 'maintenance_nag', 'site_admin_notice', 'settings_errors', 'welcome_panel' );
+
+    foreach ( $hooks as $hook ) {
+        if ( empty( $wp_filter[ $hook ] ) ) {
+            continue;
+        }
+
+        foreach ( $wp_filter[ $hook ]->callbacks as $priority => $callbacks ) {
+            foreach ( $callbacks as $id => $callback ) {
+                $function = $callback['function'];
+
+                $is_allowed = false;
+
+                if ( is_string( $function ) && in_array( $function, $allowed_functions ) ) {
+                    $is_allowed = true;
+                }
+
+                if ( is_array( $function ) ) {
+                    $class = is_object( $function[0] ) ? get_class( $function[0] ) : (is_string($function[0]) ? $function[0] : '');
+                    // Allow our own plugin and any core WordPress classes
+                    if ( strpos( $class, 'Lw_All_In_One' ) !== false || strpos( $class, 'WP_' ) === 0 ) {
+                        $is_allowed = true;
+                    }
+                }
+
+                if ( ! $is_allowed ) {
+                    unset( $wp_filter[ $hook ]->callbacks[ $priority ][ $id ] );
+                }
+            }
+        }
     }
   }
 }

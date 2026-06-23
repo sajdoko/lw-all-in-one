@@ -2,7 +2,7 @@
 Contributors: sajdoko
 Tags: localweb, local web, chat, wim, web instant messenger
 Requires at least: 4.8.5
-Tested up to: 6.8
+Tested up to: 7.0
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2 or later
@@ -40,6 +40,27 @@ For more information, updates, and support, please visit [LocalWeb's official we
 5. Plugin options page.
 
 == Changelog ==
+
+= 1.10.3 =
+
+* Fix: Fixed the options saving bug on update. 
+
+= 1.10.2 =
+
+* UX: Cleaned up the admin dashboard by using PHP to natively block third-party plugin notices from rendering, while safely preserving WordPress core and plugin update banners.
+
+= 1.10.1 =
+
+* Security: Fixed missing authorization capability check on privacy policy pages creation.
+* Security: Fixed stored XSS vulnerability by restricting header/footer script saving to administrators with `unfiltered_html` capability.
+* Security: Fixed HTML minification regex failure causing site blanking (Denial of Service).
+* Security: Enhanced SSO domain binding validation.
+* Security: Improved PHP code stripping in scripts sanitization.
+* Security: Implemented rate limiting for unauthenticated Google Analytics event endpoint.
+
+= 1.10.0 =
+
+* Introduced Performance Optimization module (WebP image conversion, Critical CSS extraction, HTML Minification).
 
 = 1.9.0 =
 
