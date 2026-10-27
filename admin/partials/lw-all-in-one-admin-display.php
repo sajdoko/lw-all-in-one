@@ -481,6 +481,13 @@
                     </td>
                   </tr>
                   <tr>
+                    <th scope="row"><label for="release_old_submissions"><?php esc_html_e('Deliver old backlog', 'lw-all-in-one'); ?></label></th>
+                    <td>
+                      <input type="checkbox" id="release_old_submissions" name="<?php echo esc_attr($this->plugin_name); ?>[lw_cf7_fields][release_old_submissions]" <?php checked($options['lw_cf7_fields']['release_old_submissions'] ?? '', 'on'); ?> aria-describedby="legacy-backlog-description">
+                      <p id="legacy-backlog-description" class="description"><?php esc_html_e('Enable only after confirming that the API accepts old enquiries. Submissions already over 14 days old when this update was installed are held until enabled. They remain saved locally.', 'lw-all-in-one'); ?></p>
+                    </td>
+                  </tr>
+                  <tr>
                     <td class="lw-aio-settings-title">
                       <label for="tipo_contratto"><?php esc_attr_e('Packet Type', 'lw-all-in-one');?></label>
                     </td>
@@ -584,7 +591,10 @@
                           <div class="lw-aio-settings-custom-switch-switch"></div>
                         </label>
                       </div>
-                      <div class="switch-desc"> <b><?php esc_html_e('Enable a daily cron job to delete saved data on the database older than 14 days?', 'lw-all-in-one');?></b> <span class="description"> <?php esc_attr_e('Saved Contact Form 7 submissions older than 14 days will be permanently deleted!', 'lw-all-in-one');?></span></div>
+                      <div class="switch-desc"> <b><?php esc_html_e('Enable daily retention for delivered submissions?', 'lw-all-in-one');?></b> <span class="description"> <?php esc_attr_e('Only delivered Contact Form 7 submissions older than the configured window are deleted. Pending, held and failed submissions are kept until you deliberately delete them.', 'lw-all-in-one');?></span></div>
+                      <p><label for="retention_days"><?php esc_html_e('Retention window (days)', 'lw-all-in-one'); ?></label>
+                        <input type="number" id="retention_days" name="<?php echo esc_attr($this->plugin_name); ?>[lw_aio_fields][retention_days]" min="1" max="3650" step="1" value="<?php echo esc_attr($options['lw_aio_fields']['retention_days'] ?? 14); ?>">
+                      </p>
                     </td>
                   </tr>
                 </tbody>

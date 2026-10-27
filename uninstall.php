@@ -25,6 +25,10 @@ if (isset($options['lw_aio_fields']['delete_data']) && $options['lw_aio_fields']
 
   delete_option('lw_all_in_one');
   delete_option('lw_all_in_one_version');
+  delete_option('lw_all_in_one_cf7_schema');
+  delete_option('lw_all_in_one_cf7_legacy_cutoff');
+  delete_option('lw_all_in_one_cf7_circuit');
+  delete_option('lw_all_in_one_cf7_sync_lock');
   delete_option('lw_all_in_one_privacy_pages');
   delete_option('lw_all_in_one_ga_custom_events');
   delete_option('lw_all_in_one_purified_css');

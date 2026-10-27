@@ -219,6 +219,8 @@ class Lw_All_In_One_Admin {
     $valid['lw_hf_fields']['insert_footer'] = (isset($input['lw_hf_fields']['insert_footer'])) ? $this->sanitize_header_footer_scripts($input['lw_hf_fields']['insert_footer']) : '';
 
     $valid['lw_aio_fields']['delete_data'] = (isset($input['lw_aio_fields']['delete_data']) && $input['lw_aio_fields']['delete_data'] === 'on') ? 'on' : '';
+    $valid['lw_aio_fields']['retention_days'] = max(1, min(3650, absint($input['lw_aio_fields']['retention_days'] ?? 14)));
+    $valid['lw_cf7_fields']['release_old_submissions'] = (($input['lw_cf7_fields']['release_old_submissions'] ?? '') === 'on') ? 'on' : '';
     $valid['lw_aio_fields']['data_retention'] = (isset($input['lw_aio_fields']['data_retention']) && $input['lw_aio_fields']['data_retention'] === 'on') ? 'on' : '';
 
     $exiting_options = get_option($this->plugin_name);
@@ -336,6 +338,7 @@ class Lw_All_In_One_Admin {
 
       delete_option('lw_all_in_one');
       delete_option('lw_all_in_one_version');
+      delete_option('lw_all_in_one_cf7_schema');
       delete_option('lw_all_in_one_privacy_pages');
 
       if (wp_next_scheduled('lw_all_in_one_data_retention')) {
@@ -426,26 +429,8 @@ class Lw_All_In_One_Admin {
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange -- Custom table creation
         dbDelta($sql1);
       }
-      // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table check
-      if ($wpdb->get_var("show tables like '$cf7_table'") != $cf7_table) {
-        $sql2 = "CREATE TABLE $cf7_table (
-              id mediumint(9) NOT NULL AUTO_INCREMENT,
-              subject text DEFAULT '' NULL,
-              message text DEFAULT '' NULL,
-              name varchar(150) DEFAULT '' NULL,
-              surname varchar(150) DEFAULT '' NULL,
-              time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-              email varchar(100) DEFAULT '' NULL,
-              phone varchar(100) DEFAULT '' NULL,
-              tipo_Contratto varchar(10) DEFAULT '' NULL,
-              id_Contratto varchar(10) DEFAULT '' NULL,
-              submited_page text DEFAULT '' NULL,
-              sent varchar(2) DEFAULT '' NULL,
-              PRIMARY KEY (id)
-            ) $charset_collate;";
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange -- Custom table creation
-        dbDelta($sql2);
-      }
+      require_once dirname(__DIR__) . '/includes/class-lw-all-in-one-cf7-sync.php';
+      Lw_All_In_One_Cf7_Sync::maybe_upgrade();
 
       wp_send_json_success(array('message' => __('Options were reset to defaults!', 'lw-all-in-one')));
       die();

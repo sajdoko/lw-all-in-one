@@ -26,6 +26,9 @@ class Lw_All_In_One_Cf7_List_Table {
   }
 
   public function lw_all_in_one_cf7_list_table() {
+    if (!current_user_can('manage_options')) {
+      wp_die(esc_html__('You do not have permission to view submissions.', 'lw-all-in-one'));
+    }
 
     $ListTableClassCf7 = new Lw_All_In_One_Cf7_List_Table_Class();
     $ListTableClassCf7->prepare_items_cf7();
@@ -34,6 +37,10 @@ class Lw_All_In_One_Cf7_List_Table {
     $page = sanitize_text_field($_REQUEST['page']);
     echo '<div class="wrap">';
     echo '<h1 class="wp-heading-inline">' . esc_html(get_admin_page_title()) . '</h1>';
+    echo '<p>' . esc_html__('Undelivered submissions are retained until you deliberately delete them. Automatic delivery stops after eight attempts. Review failed submissions here before taking further action.', 'lw-all-in-one') . '</p>';
+    if (Lw_All_In_One_Cf7_Sync::cooling_down()) {
+      echo '<div class="notice notice-warning inline"><p>' . esc_html__('The delivery endpoint is cooling down after a failure. Submissions continue to be saved locally.', 'lw-all-in-one') . '</p></div>';
+    }
 
     do_action( 'lw_all_in_one_cf7_deleted_message' );
     echo '<hr class="wp-header-end">';
@@ -114,6 +121,10 @@ class Lw_All_In_One_Cf7_List_Table_Class extends WP_List_Table {
       'surname' => esc_attr__('Surname', 'lw-all-in-one'),
       'email' => esc_attr__('Email', 'lw-all-in-one'),
       'phone' => esc_attr__('Phone', 'lw-all-in-one'),
+      'delivery' => esc_html__('Delivery', 'lw-all-in-one'),
+      'attempts' => esc_html__('Attempts', 'lw-all-in-one'),
+      'last_attempt' => esc_html__('Last attempt (UTC)', 'lw-all-in-one'),
+      'last_error' => esc_html__('Last error', 'lw-all-in-one'),
     ];
     return $columns;
   }
@@ -148,13 +159,27 @@ class Lw_All_In_One_Cf7_List_Table_Class extends WP_List_Table {
 
   public function column_default($item, $column_name) {
     switch ($column_name) {
+    case 'delivery':
+      if ($item['sent'] === 'Si') {
+        return esc_html__('Delivered', 'lw-all-in-one');
+      }
+      if ((int) $item['attempts'] >= Lw_All_In_One_Cf7_Sync::MAX_ATTEMPTS) {
+        return esc_html__('Failed — review required', 'lw-all-in-one');
+      }
+      if (Lw_All_In_One_Cf7_Sync::held((object) $item)) {
+        return esc_html__('Held — old backlog', 'lw-all-in-one');
+      }
+      return esc_html__('Pending', 'lw-all-in-one');
+    case 'attempts':
+    case 'last_attempt':
+    case 'last_error':
     case 'subject':
     case 'time':
     case 'name':
     case 'surname':
     case 'email':
     case 'phone':
-      return $item[$column_name];
+      return esc_html((string) $item[$column_name]);
 
     default:
       return print_r($item, true);
@@ -189,6 +214,9 @@ class Lw_All_In_One_Cf7_List_Table_Class extends WP_List_Table {
   }
 
   protected function process_bulk_action() {
+    if (!current_user_can('manage_options')) {
+      wp_die(esc_html__('You do not have permission to delete submissions.', 'lw-all-in-one'));
+    }
 
     if ('delete-cf7' === $this->current_action()) {
       if (!wp_verify_nonce($_REQUEST['_wpnonce'], 'delete')) {

@@ -764,7 +764,8 @@ PEM;
 
     if ($opt_scr_deliv === 'on') {
       global $post;
-      if (!has_shortcode($post->post_content, 'contact-form-7')) {
+      // Preserve dequeue behavior when there is no global post (archives, 404s, etc.).
+      if (empty($post) || !has_shortcode($post->post_content, 'contact-form-7')) {
         add_action('wp_print_styles', 'lw_all_in_one_dequeue_styles');
         add_action('wp_print_scripts', 'lw_all_in_one_dequeue_scripts');
       }

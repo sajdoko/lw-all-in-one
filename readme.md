@@ -41,6 +41,12 @@ For more information, updates, and support, please visit [LocalWeb's official we
 
 == Changelog ==
 
+= 1.10.5 =
+* Preserve undelivered CF7 enquiries during retention; configure the delivered-row retention window.
+* Add durable retry state, bounded exponential retries, endpoint cooldown and bounded batch delivery.
+* Display delivery failures and hold the old backlog until API acceptance is confirmed.
+* Guard the CF7 dequeue path when the global post is absent.
+
 = 1.10.4 =
 
 * Update: Updated contact and privacy policy addresses to reflect new location

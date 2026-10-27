@@ -64,6 +64,8 @@ class Lw_All_In_One {
     $this->plugin_name = 'lw_all_in_one';
 
     $this->load_dependencies();
+    // Updates must migrate before submissions or cron can use the new columns.
+    Lw_All_In_One_Cf7_Sync::maybe_upgrade();
     $this->lw_all_in_one_schedule_data_retention();
     $this->lw_all_in_one_schedule_single_event();
     $this->define_admin_hooks();
@@ -83,6 +85,8 @@ class Lw_All_In_One {
   }
 
   private function load_dependencies() {
+
+    require_once __DIR__ . '/class-lw-all-in-one-cf7-sync.php';
 
     require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-lw-all-in-one-loader.php';
 
@@ -273,6 +277,7 @@ class Lw_All_In_One {
   }
 
   public static function lw_all_in_one_single_event_run($lw_all_in_one_version) {
+    Lw_All_In_One_Cf7_Sync::maybe_upgrade();
 
     if (version_compare($lw_all_in_one_version, '1.8.4') <= 0) {
       // Update translation files
@@ -320,8 +325,13 @@ class Lw_All_In_One {
     global $wpdb;
     $cf7_table = $wpdb->prefix . LW_ALL_IN_ONE_CF7_TABLE;
 
+    $options = get_option('lw_all_in_one', array());
+    if (($options['lw_aio_fields']['data_retention'] ?? '') !== 'on') {
+      return;
+    }
+    $days = max(1, min(3650, (int) ($options['lw_aio_fields']['retention_days'] ?? 14)));
     // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table cleanup for data retention
-    $wpdb->query(" DELETE FROM $cf7_table WHERE DATE(time) < DATE_SUB(DATE(NOW()), INTERVAL 14 DAY) ");
+    $wpdb->query($wpdb->prepare("DELETE FROM $cf7_table WHERE sent = %s AND time < %s", 'Si', gmdate('Y-m-d 00:00:00', time() - $days * DAY_IN_SECONDS)));
   }
 
   public function lw_all_in_one_5_min_schedule($schedules) {
@@ -347,49 +357,7 @@ class Lw_All_In_One {
   }
 
   public static function lw_all_in_one_cf7_sync_run() {
-    global $wpdb;
-    $cf7_table = $wpdb->prefix . LW_ALL_IN_ONE_CF7_TABLE;
-    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table query for CF7 sync
-    $select_nn_inviato = $wpdb->get_row($wpdb->prepare("SELECT * FROM $cf7_table WHERE sent !=%s", 'Si'));
-    if ($select_nn_inviato !== null) {
-      $re_invia = array();
-      $re_invia['nome'] = sanitize_text_field($select_nn_inviato->name);
-      $re_invia['cognome'] = sanitize_text_field($select_nn_inviato->surname);
-      $re_invia['email'] = sanitize_email($select_nn_inviato->email);
-      $re_invia['telefono'] = sanitize_text_field($select_nn_inviato->phone);
-      $re_invia['soggetto'] = sanitize_text_field($select_nn_inviato->subject);
-      $re_invia['messaggio'] = sanitize_textarea_field($select_nn_inviato->message);
-      $re_invia['tipo_Contratto'] = sanitize_text_field($select_nn_inviato->tipo_Contratto);
-      $re_invia['id_Contratto'] = sanitize_text_field($select_nn_inviato->id_Contratto);
-      $re_invia['submited_page'] = esc_url_raw($select_nn_inviato->submited_page);
-
-      $json_re_invia = json_encode($re_invia);
-      $args = array(
-        'body' => $json_re_invia,
-        'timeout' => '5',
-        'redirection' => '5',
-        'httpversion' => '1.0',
-        'blocking' => true,
-        'headers' => array(),
-        'cookies' => array(),
-      );
-      $send = wp_remote_post('https://localwebapi.ids.al/contactFormWeb', $args);
-      $ret_body = wp_remote_retrieve_body($send);
-      $data = recursive_sanitize_array_object(json_decode($ret_body));
-
-      if ($data->response == "OK") {
-        $inviato = "Si";
-        $id = $select_nn_inviato->id;
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table update for sync status
-        $wpdb->update(
-          $cf7_table,
-          array(
-            'sent' => $inviato,
-          ),
-          array('id' => $id)
-        );
-      }
-    }
+    Lw_All_In_One_Cf7_Sync::run();
   }
 
   public function check_plugin_options($parent_key = false, $key = false) {
