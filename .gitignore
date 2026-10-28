@@ -11,7 +11,11 @@
 /wp-content/plugins/index.php
 /wp-content/themes/index.php
 /wp-includes/
-/tests
+/tests/*
+!/tests/*.php
+!/tests/*.py
+!/tests/*.js
+!/tests/README.md
 /index.php
 /license.txt
 /readme.html
@@ -52,3 +56,5 @@ wp-config.php
 .github
 .vscode
 .idea
+/work/
+/dist/

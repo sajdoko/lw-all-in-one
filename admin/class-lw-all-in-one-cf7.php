@@ -65,14 +65,7 @@ class Lw_All_In_One_Cf7 {
     $lw_cf7_fields_saved_id_contratto = (isset($options['lw_cf7_fields']['id_contratto'])) ? sanitize_text_field($options['lw_cf7_fields']['id_contratto']) : '';
 
 
-    $url_path = "http://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
-    $domain = htmlspecialchars($url_path, ENT_QUOTES, 'UTF-8');
-    $domain = trim($domain, '/');
-    if (!preg_match('#^http(s)?://#', $domain)) {
-      $domain = 'http://' . $domain;
-    }
-    $url_parts = wp_parse_url($domain);
-    $submited_page = preg_replace('/^www\./', '', $url_parts['host']);
+    $submited_page = wp_parse_url(home_url('/'), PHP_URL_HOST);
 
     $submission = WPCF7_Submission::get_instance();
     if (!$submission) {
@@ -139,11 +132,7 @@ class Lw_All_In_One_Cf7 {
   }
 
   public function lw_all_in_one_old_cf7_is_active_deactivate() {
-    if (is_plugin_active('lw-contact-form/localweb.php')) {
-      deactivate_plugins('lw-contact-form/localweb.php');
-    } elseif (is_plugin_inactive('lw-contact-form/localweb.php')) {
-      delete_plugins(array('lw-contact-form/localweb.php'));
-    }
+    // Compatibility no-op. Legacy migration requires an explicit authorized POST.
   }
 
   public function lw_all_in_one_cf7_screen_options( $result, $option, $value ) {

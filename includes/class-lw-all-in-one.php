@@ -64,6 +64,7 @@ class Lw_All_In_One {
     $this->plugin_name = 'lw_all_in_one';
 
     $this->load_dependencies();
+    Lw_All_In_One_Security::register_hooks();
     // Updates must migrate before submissions or cron can use the new columns.
     Lw_All_In_One_Cf7_Sync::maybe_upgrade();
     $this->lw_all_in_one_schedule_data_retention();
@@ -87,6 +88,7 @@ class Lw_All_In_One {
   private function load_dependencies() {
 
     require_once __DIR__ . '/class-lw-all-in-one-cf7-sync.php';
+    require_once __DIR__ . '/class-lw-all-in-one-security.php';
 
     require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-lw-all-in-one-loader.php';
 
@@ -125,6 +127,7 @@ class Lw_All_In_One {
     $this->loader->add_action('admin_init', $plugin_admin, 'lw_all_in_one_options_update');
 
     $this->loader->add_action('wp_ajax_lw_all_in_one_reset_plugin_options', $plugin_admin, 'lw_all_in_one_reset_plugin_options');
+    $this->loader->add_action('admin_post_lw_all_in_one_legacy_cleanup', $plugin_admin, 'legacy_cleanup');
 
     $this->loader->add_filter('admin_footer_text', $plugin_admin, 'lw_all_in_one_admin_footer_text');
 
@@ -134,7 +137,7 @@ class Lw_All_In_One {
     $this->loader->add_action('wp_head', $plugin_admin, 'lw_all_in_one_header_scripts_from_tab');
     $this->loader->add_action('wp_footer', $plugin_admin, 'lw_all_in_one_footer_scripts_from_tab');
 
-    $this->loader->add_action('in_admin_header', $plugin_admin, 'lw_all_in_one_clean_admin_notices', 9999);
+
   }
 
   private function define_public_hooks() {
@@ -175,7 +178,6 @@ class Lw_All_In_One {
 
     // $this->loader->add_action('admin_notices', $plugin_ga_events, 'woocommerce_google_analytics_missing_notice');
 
-    $this->loader->add_action('admin_init', $plugin_ga_events, 'lw_all_in_one_gadwp_is_active_deactivate');
   }
 
   private function define_wim_hooks() {
@@ -184,7 +186,6 @@ class Lw_All_In_One {
 
     $this->loader->add_action('wp_ajax_lw_all_in_one_verify_wim_attivation', $plugin_wim, 'lw_all_in_one_verify_wim_attivation');
 
-    $this->loader->add_action('admin_init', $plugin_wim, 'lw_all_in_one_old_wim_is_active_deactivate');
   }
 
   private function define_cf7_hooks() {
@@ -208,7 +209,6 @@ class Lw_All_In_One {
       $this->loader->add_action('wpcf7_before_send_mail', $plugin_cf7, 'lw_all_in_one_cf7_to_db');
     }
 
-    $this->loader->add_action('admin_init', $plugin_cf7, 'lw_all_in_one_old_cf7_is_active_deactivate');
   }
 
   private function define_privacy_policy_hooks() {
@@ -218,7 +218,6 @@ class Lw_All_In_One {
 
     $this->loader->add_action('admin_menu', $plugin_privacy_policy, 'lw_all_in_one_privacy_policy_admin_menu', 99);
 
-    $this->loader->add_action('admin_init', $plugin_privacy_policy, 'lw_all_in_one_remove_italy_cookie_choices');
 
   }
 

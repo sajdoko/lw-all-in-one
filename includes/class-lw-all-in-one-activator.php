@@ -199,24 +199,6 @@ class Lw_All_In_One_Activator {
       }
     }
 
-    if (is_plugin_active('web-instant-messenger/web-instant-messenger.php')) {
-      deactivate_plugins('web-instant-messenger/web-instant-messenger.php');
-    }
-    if (is_plugin_active('lw-contact-form/localweb.php')) {
-      deactivate_plugins('lw-contact-form/localweb.php');
-    }
-    if (is_plugin_active('lw-cookie-privacy/lw-cookie-privacy.php')) {
-      deactivate_plugins('lw-cookie-privacy/lw-cookie-privacy.php');
-    }
-    if (is_plugin_active('google-analytics-dashboard-for-wp/gadwp.php')) {
-      deactivate_plugins('google-analytics-dashboard-for-wp/gadwp.php');
-    }
-    if (is_plugin_active('woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php')) {
-      deactivate_plugins('woocommerce-google-analytics-integration/woocommerce-google-analytics-integration.php');
-    }
-    if (is_plugin_active('italy-cookie-choices/italy-cookie-choices.php')) {
-      deactivate_plugins('italy-cookie-choices/italy-cookie-choices.php');
-    }
     if (is_plugin_active('wp-fastest-cache/wpFastestCache.php')) {
       // Exclude from cache 'lwaio_*' cookies
       update_option( 'WpFastestCacheExclude', json_encode([["prefix" => "contain", "content" => "lwaio_", "type" => "cookie"]]));

@@ -76,22 +76,10 @@ class Lw_All_In_One_Cf7_List_Table_Class extends WP_List_Table {
 
     $this->process_bulk_action();
 
-    $data = $this->table_data();
-    usort($data, array(&$this, 'sort_data'));
-
-    $perPage = 10;
-    $current_screen = get_current_screen();
-    // wp_die($current_screen->id);
-		$perPage = $this->get_items_per_page( 'records_per_page' );
-    $currentPage = $this->get_pagenum();
-    $totalItems = count($data);
-
-    $this->set_pagination_args(array(
-      'total_items' => $totalItems,
-      'per_page' => $perPage,
-    ));
-
-    $data = array_slice($data, (($currentPage - 1) * $perPage), $perPage);
+    $perPage = max(1, min(100, $this->get_items_per_page('records_per_page')));
+    $currentPage = max(1, $this->get_pagenum());
+    $data = $this->table_data($perPage, $currentPage);
+    $this->set_pagination_args(array('total_items' => $this->total_records, 'per_page' => $perPage));
 
     $this->_column_headers = array($columns, $hidden, $sortable);
     $this->items = $data;
@@ -100,10 +88,10 @@ class Lw_All_In_One_Cf7_List_Table_Class extends WP_List_Table {
   public function column_subject($item) {
     $delete_url = wp_nonce_url( '?page='.sanitize_text_field($_REQUEST['page']).'&action=delete-cf7&record_id='.$item['id'].'', 'delete' );
     $actions = array(
-      'delete' => sprintf('<a href="%s" id="lw_aio_delete_record">Delete</a>', $delete_url),
+      'delete' => sprintf('<a href="%s" id="lw_aio_delete_record">Delete</a>', esc_url($delete_url)),
     );
     $subject = (strlen($item['subject']) > 10) ? substr($item['subject'], 0, 30) . ' ...' : $item['subject'];
-    return sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s', $subject, $item['id'], $this->row_actions($actions) );
+    return sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s', esc_html($subject), absint($item['id']), $this->row_actions($actions) );
   }
 
   public function column_cb($item) {
@@ -142,19 +130,25 @@ class Lw_All_In_One_Cf7_List_Table_Class extends WP_List_Table {
     return $sortable_columns;
   }
 
-  private function table_data() {
-    $data = array();
+  private $total_records = 0;
 
+  private function table_data($limit, $page) {
+    if (!current_user_can('manage_options')) {
+      wp_die(esc_html__('Permission denied.', 'lw-all-in-one'));
+    }
     global $wpdb;
     $table_name = $wpdb->prefix . LW_ALL_IN_ONE_CF7_TABLE;
-    $s = (isset($_REQUEST['s'])) ? sanitize_text_field(wp_unslash($_REQUEST['s'])) : '';
-    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table query
-    $data = $wpdb->get_results(
-      $wpdb->prepare("SELECT * FROM $table_name WHERE subject LIKE %s OR name LIKE %s OR surname LIKE %s", '%'.$s.'%', '%'.$s.'%', '%'.$s.'%'),
-      ARRAY_A
-    );
-
-    return $data;
+    $search = isset($_REQUEST['s']) ? sanitize_text_field(wp_unslash($_REQUEST['s'])) : '';
+    $like = '%' . $wpdb->esc_like($search) . '%';
+    $allowed = array('id', 'time', 'subject', 'name', 'surname');
+    $requested = isset($_GET['orderby']) ? sanitize_key(wp_unslash($_GET['orderby'])) : 'id';
+    $orderby = in_array($requested, $allowed, true) ? $requested : 'id';
+    $order = isset($_GET['order']) && $_GET['order'] === 'asc' ? 'ASC' : 'DESC';
+    $this->total_records = (int) $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $table_name WHERE subject LIKE %s OR name LIKE %s OR surname LIKE %s", $like, $like, $like));
+    return $wpdb->get_results($wpdb->prepare(
+      "SELECT * FROM $table_name WHERE subject LIKE %s OR name LIKE %s OR surname LIKE %s ORDER BY $orderby $order LIMIT %d OFFSET %d",
+      $like, $like, $like, $limit, ($page - 1) * $limit
+    ), ARRAY_A);
   }
 
   public function column_default($item, $column_name) {
@@ -182,30 +176,8 @@ class Lw_All_In_One_Cf7_List_Table_Class extends WP_List_Table {
       return esc_html((string) $item[$column_name]);
 
     default:
-      return print_r($item, true);
+      return '';
     }
-  }
-
-  private function sort_data($a, $b) {
-
-    $orderby = 'id';
-    $order = 'asc';
-
-    if (!empty($_GET['orderby'])) {
-      $orderby = absint(sanitize_text_field($_GET['orderby']));
-    }
-
-    if (!empty($_GET['order'])) {
-      $order = sanitize_text_field($_GET['order']);
-    }
-
-    $result = strcmp($a[$orderby], $b[$orderby]);
-
-    if ($order === 'desc') {
-      return $result;
-    }
-
-    return -$result;
   }
 
   public function get_bulk_actions() {
@@ -219,7 +191,7 @@ class Lw_All_In_One_Cf7_List_Table_Class extends WP_List_Table {
     }
 
     if ('delete-cf7' === $this->current_action()) {
-      if (!wp_verify_nonce($_REQUEST['_wpnonce'], 'delete')) {
+      if (!wp_verify_nonce(sanitize_text_field(wp_unslash($_REQUEST['_wpnonce'] ?? '')), 'delete')) {
         wp_die( esc_html__('Not valid request!', 'lw-all-in-one') );
       }
       self::wpdb_delete_records(absint(sanitize_text_field($_REQUEST['record_id'])));
@@ -227,7 +199,7 @@ class Lw_All_In_One_Cf7_List_Table_Class extends WP_List_Table {
       // wp_safe_redirect($redirect_to_ga);
       // return;
     } else if ('bulk-delete-cf7' === $this->current_action()) {
-      if (!wp_verify_nonce($_REQUEST['bulk_delete_nonce_cf7'], 'bulk_delete_records_cf7')) {
+      if (!wp_verify_nonce(sanitize_text_field(wp_unslash($_REQUEST['bulk_delete_nonce_cf7'] ?? '')), 'bulk_delete_records_cf7')) {
         wp_die( esc_html__('Not valid request!', 'lw-all-in-one') );
       }
       if (isset($_REQUEST['bulk-delete-cf7']) && is_array($_REQUEST['bulk-delete-cf7'])) {
@@ -254,7 +226,7 @@ class Lw_All_In_One_Cf7_List_Table_Class extends WP_List_Table {
     global $wpdb;
     $table_name = $wpdb->prefix . LW_ALL_IN_ONE_CF7_TABLE;
     // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table count
-    return $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $table_name"));
+    return $wpdb->get_var("SELECT COUNT(*) FROM $table_name");
   }
 }
 
